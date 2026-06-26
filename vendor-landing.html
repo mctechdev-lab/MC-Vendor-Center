@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sell on MC Store — Vendor Center</title>
+<meta name="description" content="Join thousands of vendors selling on MC Store Nigeria. List your products free, reach customers nationwide, get paid fast.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --ink:#080c18;
+  --gold:#f5a623;--gold2:#f97316;--gold-lt:rgba(245,166,35,.12);
+  --blue:#1a56db;--elec:#3b82f6;
+  --white:#fff;--muted:rgba(255,255,255,.45);--border:rgba(255,255,255,.08);
+  --green:#10b981;--red:#ef4444;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--white);overflow-x:hidden;}
+
+/* ── AMBIENT ── */
+.amb{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 55% 45% at 15% 15%,rgba(245,166,35,.18) 0%,transparent 60%),
+    radial-gradient(ellipse 45% 55% at 85% 85%,rgba(249,115,22,.14) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 50% 0%,rgba(26,86,219,.1) 0%,transparent 50%);}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.04;
+  background-image:linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px);
+  background-size:52px 52px;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(8,12,24,.75);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:900;
+  text-decoration:none;color:var(--white);display:flex;align-items:center;gap:.5rem;}
+.nav-logo .dot{color:var(--gold);}
+.nav-logo .sub{font-size:.65rem;font-weight:700;color:var(--gold);
+  background:var(--gold-lt);border:1px solid rgba(245,166,35,.25);
+  padding:.15rem .5rem;border-radius:50px;letter-spacing:.05em;text-transform:uppercase;}
+.nav-btns{display:flex;gap:.5rem;align-items:center;}
+.btn-ghost{padding:.48rem 1rem;border-radius:50px;font-family:'DM Sans',sans-serif;
+  font-size:.8rem;font-weight:700;text-decoration:none;cursor:pointer;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);color:rgba(255,255,255,.8);
+  transition:all .2s;}
+.btn-ghost:hover{background:rgba(255,255,255,.12);color:var(--white);}
+.btn-gold{padding:.48rem 1.1rem;border-radius:50px;font-family:'DM Sans',sans-serif;
+  font-size:.8rem;font-weight:800;text-decoration:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border:none;color:var(--ink);
+  box-shadow:0 4px 14px rgba(245,166,35,.35);transition:all .2s;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(245,166,35,.45);}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:1;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:8rem 1.5rem 5rem;}
+
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;
+  padding:.38rem 1rem;border-radius:50px;margin-bottom:1.75rem;
+  background:var(--gold-lt);border:1px solid rgba(245,166,35,.3);
+  font-size:.72rem;font-weight:800;color:var(--gold);
+  letter-spacing:.06em;text-transform:uppercase;}
+.badge-pulse{width:7px;height:7px;border-radius:50%;background:var(--gold);
+  animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.65);}}
+
+.hero-title{font-family:'Syne',sans-serif;
+  font-size:clamp(2.2rem,8vw,4rem);font-weight:900;
+  line-height:1.05;letter-spacing:-1.5px;
+  max-width:680px;margin:0 auto 1.25rem;}
+.hero-title em{font-style:normal;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+.hero-sub{font-size:clamp(.9rem,2.5vw,1.05rem);color:var(--muted);
+  line-height:1.7;max-width:480px;margin:0 auto 2.5rem;}
+
+.hero-ctas{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;}
+.cta-primary{padding:.85rem 2rem;border-radius:50px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--ink);font-family:'DM Sans',sans-serif;
+  font-size:.95rem;font-weight:900;text-decoration:none;
+  box-shadow:0 6px 20px rgba(245,166,35,.4);transition:all .25s;
+  display:flex;align-items:center;gap:.5rem;}
+.cta-primary:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(245,166,35,.5);}
+.cta-secondary{padding:.85rem 1.6rem;border-radius:50px;
+  background:rgba(255,255,255,.06);border:1.5px solid var(--border);
+  color:var(--white);font-family:'DM Sans',sans-serif;
+  font-size:.9rem;font-weight:700;text-decoration:none;
+  transition:all .25s;display:flex;align-items:center;gap:.5rem;}
+.cta-secondary:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);}
+
+/* ── TRUST STRIP ── */
+.trust-strip{display:flex;align-items:center;justify-content:center;
+  gap:1.5rem;flex-wrap:wrap;
+  padding:.85rem 1.5rem;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:14px;max-width:580px;margin:0 auto;}
+.trust-item{display:flex;align-items:center;gap:.4rem;
+  font-size:.78rem;font-weight:700;color:rgba(255,255,255,.6);}
+.trust-item i{color:var(--gold);font-size:.75rem;}
+
+/* ── STATS BAR ── */
+.stats-bar{position:relative;z-index:1;
+  background:rgba(245,166,35,.06);border-top:1px solid rgba(245,166,35,.15);
+  border-bottom:1px solid rgba(245,166,35,.15);
+  padding:2rem 1.5rem;}
+.stats-inner{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;max-width:700px;margin:0 auto;}
+.stat-item{text-align:center;}
+.stat-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-lbl{font-size:.7rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--muted);margin-top:4px;}
+
+/* ── SECTION COMMON ── */
+section{position:relative;z-index:1;padding:5rem 1.5rem;}
+.sec-eyebrow{font-size:.7rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--gold);margin-bottom:.85rem;
+  display:flex;align-items:center;gap:.6rem;}
+.sec-eyebrow::before{content:'';width:24px;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:1px;}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);
+  font-weight:900;line-height:1.15;letter-spacing:-.5px;margin-bottom:.85rem;}
+.sec-title em{font-style:normal;color:var(--gold);}
+.sec-sub{font-size:.92rem;color:var(--muted);line-height:1.7;max-width:480px;}
+
+/* ── HOW IT WORKS ── */
+.how-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:1rem;margin-top:3rem;max-width:900px;margin-left:auto;margin-right:auto;}
+.how-card{background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:18px;padding:1.5rem;position:relative;overflow:hidden;
+  transition:all .25s;}
+.how-card:hover{border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.05);
+  transform:translateY(-4px);}
+.how-num{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:900;
+  color:rgba(245,166,35,.12);position:absolute;top:.5rem;right:1rem;
+  line-height:1;pointer-events:none;}
+.how-icon{width:44px;height:44px;border-radius:12px;
+  background:var(--gold-lt);border:1px solid rgba(245,166,35,.25);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);font-size:1rem;margin-bottom:1rem;}
+.how-title{font-size:.92rem;font-weight:800;margin-bottom:.4rem;}
+.how-desc{font-size:.8rem;color:var(--muted);line-height:1.6;}
+
+/* ── BENEFITS ── */
+.benefits-wrap{max-width:900px;margin:3rem auto 0;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;}
+.benefit-card{background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:16px;padding:1.25rem;display:flex;align-items:flex-start;gap:.85rem;
+  transition:all .25s;}
+.benefit-card:hover{border-color:rgba(245,166,35,.2);background:rgba(245,166,35,.04);}
+.ben-icon{width:40px;height:40px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+.bi-gold{background:var(--gold-lt);color:var(--gold);}
+.bi-green{background:rgba(16,185,129,.15);color:var(--green);}
+.bi-blue{background:rgba(59,130,246,.15);color:var(--elec);}
+.bi-red{background:rgba(239,68,68,.12);color:var(--red);}
+.ben-title{font-size:.88rem;font-weight:800;margin-bottom:.25rem;}
+.ben-desc{font-size:.76rem;color:var(--muted);line-height:1.55;}
+
+/* ── VERIFICATION STAGES ── */
+.stages-wrap{max-width:680px;margin:3rem auto 0;}
+.stage-item{display:flex;gap:1rem;align-items:flex-start;padding:1.1rem 0;
+  border-bottom:1px solid var(--border);}
+.stage-item:last-child{border-bottom:none;}
+.stage-num{width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:var(--gold-lt);border:1.5px solid rgba(245,166,35,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:.82rem;font-weight:900;color:var(--gold);}
+.stage-title{font-size:.9rem;font-weight:800;margin-bottom:.25rem;}
+.stage-desc{font-size:.77rem;color:var(--muted);line-height:1.55;}
+.stage-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.5rem;}
+.stage-tag{font-size:.65rem;font-weight:700;padding:.2rem .55rem;border-radius:50px;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);color:rgba(255,255,255,.5);}
+
+/* ── EARNINGS CALC ── */
+.calc-wrap{max-width:480px;margin:3rem auto 0;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:20px;padding:1.75rem;overflow:hidden;position:relative;}
+.calc-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.calc-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:1.25rem;}
+.calc-row{display:flex;justify-content:space-between;align-items:center;
+  padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.85rem;}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-row .lbl{color:var(--muted);}
+.calc-row .val{font-weight:800;}
+.calc-total{display:flex;justify-content:space-between;align-items:center;
+  padding:.85rem;background:var(--gold-lt);border:1px solid rgba(245,166,35,.25);
+  border-radius:12px;margin-top:.85rem;}
+.calc-total .lbl{font-weight:800;font-size:.88rem;}
+.calc-total .val{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:900;color:var(--gold);}
+.calc-note{font-size:.72rem;color:var(--muted);margin-top:.75rem;text-align:center;line-height:1.5;}
+
+/* ── FAQ ── */
+.faq-wrap{max-width:620px;margin:3rem auto 0;}
+.faq-item{border-bottom:1px solid var(--border);overflow:hidden;}
+.faq-q{padding:1rem 0;display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;font-size:.9rem;font-weight:700;gap:1rem;}
+.faq-q i{color:var(--gold);flex-shrink:0;transition:transform .25s;font-size:.8rem;}
+.faq-item.open .faq-q i{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;
+  font-size:.82rem;color:var(--muted);line-height:1.7;}
+.faq-item.open .faq-a{max-height:200px;padding-bottom:1rem;}
+
+/* ── CTA BOTTOM ── */
+.cta-section{position:relative;z-index:1;
+  background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(249,115,22,.08));
+  border-top:1px solid rgba(245,166,35,.15);
+  border-bottom:1px solid rgba(245,166,35,.15);
+  padding:5rem 1.5rem;text-align:center;}
+.cta-section .sec-title{max-width:520px;margin:0 auto .85rem;}
+.cta-section .sec-sub{max-width:380px;margin:0 auto 2.5rem;}
+
+/* ── FOOTER ── */
+footer{position:relative;z-index:1;
+  padding:2rem 1.5rem;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;gap:.75rem;}
+.footer-logo{font-family:'Syne',sans-serif;font-size:1rem;font-weight:900;
+  display:flex;align-items:center;gap:.4rem;}
+.footer-links{display:flex;gap:1.25rem;flex-wrap:wrap;justify-content:center;}
+.footer-links a{font-size:.78rem;color:var(--muted);text-decoration:none;
+  transition:color .2s;font-weight:600;}
+.footer-links a:hover{color:var(--gold);}
+footer p{font-size:.72rem;color:rgba(255,255,255,.2);}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(24px);transition:all .6s ease;}
+.reveal.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+
+<div class="amb"></div>
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    MC<span class="dot">.</span>Vendor
+    <span class="sub">Center</span>
+  </a>
+  <div class="nav-btns">
+    <a href="/login.html" class="btn-ghost">Login</a>
+    <a href="/register.html" class="btn-gold"><i class="fas fa-store"></i> Start Selling</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <div class="badge-pulse"></div>
+    Now accepting vendors across Nigeria
+  </div>
+
+  <h1 class="hero-title reveal">
+    Turn your products into<br><em>real income</em> nationwide
+  </h1>
+
+  <p class="hero-sub reveal">
+    List your products on MC Store — Nigeria's fastest growing phone accessories platform. Reach thousands of customers across all 36 states. Free to join, no monthly fees.
+  </p>
+
+  <div class="hero-ctas reveal">
+    <a href="/register.html" class="cta-primary">
+      <i class="fas fa-store"></i> Start Selling Free
+    </a>
+    <a href="#how" class="cta-secondary">
+      <i class="fas fa-play-circle"></i> See How It Works
+    </a>
+  </div>
+
+  <div class="trust-strip reveal">
+    <div class="trust-item"><i class="fas fa-check-circle"></i> Free to list</div>
+    <div class="trust-item"><i class="fas fa-check-circle"></i> No monthly fees</div>
+    <div class="trust-item"><i class="fas fa-check-circle"></i> Fast payouts</div>
+    <div class="trust-item"><i class="fas fa-check-circle"></i> 36 states delivery</div>
+    <div class="trust-item"><i class="fas fa-check-circle"></i> Dedicated support</div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item reveal">
+      <div class="stat-val">36</div>
+      <div class="stat-lbl">States Covered</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-val">0₦</div>
+      <div class="stat-lbl">Monthly Fee</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-val">24h</div>
+      <div class="stat-lbl">Approval Time</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-val">48h</div>
+      <div class="stat-lbl">Payout Speed</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div style="max-width:900px;margin:0 auto">
+    <div class="sec-eyebrow reveal">How it works</div>
+    <h2 class="sec-title reveal">From signup to <em>first sale</em> in 4 steps</h2>
+    <p class="sec-sub reveal">We've made it simple. No complicated setup, no hidden fees.</p>
+
+    <div class="how-grid">
+      <div class="how-card reveal">
+        <div class="how-num">01</div>
+        <div class="how-icon"><i class="fas fa-user-plus"></i></div>
+        <div class="how-title">Create Your Shop</div>
+        <div class="how-desc">Register free and complete your vendor profile — shop name, description, category and verification documents.</div>
+      </div>
+      <div class="how-card reveal">
+        <div class="how-num">02</div>
+        <div class="how-icon"><i class="fas fa-shield-check"></i></div>
+        <div class="how-title">Get Verified</div>
+        <div class="how-desc">We review your NIN, business info and ID. Approval takes under 24 hours. We protect buyers and sellers.</div>
+      </div>
+      <div class="how-card reveal">
+        <div class="how-num">03</div>
+        <div class="how-icon"><i class="fas fa-box-open"></i></div>
+        <div class="how-title">Add Products</div>
+        <div class="how-desc">Upload your products with photos and your base price. MC Store reviews and sets the final price — then it goes live!</div>
+      </div>
+      <div class="how-card reveal">
+        <div class="how-num">04</div>
+        <div class="how-icon"><i class="fas fa-money-bill-wave"></i></div>
+        <div class="how-title">Get Paid</div>
+        <div class="how-desc">Customers order, we handle delivery, you get your earnings paid directly to your bank within 48 hours of delivery.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section style="padding-top:0">
+  <div style="max-width:900px;margin:0 auto">
+    <div class="sec-eyebrow reveal">Why vendors choose us</div>
+    <h2 class="sec-title reveal">Everything you need to <em>sell more</em></h2>
+
+    <div class="benefits-wrap">
+      <div class="benefit-card reveal">
+        <div class="ben-icon bi-gold"><i class="fas fa-tag"></i></div>
+        <div>
+          <div class="ben-title">Free To List</div>
+          <div class="ben-desc">No upfront fees, no monthly subscriptions. Pay nothing until you make a sale.</div>
+        </div>
+      </div>
+      <div class="benefit-card reveal">
+        <div class="ben-icon bi-green"><i class="fas fa-truck-fast"></i></div>
+        <div>
+          <div class="ben-title">We Handle Delivery</div>
+          <div class="ben-desc">MC Store's logistics network handles all deliveries. You just prepare the order.</div>
+        </div>
+      </div>
+      <div class="benefit-card reveal">
+        <div class="ben-icon bi-blue"><i class="fas fa-chart-line"></i></div>
+        <div>
+          <div class="ben-title">Sales Dashboard</div>
+          <div class="ben-desc">Track your products, orders, and earnings in real-time from your vendor dashboard.</div>
+        </div>
+      </div>
+      <div class="benefit-card reveal">
+        <div class="ben-icon bi-gold"><i class="fas fa-bell"></i></div>
+        <div>
+          <div class="ben-title">Instant Notifications</div>
+          <div class="ben-desc">Get SMS and WhatsApp alerts the moment a customer places an order for your product.</div>
+        </div>
+      </div>
+      <div class="benefit-card reveal">
+        <div class="ben-icon bi-green"><i class="fas fa-shield-halved"></i></div>
+        <div>
+          <div class="ben-title">Buyer Protection</div>
+          <div class="ben-desc">Our verification system protects both buyers and vendors. Fake orders are blocked automatically.</div>
+        </div>
+      </div>
+      <div class="benefit-card reveal">
+        <div class="ben-icon bi-blue"><i class="fas fa-headset"></i></div>
+        <div>
+          <div class="ben-title">Dedicated Support</div>
+          <div class="ben-desc">WhatsApp support 7 days a week. We help you resolve issues and grow your sales.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VERIFICATION STAGES -->
+<section style="padding-top:0">
+  <div style="max-width:900px;margin:0 auto">
+    <div class="sec-eyebrow reveal">Verification process</div>
+    <h2 class="sec-title reveal">6 simple stages to get <em>approved</em></h2>
+    <p class="sec-sub reveal">We verify every vendor to protect our customers and your brand reputation.</p>
+
+    <div class="stages-wrap">
+      <div class="stage-item reveal">
+        <div class="stage-num">1</div>
+        <div>
+          <div class="stage-title">Shop Information</div>
+          <div class="stage-desc">Your shop name, description, category and a unique shop URL slug.</div>
+          <div class="stage-tags">
+            <span class="stage-tag">Shop Name</span>
+            <span class="stage-tag">Category</span>
+            <span class="stage-tag">Shop URL</span>
+            <span class="stage-tag">Description</span>
+          </div>
+        </div>
+      </div>
+      <div class="stage-item reveal">
+        <div class="stage-num">2</div>
+        <div>
+          <div class="stage-title">Business Information</div>
+          <div class="stage-desc">Your legal name, business type, NIN number, CAC registration (if applicable) and business address.</div>
+          <div class="stage-tags">
+            <span class="stage-tag">Full Name</span>
+            <span class="stage-tag">NIN</span>
+            <span class="stage-tag">CAC (Optional)</span>
+            <span class="stage-tag">Business Address</span>
+          </div>
+        </div>
+      </div>
+      <div class="stage-item reveal">
+        <div class="stage-num">3</div>
+        <div>
+          <div class="stage-title">Shipping Information</div>
+          <div class="stage-desc">Where you ship from, which states you can serve, and your average order processing time.</div>
+          <div class="stage-tags">
+            <span class="stage-tag">Ship From</span>
+            <span class="stage-tag">Coverage</span>
+            <span class="stage-tag">Processing Time</span>
+          </div>
+        </div>
+      </div>
+      <div class="stage-item reveal">
+        <div class="stage-num">4</div>
+        <div>
+          <div class="stage-title">Payment Information</div>
+          <div class="stage-desc">Your bank account details for receiving your earnings after each successful sale.</div>
+          <div class="stage-tags">
+            <span class="stage-tag">Bank Name</span>
+            <span class="stage-tag">Account Number</span>
+            <span class="stage-tag">Account Name</span>
+          </div>
+        </div>
+      </div>
+      <div class="stage-item reveal">
+        <div class="stage-num">5</div>
+        <div>
+          <div class="stage-title">Identity Verification</div>
+          <div class="stage-desc">Upload a government-issued ID and a clear selfie photo. This protects all parties and builds buyer trust.</div>
+          <div class="stage-tags">
+            <span class="stage-tag">Government ID</span>
+            <span class="stage-tag">Selfie Photo</span>
+            <span class="stage-tag">WhatsApp Number</span>
+          </div>
+        </div>
+      </div>
+      <div class="stage-item reveal">
+        <div class="stage-num">6</div>
+        <div>
+          <div class="stage-title">Review & Submit</div>
+          <div class="stage-desc">Review all your information, agree to MC Store Vendor Terms, and submit for approval. We review within 24 hours.</div>
+          <div class="stage-tags">
+            <span class="stage-tag">Terms Agreement</span>
+            <span class="stage-tag">Final Review</span>
+            <span class="stage-tag">Submit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EARNINGS CALCULATOR -->
+<section style="padding-top:0">
+  <div style="max-width:900px;margin:0 auto;text-align:center">
+    <div class="sec-eyebrow reveal" style="justify-content:center">Earnings example</div>
+    <h2 class="sec-title reveal">See how much you can <em>earn</em></h2>
+    <p class="sec-sub reveal" style="margin:0 auto 0">Based on a typical phone accessory vendor selling 20 items a month.</p>
+
+    <div class="calc-wrap reveal">
+      <div class="calc-title">📊 Monthly Earnings Estimate</div>
+      <div class="calc-row">
+        <span class="lbl">Products listed</span>
+        <span class="val">10 products</span>
+      </div>
+      <div class="calc-row">
+        <span class="lbl">Orders per month</span>
+        <span class="val">20 orders</span>
+      </div>
+      <div class="calc-row">
+        <span class="lbl">Average order value</span>
+        <span class="val">₦5,000</span>
+      </div>
+      <div class="calc-row">
+        <span class="lbl">Total sales</span>
+        <span class="val">₦100,000</span>
+      </div>
+      <div class="calc-row">
+        <span class="lbl">Your base price earnings</span>
+        <span class="val" style="color:var(--green)">₦80,000</span>
+      </div>
+      <div class="calc-total">
+        <span class="lbl">💰 You take home</span>
+        <span class="val">₦80,000+</span>
+      </div>
+      <div class="calc-note">
+        You set your base price. MC Store adds its margin on top. You always earn your full base price per sale — no hidden deductions.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="padding-top:0">
+  <div style="max-width:900px;margin:0 auto">
+    <div class="sec-eyebrow reveal">FAQ</div>
+    <h2 class="sec-title reveal">Questions vendors <em>always ask</em></h2>
+
+    <div class="faq-wrap">
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is it really free to become a vendor?
+          <i class="fas fa-plus"></i>
+        </div>
+        <div class="faq-a">Yes — listing products on MC Store is completely free. We only earn when you make a sale, by adding our margin on top of your base price. There are no monthly fees, setup fees or hidden charges.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How long does verification take?
+          <i class="fas fa-plus"></i>
+        </div>
+        <div class="faq-a">We aim to review and approve all vendor applications within 24 hours. You'll receive an SMS and email notification once your account is approved or if we need additional information.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Who handles delivery to customers?
+          <i class="fas fa-plus"></i>
+        </div>
+        <div class="faq-a">MC Store handles all deliveries using our logistics partners. Once an order is placed, you prepare and package the item. Our courier collects from your location and delivers to the customer nationwide.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          When and how do I get paid?
+          <i class="fas fa-plus"></i>
+        </div>
+        <div class="faq-a">Earnings are paid directly to your registered bank account within 48 hours of successful order delivery. You can track all your earnings in your vendor dashboard in real-time.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Can I sell any type of product?
+          <i class="fas fa-plus"></i>
+        </div>
+        <div class="faq-a">Currently MC Store focuses on phone accessories, electronics and related gadgets. All products are reviewed by our team before going live to ensure quality and authenticity.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What if a customer returns a product?
+          <i class="fas fa-plus"></i>
+        </div>
+        <div class="faq-a">Returns are handled case by case. If the product was faulty or not as described, MC Store covers the return. If it was a customer preference return, the vendor's earnings for that order are reversed. Full policy is in our Vendor Terms.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section class="cta-section">
+  <div class="sec-eyebrow reveal" style="justify-content:center">Ready to start?</div>
+  <h2 class="sec-title reveal">Your products deserve<br><em>nationwide reach</em></h2>
+  <p class="sec-sub reveal">Join MC Store vendors selling to thousands of customers across Nigeria every day. Free to start, fast to grow.</p>
+
+  <div class="hero-ctas reveal">
+    <a href="/register.html" class="cta-primary">
+      <i class="fas fa-rocket"></i> Create Your Vendor Account
+    </a>
+    <a href="https://wa.me/2348056230366?text=Hi%20MC%20Store!%20I%20want%20to%20become%20a%20vendor" target="_blank" class="cta-secondary">
+      <i class="fab fa-whatsapp"></i> Ask Us First
+    </a>
+  </div>
+
+  <div class="trust-strip reveal" style="margin-top:1.5rem">
+    <div class="trust-item"><i class="fas fa-check-circle"></i> Free registration</div>
+    <div class="trust-item"><i class="fas fa-check-circle"></i> 24hr approval</div>
+    <div class="trust-item"><i class="fas fa-check-circle"></i> 48hr payout</div>
+    <div class="trust-item"><i class="fas fa-check-circle"></i> No hidden fees</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    MC<span style="color:var(--gold)">.</span>Vendor
+    <span style="font-size:.65rem;color:var(--muted);font-weight:600;">by MC Store Nigeria</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://mcstore.com.ng">MC Store</a>
+    <a href="/register.html">Become a Vendor</a>
+    <a href="/login.html">Vendor Login</a>
+    <a href="https://wa.me/2348056230366">Support</a>
+    <a href="#">Vendor Terms</a>
+  </div>
+  <p>© 2026 MC Store Nigeria · vendors.mcstore.com.ng · Bodija, Ibadan</p>
+</footer>
+
+<script>
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── FAQ TOGGLE ──
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>
