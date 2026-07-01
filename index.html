@@ -1,637 +1,859 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sell on MC Store — Vendor Center</title>
-<meta name="description" content="Join thousands of vendors selling on MC Store Nigeria. List your products free, reach customers nationwide, get paid fast.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root{
-  --ink:#080c18;
-  --gold:#f5a623;--gold2:#f97316;--gold-lt:rgba(245,166,35,.12);
-  --blue:#1a56db;--elec:#3b82f6;
-  --white:#fff;--muted:rgba(255,255,255,.45);--border:rgba(255,255,255,.08);
-  --green:#10b981;--red:#ef4444;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--white);overflow-x:hidden;}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a56db" />
+  <title>MC Vendor Center — Sell on MC Store Nigeria</title>
+  <meta name="description" content="Join Nigeria's fastest growing phone accessories marketplace. List your products, set your own prices, and reach customers in 36 states. Only 3% commission." />
+  <meta property="og:title" content="MC Vendor Center — Sell on MC Store Nigeria" />
+  <meta property="og:description" content="List your products, set your own prices, reach 36 states. Only 3% commission — you keep 97%." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vendors.mcstore.com.ng" />
 
-/* ── AMBIENT ── */
-.amb{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 55% 45% at 15% 15%,rgba(245,166,35,.18) 0%,transparent 60%),
-    radial-gradient(ellipse 45% 55% at 85% 85%,rgba(249,115,22,.14) 0%,transparent 60%),
-    radial-gradient(ellipse 60% 40% at 50% 0%,rgba(26,86,219,.1) 0%,transparent 50%);}
-.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.04;
-  background-image:linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px);
-  background-size:52px 52px;}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;
-  padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
-  background:rgba(8,12,24,.75);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);}
-.nav-logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:900;
-  text-decoration:none;color:var(--white);display:flex;align-items:center;gap:.5rem;}
-.nav-logo .dot{color:var(--gold);}
-.nav-logo .sub{font-size:.65rem;font-weight:700;color:var(--gold);
-  background:var(--gold-lt);border:1px solid rgba(245,166,35,.25);
-  padding:.15rem .5rem;border-radius:50px;letter-spacing:.05em;text-transform:uppercase;}
-.nav-btns{display:flex;gap:.5rem;align-items:center;}
-.btn-ghost{padding:.48rem 1rem;border-radius:50px;font-family:'DM Sans',sans-serif;
-  font-size:.8rem;font-weight:700;text-decoration:none;cursor:pointer;
-  background:rgba(255,255,255,.06);border:1px solid var(--border);color:rgba(255,255,255,.8);
-  transition:all .2s;}
-.btn-ghost:hover{background:rgba(255,255,255,.12);color:var(--white);}
-.btn-gold{padding:.48rem 1.1rem;border-radius:50px;font-family:'DM Sans',sans-serif;
-  font-size:.8rem;font-weight:800;text-decoration:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  border:none;color:var(--ink);
-  box-shadow:0 4px 14px rgba(245,166,35,.35);transition:all .2s;}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(245,166,35,.45);}
+  <style>
+    :root {
+      --blue:        #1a56db;
+      --blue-dark:   #1543ad;
+      --blue-dim:    rgba(26,86,219,.07);
+      --blue-dim2:   rgba(26,86,219,.12);
+      --blue-bd:     rgba(26,86,219,.20);
 
-/* ── HERO ── */
-.hero{position:relative;z-index:1;min-height:100vh;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:8rem 1.5rem 5rem;}
+      --gold:        #f5a623;
+      --gold2:       #f97316;
+      --gold-dim:    rgba(245,166,35,.10);
+      --gold-bd:     rgba(245,166,35,.30);
 
-.hero-badge{display:inline-flex;align-items:center;gap:.5rem;
-  padding:.38rem 1rem;border-radius:50px;margin-bottom:1.75rem;
-  background:var(--gold-lt);border:1px solid rgba(245,166,35,.3);
-  font-size:.72rem;font-weight:800;color:var(--gold);
-  letter-spacing:.06em;text-transform:uppercase;}
-.badge-pulse{width:7px;height:7px;border-radius:50%;background:var(--gold);
-  animation:pulse 2s ease infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.65);}}
+      --bg:          #ffffff;
+      --bg2:         #f6f8fd;
+      --bg3:         #eef2fb;
+      --border:      rgba(26,86,219,.10);
+      --border2:     rgba(26,86,219,.16);
 
-.hero-title{font-family:'Syne',sans-serif;
-  font-size:clamp(2.2rem,8vw,4rem);font-weight:900;
-  line-height:1.05;letter-spacing:-1.5px;
-  max-width:680px;margin:0 auto 1.25rem;}
-.hero-title em{font-style:normal;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+      --ink:         #0f1b3d;
+      --muted:       #5b6987;
+      --muted2:      #93a0bd;
 
-.hero-sub{font-size:clamp(.9rem,2.5vw,1.05rem);color:var(--muted);
-  line-height:1.7;max-width:480px;margin:0 auto 2.5rem;}
+      --green:       #0ea968;
 
-.hero-ctas{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;}
-.cta-primary{padding:.85rem 2rem;border-radius:50px;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:var(--ink);font-family:'DM Sans',sans-serif;
-  font-size:.95rem;font-weight:900;text-decoration:none;
-  box-shadow:0 6px 20px rgba(245,166,35,.4);transition:all .25s;
-  display:flex;align-items:center;gap:.5rem;}
-.cta-primary:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(245,166,35,.5);}
-.cta-secondary{padding:.85rem 1.6rem;border-radius:50px;
-  background:rgba(255,255,255,.06);border:1.5px solid var(--border);
-  color:var(--white);font-family:'DM Sans',sans-serif;
-  font-size:.9rem;font-weight:700;text-decoration:none;
-  transition:all .25s;display:flex;align-items:center;gap:.5rem;}
-.cta-secondary:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);}
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'Plus Jakarta Sans', sans-serif;
 
-/* ── TRUST STRIP ── */
-.trust-strip{display:flex;align-items:center;justify-content:center;
-  gap:1.5rem;flex-wrap:wrap;
-  padding:.85rem 1.5rem;
-  background:rgba(255,255,255,.03);border:1px solid var(--border);
-  border-radius:14px;max-width:580px;margin:0 auto;}
-.trust-item{display:flex;align-items:center;gap:.4rem;
-  font-size:.78rem;font-weight:700;color:rgba(255,255,255,.6);}
-.trust-item i{color:var(--gold);font-size:.75rem;}
+      --radius-sm:  10px;
+      --radius-md:  16px;
+      --radius-lg:  22px;
+      --radius-xl:  30px;
 
-/* ── STATS BAR ── */
-.stats-bar{position:relative;z-index:1;
-  background:rgba(245,166,35,.06);border-top:1px solid rgba(245,166,35,.15);
-  border-bottom:1px solid rgba(245,166,35,.15);
-  padding:2rem 1.5rem;}
-.stats-inner{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;max-width:700px;margin:0 auto;}
-.stat-item{text-align:center;}
-.stat-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:900;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.stat-lbl{font-size:.7rem;font-weight:700;text-transform:uppercase;
-  letter-spacing:.08em;color:var(--muted);margin-top:4px;}
+      --ease-out: cubic-bezier(.22,.68,0,1.2);
+      --ease-smooth: cubic-bezier(.4,0,.2,1);
 
-/* ── SECTION COMMON ── */
-section{position:relative;z-index:1;padding:5rem 1.5rem;}
-.sec-eyebrow{font-size:.7rem;font-weight:800;text-transform:uppercase;
-  letter-spacing:.12em;color:var(--gold);margin-bottom:.85rem;
-  display:flex;align-items:center;gap:.6rem;}
-.sec-eyebrow::before{content:'';width:24px;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:1px;}
-.sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);
-  font-weight:900;line-height:1.15;letter-spacing:-.5px;margin-bottom:.85rem;}
-.sec-title em{font-style:normal;color:var(--gold);}
-.sec-sub{font-size:.92rem;color:var(--muted);line-height:1.7;max-width:480px;}
+      --shadow-sm: 0 2px 12px rgba(15,27,61,.06);
+      --shadow-md: 0 8px 28px rgba(15,27,61,.08);
+      --shadow-lg: 0 16px 48px rgba(15,27,61,.10);
+      --shadow-blue: 0 8px 28px rgba(26,86,219,.18);
+      --shadow-gold: 0 8px 28px rgba(245,166,35,.25);
+    }
 
-/* ── HOW IT WORKS ── */
-.how-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-  gap:1rem;margin-top:3rem;max-width:900px;margin-left:auto;margin-right:auto;}
-.how-card{background:rgba(255,255,255,.04);border:1px solid var(--border);
-  border-radius:18px;padding:1.5rem;position:relative;overflow:hidden;
-  transition:all .25s;}
-.how-card:hover{border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.05);
-  transform:translateY(-4px);}
-.how-num{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:900;
-  color:rgba(245,166,35,.12);position:absolute;top:.5rem;right:1rem;
-  line-height:1;pointer-events:none;}
-.how-icon{width:44px;height:44px;border-radius:12px;
-  background:var(--gold-lt);border:1px solid rgba(245,166,35,.25);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--gold);font-size:1rem;margin-bottom:1rem;}
-.how-title{font-size:.92rem;font-weight:800;margin-bottom:.4rem;}
-.how-desc{font-size:.8rem;color:var(--muted);line-height:1.6;}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    button { cursor: pointer; font-family: inherit; border: none; outline: none; background: none; }
+    ul { list-style: none; }
 
-/* ── BENEFITS ── */
-.benefits-wrap{max-width:900px;margin:3rem auto 0;
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;}
-.benefit-card{background:rgba(255,255,255,.03);border:1px solid var(--border);
-  border-radius:16px;padding:1.25rem;display:flex;align-items:flex-start;gap:.85rem;
-  transition:all .25s;}
-.benefit-card:hover{border-color:rgba(245,166,35,.2);background:rgba(245,166,35,.04);}
-.ben-icon{width:40px;height:40px;border-radius:11px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:.9rem;}
-.bi-gold{background:var(--gold-lt);color:var(--gold);}
-.bi-green{background:rgba(16,185,129,.15);color:var(--green);}
-.bi-blue{background:rgba(59,130,246,.15);color:var(--elec);}
-.bi-red{background:rgba(239,68,68,.12);color:var(--red);}
-.ben-title{font-size:.88rem;font-weight:800;margin-bottom:.25rem;}
-.ben-desc{font-size:.76rem;color:var(--muted);line-height:1.55;}
+    /* NAV */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(16px, 5vw, 32px);
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow .3s var(--ease-smooth), background .3s;
+    }
+    .nav.scrolled { background: rgba(255,255,255,.97); box-shadow: var(--shadow-sm); }
+    .nav-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: linear-gradient(140deg, var(--blue) 0%, var(--blue-dark) 100%);
+      border-radius: 10px;
+      display: grid; place-items: center;
+      font-family: var(--font-display);
+      font-weight: 900; font-size: 13px; letter-spacing: -.5px;
+      color: #fff; flex-shrink: 0;
+      box-shadow: var(--shadow-blue);
+    }
+    .brand-text { line-height: 1.15; }
+    .brand-text strong {
+      display: block; font-family: var(--font-display);
+      font-weight: 800; font-size: 14px; letter-spacing: -.01em; color: var(--ink);
+    }
+    .brand-text span {
+      font-size: 10px; font-weight: 700; color: var(--gold2);
+      letter-spacing: .09em; text-transform: uppercase;
+    }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-ghost-nav {
+      padding: 7px 14px; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 700; color: var(--muted);
+      border: 1px solid var(--border2);
+      transition: color .2s, border-color .2s, background .2s;
+    }
+    .btn-ghost-nav:hover { color: var(--blue); border-color: var(--blue-bd); background: var(--blue-dim); }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 800; color: #fff;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+      box-shadow: var(--shadow-gold);
+      transition: transform .2s var(--ease-out), box-shadow .2s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(245,166,35,.35); }
+    .btn-primary:active { transform: translateY(0); }
 
-/* ── VERIFICATION STAGES ── */
-.stages-wrap{max-width:680px;margin:3rem auto 0;}
-.stage-item{display:flex;gap:1rem;align-items:flex-start;padding:1.1rem 0;
-  border-bottom:1px solid var(--border);}
-.stage-item:last-child{border-bottom:none;}
-.stage-num{width:36px;height:36px;border-radius:50%;flex-shrink:0;
-  background:var(--gold-lt);border:1.5px solid rgba(245,166,35,.3);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Syne',sans-serif;font-size:.82rem;font-weight:900;color:var(--gold);}
-.stage-title{font-size:.9rem;font-weight:800;margin-bottom:.25rem;}
-.stage-desc{font-size:.77rem;color:var(--muted);line-height:1.55;}
-.stage-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.5rem;}
-.stage-tag{font-size:.65rem;font-weight:700;padding:.2rem .55rem;border-radius:50px;
-  background:rgba(255,255,255,.06);border:1px solid var(--border);color:rgba(255,255,255,.5);}
+    /* HERO */
+    .hero {
+      position: relative; z-index: 1; min-height: 92svh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 90px clamp(16px,5vw,32px) 60px; text-align: center; overflow: hidden;
+      background:
+        radial-gradient(ellipse 800px 500px at 50% 0%, var(--blue-dim) 0%, transparent 60%),
+        linear-gradient(180deg, #fbfcff 0%, #ffffff 100%);
+    }
+    .hero-blob { position: absolute; width: min(500px, 100vw); height: min(500px, 100vw); border-radius: 50%; filter: blur(10px); pointer-events: none; opacity: .5; }
+    .hero-blob-1 { background: radial-gradient(circle, var(--blue-dim2) 0%, transparent 70%); top: -10%; left: -10%; }
+    .hero-blob-2 { background: radial-gradient(circle, var(--gold-dim) 0%, transparent 70%); bottom: -15%; right: -10%; }
 
-/* ── EARNINGS CALC ── */
-.calc-wrap{max-width:480px;margin:3rem auto 0;
-  background:rgba(255,255,255,.04);border:1px solid var(--border);
-  border-radius:20px;padding:1.75rem;overflow:hidden;position:relative;}
-.calc-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--gold),var(--gold2));}
-.calc-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:1.25rem;}
-.calc-row{display:flex;justify-content:space-between;align-items:center;
-  padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.85rem;}
-.calc-row:last-of-type{border-bottom:none;}
-.calc-row .lbl{color:var(--muted);}
-.calc-row .val{font-weight:800;}
-.calc-total{display:flex;justify-content:space-between;align-items:center;
-  padding:.85rem;background:var(--gold-lt);border:1px solid rgba(245,166,35,.25);
-  border-radius:12px;margin-top:.85rem;}
-.calc-total .lbl{font-weight:800;font-size:.88rem;}
-.calc-total .val{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:900;color:var(--gold);}
-.calc-note{font-size:.72rem;color:var(--muted);margin-top:.75rem;text-align:center;line-height:1.5;}
+    .live-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px 7px 12px; background: #fff;
+      border: 1px solid var(--blue-bd); border-radius: 999px;
+      font-size: 12px; font-weight: 700; color: var(--blue);
+      margin-bottom: clamp(20px, 4vw, 30px); box-shadow: var(--shadow-sm);
+      opacity: 0; animation: fadeUp .6s .05s var(--ease-out) forwards;
+    }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 0 0 rgba(14,169,104,.5); animation: livePulse 2s infinite;
+    }
+    @keyframes livePulse {
+      0%   { box-shadow: 0 0 0 0 rgba(14,169,104,.5); }
+      70%  { box-shadow: 0 0 0 6px rgba(14,169,104,0); }
+      100% { box-shadow: 0 0 0 0 rgba(14,169,104,0); }
+    }
+    .hero-h1 {
+      font-family: var(--font-display); font-weight: 900;
+      font-size: clamp(32px, 9vw, 64px); line-height: 1.08; letter-spacing: -.03em;
+      max-width: 740px; color: var(--ink);
+      opacity: 0; animation: fadeUp .65s .12s var(--ease-out) forwards;
+    }
+    .hero-h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub {
+      font-size: clamp(15px, 3.5vw, 18px); color: var(--muted);
+      max-width: 480px; margin: clamp(14px,3vw,22px) auto clamp(28px,5vw,40px);
+      line-height: 1.7; font-weight: 500;
+      opacity: 0; animation: fadeUp .65s .22s var(--ease-out) forwards;
+    }
+    .hero-ctas {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      width: 100%; max-width: 340px;
+      opacity: 0; animation: fadeUp .65s .32s var(--ease-out) forwards;
+    }
+    .btn-hero-primary {
+      width: 100%; display: flex; align-items: center; justify-content: center; gap: 9px;
+      padding: 16px 28px; border-radius: var(--radius-md);
+      font-size: 16px; font-weight: 800; color: #fff;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+      box-shadow: var(--shadow-blue);
+      transition: transform .22s var(--ease-out), box-shadow .22s; letter-spacing: -.01em;
+    }
+    .btn-hero-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(26,86,219,.28); }
+    .btn-hero-secondary {
+      width: 100%; display: flex; align-items: center; justify-content: center; gap: 9px;
+      padding: 15px 28px; border-radius: var(--radius-md);
+      font-size: 15px; font-weight: 700; color: var(--ink);
+      border: 1px solid var(--border2); background: #fff;
+      transition: background .2s, border-color .2s;
+    }
+    .btn-hero-secondary:hover { background: var(--bg2); border-color: var(--blue-bd); }
+    .hero-trust {
+      display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px 18px;
+      margin-top: clamp(28px, 5vw, 44px); font-size: 12px; font-weight: 700; color: var(--muted2);
+      opacity: 0; animation: fadeUp .65s .44s var(--ease-out) forwards;
+    }
+    .trust-item { display: flex; align-items: center; gap: 5px; }
+    .trust-item i { color: var(--green); font-size: 11px; }
 
-/* ── FAQ ── */
-.faq-wrap{max-width:620px;margin:3rem auto 0;}
-.faq-item{border-bottom:1px solid var(--border);overflow:hidden;}
-.faq-q{padding:1rem 0;display:flex;align-items:center;justify-content:space-between;
-  cursor:pointer;font-size:.9rem;font-weight:700;gap:1rem;}
-.faq-q i{color:var(--gold);flex-shrink:0;transition:transform .25s;font-size:.8rem;}
-.faq-item.open .faq-q i{transform:rotate(45deg);}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;
-  font-size:.82rem;color:var(--muted);line-height:1.7;}
-.faq-item.open .faq-a{max-height:200px;padding-bottom:1rem;}
+    /* METRICS */
+    .metrics {
+      position: relative; z-index: 1; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: var(--blue); padding: 0 clamp(16px, 5vw, 32px); overflow-x: auto; scrollbar-width: none;
+    }
+    .metrics::-webkit-scrollbar { display: none; }
+    .metrics-inner { display: flex; min-width: max-content; margin: 0 auto; max-width: 900px; }
+    .metric { flex: 1; min-width: 120px; padding: clamp(18px,4vw,26px) 20px; text-align: center; border-right: 1px solid rgba(255,255,255,.15); }
+    .metric:last-child { border-right: none; }
+    .metric-num { font-family: var(--font-display); font-weight: 900; font-size: clamp(24px, 5vw, 34px); color: var(--gold); line-height: 1; margin-bottom: 4px; }
+    .metric-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.85); text-transform: uppercase; letter-spacing: .08em; }
 
-/* ── CTA BOTTOM ── */
-.cta-section{position:relative;z-index:1;
-  background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(249,115,22,.08));
-  border-top:1px solid rgba(245,166,35,.15);
-  border-bottom:1px solid rgba(245,166,35,.15);
-  padding:5rem 1.5rem;text-align:center;}
-.cta-section .sec-title{max-width:520px;margin:0 auto .85rem;}
-.cta-section .sec-sub{max-width:380px;margin:0 auto 2.5rem;}
+    /* SECTIONS */
+    .section { position: relative; z-index: 1; padding: clamp(56px, 10vw, 96px) clamp(16px, 5vw, 32px); }
+    .section-inner { max-width: 900px; margin: 0 auto; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--gold2); margin-bottom: 12px; }
+    .eyebrow::before { content: ''; width: 18px; height: 2px; background: linear-gradient(90deg, var(--gold), var(--gold2)); border-radius: 2px; flex-shrink: 0; }
+    .section-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(26px, 6vw, 44px); line-height: 1.12; letter-spacing: -.025em; margin-bottom: 12px; color: var(--ink); }
+    .section-title em { font-style: normal; color: var(--blue); }
+    .section-sub { font-size: clamp(14px, 3vw, 16px); color: var(--muted); line-height: 1.7; max-width: 480px; font-weight: 500; }
+    .section-head { margin-bottom: clamp(32px, 6vw, 52px); }
+    .bg-tint { background: var(--bg2); }
 
-/* ── FOOTER ── */
-footer{position:relative;z-index:1;
-  padding:2rem 1.5rem;border-top:1px solid var(--border);
-  display:flex;flex-direction:column;align-items:center;gap:.75rem;}
-.footer-logo{font-family:'Syne',sans-serif;font-size:1rem;font-weight:900;
-  display:flex;align-items:center;gap:.4rem;}
-.footer-links{display:flex;gap:1.25rem;flex-wrap:wrap;justify-content:center;}
-.footer-links a{font-size:.78rem;color:var(--muted);text-decoration:none;
-  transition:color .2s;font-weight:600;}
-.footer-links a:hover{color:var(--gold);}
-footer p{font-size:.72rem;color:rgba(255,255,255,.2);}
+    .sr { opacity: 0; transform: translateY(28px); transition: opacity .55s var(--ease-smooth), transform .55s var(--ease-smooth); }
+    .sr.in { opacity: 1; transform: none; }
+    .sr-d1 { transition-delay: .08s; } .sr-d2 { transition-delay: .16s; } .sr-d3 { transition-delay: .24s; } .sr-d4 { transition-delay: .32s; }
 
-/* ── SCROLL REVEAL ── */
-.reveal{opacity:0;transform:translateY(24px);transition:all .6s ease;}
-.reveal.visible{opacity:1;transform:none;}
-</style>
+    /* STEPS */
+    .steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(10px, 2vw, 16px); }
+    .step-card {
+      position: relative; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: clamp(18px, 4vw, 28px); overflow: hidden; box-shadow: var(--shadow-sm);
+      transition: border-color .25s, transform .25s var(--ease-out), box-shadow .25s;
+    }
+    .step-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--blue), var(--gold)); opacity: 0; transition: opacity .25s; }
+    .step-card:hover { border-color: var(--blue-bd); transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .step-card:hover::after { opacity: 1; }
+    .step-icon-wrap { width: 46px; height: 46px; border-radius: 12px; background: var(--blue-dim); border: 1px solid var(--blue-bd); display: grid; place-items: center; font-size: 19px; color: var(--blue); margin-bottom: clamp(12px, 3vw, 18px); }
+    .step-num-bg { position: absolute; bottom: -10px; right: -4px; font-family: var(--font-display); font-weight: 900; font-size: 72px; color: var(--bg3); line-height: 1; pointer-events: none; user-select: none; }
+    .step-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(15px, 3vw, 17px); margin-bottom: 7px; letter-spacing: -.01em; color: var(--ink); }
+    .step-desc { font-size: clamp(12px, 2.5vw, 13px); color: var(--muted); line-height: 1.65; }
+
+    /* BENEFITS */
+    .benefits-grid { display: grid; grid-template-columns: 1fr; gap: clamp(10px, 2vw, 14px); }
+    .benefit-card {
+      display: flex; align-items: flex-start; gap: 16px; background: #fff;
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: clamp(16px, 4vw, 22px); box-shadow: var(--shadow-sm);
+      transition: border-color .22s, transform .22s, box-shadow .22s;
+    }
+    .benefit-card:hover { border-color: var(--gold-bd); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .benefit-icon { width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; background: var(--gold-dim); border: 1px solid var(--gold-bd); display: grid; place-items: center; font-size: 19px; color: var(--gold2); }
+    .benefit-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(14px, 3vw, 16px); margin-bottom: 5px; letter-spacing: -.01em; color: var(--ink); }
+    .benefit-desc { font-size: clamp(12px, 2.5vw, 13px); color: var(--muted); line-height: 1.65; }
+
+    /* STAGES */
+    .stages-list { display: flex; flex-direction: column; gap: clamp(8px, 2vw, 12px); }
+    .stage-row {
+      display: flex; align-items: center; gap: 14px; background: #fff;
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: clamp(14px, 3vw, 18px) clamp(14px, 3vw, 20px); box-shadow: var(--shadow-sm);
+      transition: border-color .2s, transform .2s;
+    }
+    .stage-row:hover { border-color: var(--blue-bd); transform: translateX(2px); }
+    .stage-num { width: 36px; height: 36px; flex-shrink: 0; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); border-radius: 10px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 900; font-size: 14px; color: #fff; box-shadow: var(--shadow-blue); }
+    .stage-info { flex: 1; min-width: 0; }
+    .stage-name { font-weight: 700; font-size: clamp(13px, 3vw, 14px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink); }
+    .stage-note { font-size: clamp(11px, 2.5vw, 12px); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .stage-pill { font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 99px; text-transform: uppercase; letter-spacing: .06em; flex-shrink: 0; }
+    .pill-req { background: rgba(220,38,38,.08); color: #dc2626; border: 1px solid rgba(220,38,38,.20); }
+    .pill-biz { background: var(--gold-dim); color: var(--gold2); border: 1px solid var(--gold-bd); }
+
+    /* CALCULATOR */
+    .calc-card { background: linear-gradient(160deg, var(--blue) 0%, var(--blue-dark) 100%); border-radius: var(--radius-xl); padding: clamp(22px, 5vw, 36px); overflow: hidden; box-shadow: var(--shadow-lg); color: #fff; }
+    .calc-heading { font-family: var(--font-display); font-weight: 900; font-size: clamp(18px, 4vw, 24px); margin-bottom: 4px; letter-spacing: -.02em; }
+    .calc-sub { font-size: 13px; color: rgba(255,255,255,.75); margin-bottom: clamp(20px, 4vw, 28px); }
+    .slider-block { margin-bottom: clamp(16px, 4vw, 22px); }
+    .slider-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+    .slider-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.85); }
+    .slider-val { font-family: var(--font-display); font-weight: 900; font-size: 20px; color: var(--gold); }
+    input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 2px; background: rgba(255,255,255,.25); outline: none; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--gold); cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,.25); border: 3px solid #fff; transition: transform .15s; }
+    input[type=range]::-webkit-slider-thumb:active { transform: scale(1.15); }
+    input[type=range]::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; border: 3px solid #fff; background: var(--gold); cursor: pointer; }
+    .calc-results { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(8px, 2vw, 12px); margin-bottom: clamp(12px, 3vw, 16px); }
+    .result-cell { background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.15); border-radius: var(--radius-md); padding: clamp(12px, 3vw, 16px); text-align: center; }
+    .result-cell .r-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,.65); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 5px; }
+    .result-cell .r-val { font-family: var(--font-display); font-weight: 900; font-size: clamp(16px, 4vw, 20px); color: #fff; }
+    .calc-total { background: rgba(245,166,35,.18); border: 1px solid rgba(245,166,35,.4); border-radius: var(--radius-md); padding: clamp(18px, 4vw, 24px); text-align: center; }
+    .total-label { font-size: 11px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px; }
+    .total-val { font-family: var(--font-display); font-weight: 900; font-size: clamp(30px, 8vw, 44px); color: #fff; line-height: 1; }
+    .total-note { font-size: 12px; color: rgba(255,255,255,.75); margin-top: 6px; }
+    .calc-disclaimer { font-size: 11px; color: rgba(255,255,255,.5); text-align: center; margin-top: 12px; }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: clamp(8px, 2vw, 10px); }
+    .faq-item { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); transition: border-color .2s; }
+    .faq-item.open { border-color: var(--blue-bd); }
+    .faq-trigger { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: clamp(15px, 3vw, 18px) clamp(15px, 3vw, 20px); font-size: clamp(13px, 3vw, 14px); font-weight: 700; color: var(--ink); text-align: left; cursor: pointer; transition: color .2s; }
+    .faq-trigger:hover { color: var(--blue); }
+    .faq-item.open .faq-trigger { color: var(--blue); }
+    .faq-icon { width: 26px; height: 26px; flex-shrink: 0; background: var(--blue-dim); border-radius: 7px; display: grid; place-items: center; font-size: 11px; color: var(--blue); transition: transform .3s var(--ease-smooth); }
+    .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--gold-dim); color: var(--gold2); }
+    .faq-body { max-height: 0; overflow: hidden; transition: max-height .38s var(--ease-smooth), padding .38s var(--ease-smooth); padding: 0 clamp(15px, 3vw, 20px); }
+    .faq-item.open .faq-body { max-height: 240px; }
+    .faq-inner { font-size: clamp(12px, 2.8vw, 13px); color: var(--muted); line-height: 1.72; padding-bottom: clamp(15px, 3vw, 18px); }
+
+    /* BOTTOM CTA */
+    .cta-section { position: relative; z-index: 1; padding: clamp(48px, 8vw, 80px) clamp(16px, 5vw, 32px); }
+    .cta-box { max-width: 900px; margin: 0 auto; background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%); border-radius: var(--radius-xl); padding: clamp(36px, 8vw, 64px) clamp(20px, 6vw, 48px); text-align: center; position: relative; overflow: hidden; box-shadow: var(--shadow-lg); }
+    .cta-box::before { content: ''; position: absolute; top: -80px; right: -80px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(245,166,35,.25), transparent 70%); pointer-events: none; }
+    .cta-box::after { content: ''; position: absolute; bottom: -80px; left: -80px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,.10), transparent 70%); pointer-events: none; }
+    .cta-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(24px, 6vw, 42px); line-height: 1.12; letter-spacing: -.025em; margin-bottom: 12px; color: #fff; }
+    .cta-title em { font-style: normal; color: var(--gold); }
+    .cta-sub { font-size: clamp(14px, 3vw, 16px); color: rgba(255,255,255,.82); max-width: 420px; margin: 0 auto clamp(24px, 5vw, 36px); line-height: 1.7; font-weight: 500; }
+    .cta-buttons { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .btn-cta-main { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 16px 32px; border-radius: var(--radius-md); font-size: clamp(14px, 3vw, 16px); font-weight: 800; color: #fff; background: linear-gradient(135deg, var(--gold), var(--gold2)); box-shadow: 0 8px 28px rgba(0,0,0,.2); transition: transform .22s var(--ease-out), box-shadow .22s; width: 100%; max-width: 320px; letter-spacing: -.01em; }
+    .btn-cta-main:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,0,0,.25); }
+    .btn-wa { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 15px 28px; border-radius: var(--radius-md); font-size: clamp(13px, 3vw, 15px); font-weight: 700; color: var(--ink); background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,.15); transition: transform .2s, box-shadow .2s; width: 100%; max-width: 320px; }
+    .btn-wa:hover { transform: translateY(-2px); }
+    .btn-wa i { color: #25d366; }
+
+    /* FOOTER */
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: clamp(24px, 5vw, 36px) clamp(16px, 5vw, 32px); background: var(--bg2); }
+    .footer-inner { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+    .footer-brand { display: flex; align-items: center; gap: 9px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 10px 20px; justify-content: center; }
+    .footer-links a { font-size: 12px; font-weight: 600; color: var(--muted); transition: color .2s; }
+    .footer-links a:hover { color: var(--blue); }
+    .footer-copy { font-size: 11px; color: var(--muted2); }
+    .footer-copy a { color: var(--blue); font-weight: 600; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+
+    @media (min-width: 480px) {
+      .hero-ctas { flex-direction: row; max-width: none; width: auto; }
+      .btn-hero-primary, .btn-hero-secondary { width: auto; }
+      .cta-buttons { flex-direction: row; justify-content: center; }
+      .btn-cta-main, .btn-wa { width: auto; }
+    }
+    @media (min-width: 640px) {
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+      .metrics-inner { min-width: 0; width: 100%; }
+    }
+    @media (min-width: 800px) {
+      .steps { grid-template-columns: repeat(4, 1fr); }
+      .benefits-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      footer { padding-bottom: calc(clamp(24px,5vw,36px) + env(safe-area-inset-bottom)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="amb"></div>
-<div class="grid-bg"></div>
-
-<!-- NAV -->
-<nav>
-  <a href="/" class="nav-logo">
-    MC<span class="dot">.</span>Vendor
-    <span class="sub">Center</span>
+<nav class="nav" id="nav">
+  <a href="/" class="nav-brand">
+    <div class="brand-mark">MC</div>
+    <div class="brand-text">
+      <strong>Vendor Center</strong>
+      <span>by MC Store Nigeria</span>
+    </div>
   </a>
-  <div class="nav-btns">
-    <a href="/login.html" class="btn-ghost">Login</a>
-    <a href="/register.html" class="btn-gold"><i class="fas fa-store"></i> Start Selling</a>
+  <div class="nav-actions">
+    <a href="login.html" class="btn-ghost-nav">Log in</a>
+    <a href="register.html" class="btn-primary">
+      <i class="fa-solid fa-store"></i>
+      Start selling
+    </a>
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">
-    <div class="badge-pulse"></div>
-    Now accepting vendors across Nigeria
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+
+  <div class="live-pill">
+    <div class="live-dot"></div>
+    Now accepting vendors across all 36 states
   </div>
 
-  <h1 class="hero-title reveal">
-    Turn your products into<br><em>real income</em> nationwide
+  <h1 class="hero-h1">
+    Sell your products.<br />
+    <em>You set the price.</em>
   </h1>
 
-  <p class="hero-sub reveal">
-    List your products on MC Store — Nigeria's fastest growing phone accessories platform. Reach thousands of customers across all 36 states. Free to join, no monthly fees.
+  <p class="hero-sub">
+    List your phone accessories, set your own prices, and reach thousands of buyers nationwide. We handle delivery and only take 3% — you keep 97% of every sale.
   </p>
 
-  <div class="hero-ctas reveal">
-    <a href="/register.html" class="cta-primary">
-      <i class="fas fa-store"></i> Start Selling Free
+  <div class="hero-ctas">
+    <a href="register.html" class="btn-hero-primary">
+      <i class="fa-solid fa-store"></i>
+      Open your vendor account
     </a>
-    <a href="#how" class="cta-secondary">
-      <i class="fas fa-play-circle"></i> See How It Works
+    <a href="#how" class="btn-hero-secondary">
+      <i class="fa-regular fa-circle-play"></i>
+      How it works
     </a>
   </div>
 
-  <div class="trust-strip reveal">
-    <div class="trust-item"><i class="fas fa-check-circle"></i> Free to list</div>
-    <div class="trust-item"><i class="fas fa-check-circle"></i> No monthly fees</div>
-    <div class="trust-item"><i class="fas fa-check-circle"></i> Fast payouts</div>
-    <div class="trust-item"><i class="fas fa-check-circle"></i> 36 states delivery</div>
-    <div class="trust-item"><i class="fas fa-check-circle"></i> Dedicated support</div>
+  <div class="hero-trust">
+    <span class="trust-item"><i class="fa-solid fa-shield-halved"></i> Verified vendors only</span>
+    <span class="trust-item"><i class="fa-solid fa-lock"></i> Secure Paystack payouts</span>
+    <span class="trust-item"><i class="fa-solid fa-flag"></i> Nigerian-built platform</span>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat-item reveal">
-      <div class="stat-val">36</div>
-      <div class="stat-lbl">States Covered</div>
+<div class="metrics">
+  <div class="metrics-inner">
+    <div class="metric">
+      <div class="metric-num">3%</div>
+      <div class="metric-label">Commission only</div>
     </div>
-    <div class="stat-item reveal">
-      <div class="stat-val">0₦</div>
-      <div class="stat-lbl">Monthly Fee</div>
+    <div class="metric">
+      <div class="metric-num">36</div>
+      <div class="metric-label">States covered</div>
     </div>
-    <div class="stat-item reveal">
-      <div class="stat-val">24h</div>
-      <div class="stat-lbl">Approval Time</div>
+    <div class="metric">
+      <div class="metric-num">24hr</div>
+      <div class="metric-label">Approval time</div>
     </div>
-    <div class="stat-item reveal">
-      <div class="stat-val">48h</div>
-      <div class="stat-lbl">Payout Speed</div>
+    <div class="metric">
+      <div class="metric-num">Fast</div>
+      <div class="metric-label">Bank payouts</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num">₦0</div>
+      <div class="metric-label">Monthly fee</div>
     </div>
   </div>
 </div>
 
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div style="max-width:900px;margin:0 auto">
-    <div class="sec-eyebrow reveal">How it works</div>
-    <h2 class="sec-title reveal">From signup to <em>first sale</em> in 4 steps</h2>
-    <p class="sec-sub reveal">We've made it simple. No complicated setup, no hidden fees.</p>
-
-    <div class="how-grid">
-      <div class="how-card reveal">
-        <div class="how-num">01</div>
-        <div class="how-icon"><i class="fas fa-user-plus"></i></div>
-        <div class="how-title">Create Your Shop</div>
-        <div class="how-desc">Register free and complete your vendor profile — shop name, description, category and verification documents.</div>
+<section class="section" id="how">
+  <div class="section-inner">
+    <div class="section-head sr">
+      <div class="eyebrow">How it works</div>
+      <h2 class="section-title">Four steps to your<br /><em>first sale</em></h2>
+      <p class="section-sub">No experience needed. If you have products and a Nigerian bank account, you're ready.</p>
+    </div>
+    <div class="steps">
+      <div class="step-card sr sr-d1">
+        <div class="step-icon-wrap"><i class="fa-solid fa-user-pen"></i></div>
+        <div class="step-num-bg">1</div>
+        <div class="step-title">Register your shop</div>
+        <p class="step-desc">Complete the 6-stage onboarding with your shop details, government ID, and bank account. Takes about 10 minutes.</p>
       </div>
-      <div class="how-card reveal">
-        <div class="how-num">02</div>
-        <div class="how-icon"><i class="fas fa-shield-check"></i></div>
-        <div class="how-title">Get Verified</div>
-        <div class="how-desc">We review your NIN, business info and ID. Approval takes under 24 hours. We protect buyers and sellers.</div>
+      <div class="step-card sr sr-d2">
+        <div class="step-icon-wrap"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="step-num-bg">2</div>
+        <div class="step-title">Get verified in 24hrs</div>
+        <p class="step-desc">Our team reviews your application. You'll get a WhatsApp notification and email once you're approved and live.</p>
       </div>
-      <div class="how-card reveal">
-        <div class="how-num">03</div>
-        <div class="how-icon"><i class="fas fa-box-open"></i></div>
-        <div class="how-title">Add Products</div>
-        <div class="how-desc">Upload your products with photos and your base price. MC Store reviews and sets the final price — then it goes live!</div>
+      <div class="step-card sr sr-d3">
+        <div class="step-icon-wrap"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <div class="step-num-bg">3</div>
+        <div class="step-title">List your products</div>
+        <p class="step-desc">Upload photos, set your own prices — just like Facebook Marketplace. MC Store handles discovery and customer trust.</p>
       </div>
-      <div class="how-card reveal">
-        <div class="how-num">04</div>
-        <div class="how-icon"><i class="fas fa-money-bill-wave"></i></div>
-        <div class="how-title">Get Paid</div>
-        <div class="how-desc">Customers order, we handle delivery, you get your earnings paid directly to your bank within 48 hours of delivery.</div>
+      <div class="step-card sr sr-d4">
+        <div class="step-icon-wrap"><i class="fa-solid fa-naira-sign"></i></div>
+        <div class="step-num-bg">4</div>
+        <div class="step-title">Earn and get paid</div>
+        <p class="step-desc">Orders land in your dashboard. Package the item, our courier picks it up, and your earnings transfer to your bank.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- BENEFITS -->
-<section style="padding-top:0">
-  <div style="max-width:900px;margin:0 auto">
-    <div class="sec-eyebrow reveal">Why vendors choose us</div>
-    <h2 class="sec-title reveal">Everything you need to <em>sell more</em></h2>
-
-    <div class="benefits-wrap">
-      <div class="benefit-card reveal">
-        <div class="ben-icon bi-gold"><i class="fas fa-tag"></i></div>
+<section class="section bg-tint" id="benefits">
+  <div class="section-inner">
+    <div class="section-head sr">
+      <div class="eyebrow">Why MC Vendor Center</div>
+      <h2 class="section-title">Everything you need.<br /><em>Nothing you don't.</em></h2>
+      <p class="section-sub">We handle the platform so you can focus on what you actually sell.</p>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card sr sr-d1">
+        <div class="benefit-icon"><i class="fa-solid fa-circle-dollar-to-slot"></i></div>
         <div>
-          <div class="ben-title">Free To List</div>
-          <div class="ben-desc">No upfront fees, no monthly subscriptions. Pay nothing until you make a sale.</div>
+          <div class="benefit-title">You set your own prices</div>
+          <p class="benefit-desc">Just like Facebook Marketplace — no fixed wholesale prices. We only take 3% when you make a sale.</p>
         </div>
       </div>
-      <div class="benefit-card reveal">
-        <div class="ben-icon bi-green"><i class="fas fa-truck-fast"></i></div>
+      <div class="benefit-card sr sr-d2">
+        <div class="benefit-icon"><i class="fa-solid fa-globe-africa"></i></div>
         <div>
-          <div class="ben-title">We Handle Delivery</div>
-          <div class="ben-desc">MC Store's logistics network handles all deliveries. You just prepare the order.</div>
+          <div class="benefit-title">Reach all 36 states</div>
+          <p class="benefit-desc">Your products are visible to MC Store customers nationwide from the moment you go live.</p>
         </div>
       </div>
-      <div class="benefit-card reveal">
-        <div class="ben-icon bi-blue"><i class="fas fa-chart-line"></i></div>
+      <div class="benefit-card sr sr-d3">
+        <div class="benefit-icon"><i class="fa-solid fa-truck-fast"></i></div>
         <div>
-          <div class="ben-title">Sales Dashboard</div>
-          <div class="ben-desc">Track your products, orders, and earnings in real-time from your vendor dashboard.</div>
+          <div class="benefit-title">We handle delivery</div>
+          <p class="benefit-desc">Package your item and our courier picks it up from you. No need to arrange your own logistics.</p>
         </div>
       </div>
-      <div class="benefit-card reveal">
-        <div class="ben-icon bi-gold"><i class="fas fa-bell"></i></div>
+      <div class="benefit-card sr sr-d1">
+        <div class="benefit-icon"><i class="fa-solid fa-bolt"></i></div>
         <div>
-          <div class="ben-title">Instant Notifications</div>
-          <div class="ben-desc">Get SMS and WhatsApp alerts the moment a customer places an order for your product.</div>
+          <div class="benefit-title">Fast bank payouts</div>
+          <p class="benefit-desc">Earnings hit your account once an order is confirmed delivered — powered by Paystack.</p>
         </div>
       </div>
-      <div class="benefit-card reveal">
-        <div class="ben-icon bi-green"><i class="fas fa-shield-halved"></i></div>
+      <div class="benefit-card sr sr-d2">
+        <div class="benefit-icon"><i class="fa-solid fa-chart-line"></i></div>
         <div>
-          <div class="ben-title">Buyer Protection</div>
-          <div class="ben-desc">Our verification system protects both buyers and vendors. Fake orders are blocked automatically.</div>
+          <div class="benefit-title">Live sales dashboard</div>
+          <p class="benefit-desc">Track orders, products, and earnings from your phone — no laptop needed, 24 hours a day.</p>
         </div>
       </div>
-      <div class="benefit-card reveal">
-        <div class="ben-icon bi-blue"><i class="fas fa-headset"></i></div>
+      <div class="benefit-card sr sr-d3">
+        <div class="benefit-icon"><i class="fa-brands fa-whatsapp"></i></div>
         <div>
-          <div class="ben-title">Dedicated Support</div>
-          <div class="ben-desc">WhatsApp support 7 days a week. We help you resolve issues and grow your sales.</div>
+          <div class="benefit-title">WhatsApp support</div>
+          <p class="benefit-desc">Our vendor support team responds on WhatsApp. Get answers in minutes, not tickets.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- VERIFICATION STAGES -->
-<section style="padding-top:0">
-  <div style="max-width:900px;margin:0 auto">
-    <div class="sec-eyebrow reveal">Verification process</div>
-    <h2 class="sec-title reveal">6 simple stages to get <em>approved</em></h2>
-    <p class="sec-sub reveal">We verify every vendor to protect our customers and your brand reputation.</p>
-
-    <div class="stages-wrap">
-      <div class="stage-item reveal">
+<section class="section" id="verify">
+  <div class="section-inner">
+    <div class="section-head sr">
+      <div class="eyebrow">Verification process</div>
+      <h2 class="section-title">6 stages. One time.<br /><em>Trusted forever.</em></h2>
+      <p class="section-sub">Every vendor is verified to protect buyers and give your shop a badge customers trust.</p>
+    </div>
+    <div class="stages-list">
+      <div class="stage-row sr sr-d1">
         <div class="stage-num">1</div>
-        <div>
-          <div class="stage-title">Shop Information</div>
-          <div class="stage-desc">Your shop name, description, category and a unique shop URL slug.</div>
-          <div class="stage-tags">
-            <span class="stage-tag">Shop Name</span>
-            <span class="stage-tag">Category</span>
-            <span class="stage-tag">Shop URL</span>
-            <span class="stage-tag">Description</span>
-          </div>
+        <div class="stage-info">
+          <div class="stage-name">Shop Information</div>
+          <div class="stage-note">Shop name, URL slug, category, description, logo & banner</div>
         </div>
+        <span class="stage-pill pill-req">Required</span>
       </div>
-      <div class="stage-item reveal">
+      <div class="stage-row sr sr-d2">
         <div class="stage-num">2</div>
-        <div>
-          <div class="stage-title">Business Information</div>
-          <div class="stage-desc">Your legal name, business type, NIN number, CAC registration (if applicable) and business address.</div>
-          <div class="stage-tags">
-            <span class="stage-tag">Full Name</span>
-            <span class="stage-tag">NIN</span>
-            <span class="stage-tag">CAC (Optional)</span>
-            <span class="stage-tag">Business Address</span>
-          </div>
+        <div class="stage-info">
+          <div class="stage-name">Business Information</div>
+          <div class="stage-note">Full legal name, phone number, NIN, business type & address</div>
         </div>
+        <span class="stage-pill pill-req">Required</span>
       </div>
-      <div class="stage-item reveal">
+      <div class="stage-row sr sr-d3">
         <div class="stage-num">3</div>
-        <div>
-          <div class="stage-title">Shipping Information</div>
-          <div class="stage-desc">Where you ship from, which states you can serve, and your average order processing time.</div>
-          <div class="stage-tags">
-            <span class="stage-tag">Ship From</span>
-            <span class="stage-tag">Coverage</span>
-            <span class="stage-tag">Processing Time</span>
-          </div>
+        <div class="stage-info">
+          <div class="stage-name">Shipping Details</div>
+          <div class="stage-note">Ship-from location, processing time, states you cover</div>
         </div>
+        <span class="stage-pill pill-req">Required</span>
       </div>
-      <div class="stage-item reveal">
+      <div class="stage-row sr">
         <div class="stage-num">4</div>
-        <div>
-          <div class="stage-title">Payment Information</div>
-          <div class="stage-desc">Your bank account details for receiving your earnings after each successful sale.</div>
-          <div class="stage-tags">
-            <span class="stage-tag">Bank Name</span>
-            <span class="stage-tag">Account Number</span>
-            <span class="stage-tag">Account Name</span>
-          </div>
+        <div class="stage-info">
+          <div class="stage-name">Payment Account</div>
+          <div class="stage-note">Bank name, account number — name verified automatically</div>
         </div>
+        <span class="stage-pill pill-req">Required</span>
       </div>
-      <div class="stage-item reveal">
+      <div class="stage-row sr sr-d1">
         <div class="stage-num">5</div>
-        <div>
-          <div class="stage-title">Identity Verification</div>
-          <div class="stage-desc">Upload a government-issued ID and a clear selfie photo. This protects all parties and builds buyer trust.</div>
-          <div class="stage-tags">
-            <span class="stage-tag">Government ID</span>
-            <span class="stage-tag">Selfie Photo</span>
-            <span class="stage-tag">WhatsApp Number</span>
-          </div>
+        <div class="stage-info">
+          <div class="stage-name">Identity Verification</div>
+          <div class="stage-note">Government-issued ID photo plus a selfie for KYC</div>
         </div>
+        <span class="stage-pill pill-req">Required</span>
       </div>
-      <div class="stage-item reveal">
+      <div class="stage-row sr sr-d2">
         <div class="stage-num">6</div>
-        <div>
-          <div class="stage-title">Review & Submit</div>
-          <div class="stage-desc">Review all your information, agree to MC Store Vendor Terms, and submit for approval. We review within 24 hours.</div>
-          <div class="stage-tags">
-            <span class="stage-tag">Terms Agreement</span>
-            <span class="stage-tag">Final Review</span>
-            <span class="stage-tag">Submit</span>
-          </div>
+        <div class="stage-info">
+          <div class="stage-name">CAC Certificate</div>
+          <div class="stage-note">For registered businesses only — individuals skip this step</div>
         </div>
+        <span class="stage-pill pill-biz">Businesses only</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- EARNINGS CALCULATOR -->
-<section style="padding-top:0">
-  <div style="max-width:900px;margin:0 auto;text-align:center">
-    <div class="sec-eyebrow reveal" style="justify-content:center">Earnings example</div>
-    <h2 class="sec-title reveal">See how much you can <em>earn</em></h2>
-    <p class="sec-sub reveal" style="margin:0 auto 0">Based on a typical phone accessory vendor selling 20 items a month.</p>
+<section class="section bg-tint" id="calculator">
+  <div class="section-inner">
+    <div class="section-head sr">
+      <div class="eyebrow">Earnings calculator</div>
+      <h2 class="section-title">See what you could<br /><em>earn monthly</em></h2>
+    </div>
+    <div class="calc-card sr">
+      <div class="calc-heading">Monthly earnings estimate</div>
+      <p class="calc-sub">Drag the sliders to see your potential earnings based on your products and pricing.</p>
 
-    <div class="calc-wrap reveal">
-      <div class="calc-title">📊 Monthly Earnings Estimate</div>
-      <div class="calc-row">
-        <span class="lbl">Products listed</span>
-        <span class="val">10 products</span>
+      <div class="slider-block">
+        <div class="slider-row">
+          <span class="slider-label">Products listed</span>
+          <span class="slider-val" id="v-prods">10</span>
+        </div>
+        <input type="range" id="s-prods" min="1" max="100" value="10" />
       </div>
-      <div class="calc-row">
-        <span class="lbl">Orders per month</span>
-        <span class="val">20 orders</span>
+
+      <div class="slider-block">
+        <div class="slider-row">
+          <span class="slider-label">Average product price</span>
+          <span class="slider-val" id="v-price">₦4,500</span>
+        </div>
+        <input type="range" id="s-price" min="500" max="50000" step="500" value="4500" />
       </div>
-      <div class="calc-row">
-        <span class="lbl">Average order value</span>
-        <span class="val">₦5,000</span>
+
+      <div class="slider-block">
+        <div class="slider-row">
+          <span class="slider-label">Sales per product / month</span>
+          <span class="slider-val" id="v-sales">8</span>
+        </div>
+        <input type="range" id="s-sales" min="1" max="50" value="8" />
       </div>
-      <div class="calc-row">
-        <span class="lbl">Total sales</span>
-        <span class="val">₦100,000</span>
+
+      <div class="calc-results">
+        <div class="result-cell">
+          <div class="r-label">Gross Sales</div>
+          <div class="r-val" id="r-gross">₦360k</div>
+        </div>
+        <div class="result-cell">
+          <div class="r-label">MC Commission (3%)</div>
+          <div class="r-val" id="r-comm">₦11k</div>
+        </div>
       </div>
-      <div class="calc-row">
-        <span class="lbl">Your base price earnings</span>
-        <span class="val" style="color:var(--green)">₦80,000</span>
-      </div>
+
       <div class="calc-total">
-        <span class="lbl">💰 You take home</span>
-        <span class="val">₦80,000+</span>
+        <div class="total-label">Your estimated monthly earnings</div>
+        <div class="total-val" id="r-net">₦349,000</div>
+        <div class="total-note">After 3% commission — no other deductions</div>
       </div>
-      <div class="calc-note">
-        You set your base price. MC Store adds its margin on top. You always earn your full base price per sale — no hidden deductions.
-      </div>
+      <p class="calc-disclaimer">* Estimates only. Actual earnings depend on demand, pricing, and competition.</p>
     </div>
   </div>
 </section>
 
-<!-- FAQ -->
-<section style="padding-top:0">
-  <div style="max-width:900px;margin:0 auto">
-    <div class="sec-eyebrow reveal">FAQ</div>
-    <h2 class="sec-title reveal">Questions vendors <em>always ask</em></h2>
+<section class="section" id="faq">
+  <div class="section-inner">
+    <div class="section-head sr">
+      <div class="eyebrow">FAQs</div>
+      <h2 class="section-title">Questions vendors<br /><em>always ask</em></h2>
+    </div>
+    <div class="faq-list sr">
 
-    <div class="faq-wrap">
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          Is it really free to become a vendor?
-          <i class="fas fa-plus"></i>
+      <div class="faq-item">
+        <button class="faq-trigger">
+          Is it really free to join?
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </button>
+        <div class="faq-body">
+          <div class="faq-inner">Yes — completely free. No registration fee, no monthly subscription, no listing fee. MC Store earns only a 3% commission on each completed sale. Everything before a sale costs you nothing.</div>
         </div>
-        <div class="faq-a">Yes — listing products on MC Store is completely free. We only earn when you make a sale, by adding our margin on top of your base price. There are no monthly fees, setup fees or hidden charges.</div>
       </div>
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          How long does verification take?
-          <i class="fas fa-plus"></i>
+
+      <div class="faq-item">
+        <button class="faq-trigger">
+          What products can I sell?
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </button>
+        <div class="faq-body">
+          <div class="faq-inner">MC Store specialises in phone accessories — cases, chargers, earphones, cables, screen protectors, power banks, and related electronics. If your products fit this niche, you're welcome to apply.</div>
         </div>
-        <div class="faq-a">We aim to review and approve all vendor applications within 24 hours. You'll receive an SMS and email notification once your account is approved or if we need additional information.</div>
       </div>
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          Who handles delivery to customers?
-          <i class="fas fa-plus"></i>
+
+      <div class="faq-item">
+        <button class="faq-trigger">
+          Who sets the price of my products?
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </button>
+        <div class="faq-body">
+          <div class="faq-inner">You do. MC Vendor Center works like Facebook Marketplace — you decide what to sell and how much to charge. MC Store doesn't buy your stock or set prices for you. We just connect you with buyers and take a 3% commission when you sell.</div>
         </div>
-        <div class="faq-a">MC Store handles all deliveries using our logistics partners. Once an order is placed, you prepare and package the item. Our courier collects from your location and delivers to the customer nationwide.</div>
       </div>
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">
+
+      <div class="faq-item">
+        <button class="faq-trigger">
+          How long does approval take?
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </button>
+        <div class="faq-body">
+          <div class="faq-inner">We review applications within 24 hours on business days. You'll get a WhatsApp message and email as soon as a decision is made. If we need more info, we reach out directly.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger">
           When and how do I get paid?
-          <i class="fas fa-plus"></i>
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </button>
+        <div class="faq-body">
+          <div class="faq-inner">Payments go directly to your Nigerian bank account via Paystack once an order is confirmed delivered. The minimum withdrawal balance is ₦5,000. No manual requests needed — it's automatic.</div>
         </div>
-        <div class="faq-a">Earnings are paid directly to your registered bank account within 48 hours of successful order delivery. You can track all your earnings in your vendor dashboard in real-time.</div>
       </div>
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          Can I sell any type of product?
-          <i class="fas fa-plus"></i>
+
+      <div class="faq-item">
+        <button class="faq-trigger">
+          Do I need to arrange delivery myself?
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </button>
+        <div class="faq-body">
+          <div class="faq-inner">No. MC Store arranges courier pickup directly from you. Delivery fees are charged to the customer at checkout. You just package the item and hand it over when our courier arrives.</div>
         </div>
-        <div class="faq-a">Currently MC Store focuses on phone accessories, electronics and related gadgets. All products are reviewed by our team before going live to ensure quality and authenticity.</div>
       </div>
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          What if a customer returns a product?
-          <i class="fas fa-plus"></i>
+
+      <div class="faq-item">
+        <button class="faq-trigger">
+          What if my application is rejected?
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </button>
+        <div class="faq-body">
+          <div class="faq-inner">You'll see the specific reason on your dashboard. Most rejections come from unclear ID photos or incomplete information. Fix what's flagged and reapply immediately — there's no waiting period.</div>
         </div>
-        <div class="faq-a">Returns are handled case by case. If the product was faulty or not as described, MC Store covers the return. If it was a customer preference return, the vendor's earnings for that order are reversed. Full policy is in our Vendor Terms.</div>
       </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger">
+          Can I sell from any state in Nigeria?
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </button>
+        <div class="faq-body">
+          <div class="faq-inner">Yes. Vendors from all 36 states and FCT are welcome. You set your ship-from location during registration, and our courier handles pickup from your location.</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- CTA BOTTOM -->
 <section class="cta-section">
-  <div class="sec-eyebrow reveal" style="justify-content:center">Ready to start?</div>
-  <h2 class="sec-title reveal">Your products deserve<br><em>nationwide reach</em></h2>
-  <p class="sec-sub reveal">Join MC Store vendors selling to thousands of customers across Nigeria every day. Free to start, fast to grow.</p>
-
-  <div class="hero-ctas reveal">
-    <a href="/register.html" class="cta-primary">
-      <i class="fas fa-rocket"></i> Create Your Vendor Account
-    </a>
-    <a href="https://wa.me/2348056230366?text=Hi%20MC%20Store!%20I%20want%20to%20become%20a%20vendor" target="_blank" class="cta-secondary">
-      <i class="fab fa-whatsapp"></i> Ask Us First
-    </a>
-  </div>
-
-  <div class="trust-strip reveal" style="margin-top:1.5rem">
-    <div class="trust-item"><i class="fas fa-check-circle"></i> Free registration</div>
-    <div class="trust-item"><i class="fas fa-check-circle"></i> 24hr approval</div>
-    <div class="trust-item"><i class="fas fa-check-circle"></i> 48hr payout</div>
-    <div class="trust-item"><i class="fas fa-check-circle"></i> No hidden fees</div>
+  <div class="cta-box sr">
+    <h2 class="cta-title">
+      Your shop is<br /><em>one form away.</em>
+    </h2>
+    <p class="cta-sub">
+      Join vendors already earning on MC Store. Zero monthly fees. Nationwide reach. You set the price, we take just 3%.
+    </p>
+    <div class="cta-buttons">
+      <a href="register.html" class="btn-cta-main">
+        <i class="fa-solid fa-store"></i>
+        Create your vendor account
+      </a>
+      <a href="https://wa.me/2348056230366?text=Hi%2C%20I%20want%20to%20become%20a%20vendor%20on%20MC%20Store" target="_blank" rel="noopener" class="btn-wa">
+        <i class="fa-brands fa-whatsapp"></i>
+        Chat us on WhatsApp
+      </a>
+    </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
-  <div class="footer-logo">
-    MC<span style="color:var(--gold)">.</span>Vendor
-    <span style="font-size:.65rem;color:var(--muted);font-weight:600;">by MC Store Nigeria</span>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brand-mark" style="width:28px;height:28px;font-size:11px;border-radius:8px;">MC</div>
+      <span style="font-family:var(--font-display);font-weight:800;font-size:14px;color:var(--ink);">Vendor Center</span>
+    </div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="https://mcstore.com.ng">MC Store</a>
+      <a href="login.html">Log in</a>
+      <a href="register.html">Register</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQs</a>
+      <a href="https://wa.me/2348056230366">Support</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </nav>
+    <p class="footer-copy">
+      &copy; 2025 <a href="https://mcstore.com.ng">MC Store Nigeria</a> &middot;
+      Bodija, Ibadan, Oyo State &middot; <a href="mailto:mcstore.care@gmail.com">mcstore.care@gmail.com</a>
+    </p>
   </div>
-  <div class="footer-links">
-    <a href="https://mcstore.com.ng">MC Store</a>
-    <a href="/register.html">Become a Vendor</a>
-    <a href="/login.html">Vendor Login</a>
-    <a href="https://wa.me/2348056230366">Support</a>
-    <a href="#">Vendor Terms</a>
-  </div>
-  <p>© 2026 MC Store Nigeria · vendors.mcstore.com.ng · Bodija, Ibadan</p>
 </footer>
 
 <script>
-// ── SCROLL REVEAL ──
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      observer.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.12 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 30);
+  }, { passive: true });
 
-// ── FAQ TOGGLE ──
-function toggleFaq(el) {
-  const item = el.parentElement;
-  const wasOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-  if (!wasOpen) item.classList.add('open');
-}
+  const srEls = document.querySelectorAll('.sr');
+  const srObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); srObs.unobserve(e.target); } });
+  }, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
+  srEls.forEach(el => srObs.observe(el));
+
+  document.querySelectorAll('.faq-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  const sProds = document.getElementById('s-prods');
+  const sPrice = document.getElementById('s-price');
+  const sSales = document.getElementById('s-sales');
+  const vProds = document.getElementById('v-prods');
+  const vPrice = document.getElementById('v-price');
+  const vSales = document.getElementById('v-sales');
+  const rGross = document.getElementById('r-gross');
+  const rComm  = document.getElementById('r-comm');
+  const rNet   = document.getElementById('r-net');
+
+  function fmt(n) {
+    if (n >= 1_000_000) return '₦' + (n / 1_000_000).toFixed(1) + 'M';
+    if (n >= 1_000)     return '₦' + Math.round(n / 1_000) + 'k';
+    return '₦' + n;
+  }
+
+  function updateCalc() {
+    const prods = +sProds.value;
+    const price = +sPrice.value;
+    const sales = +sSales.value;
+    const gross = prods * price * sales;
+    const comm  = gross * 0.03;
+    const net   = gross - comm;
+
+    vProds.textContent = prods;
+    vPrice.textContent = '₦' + Number(price).toLocaleString();
+    vSales.textContent = sales;
+    rGross.textContent = fmt(gross);
+    rComm.textContent  = fmt(Math.round(comm));
+    rNet.textContent   = fmt(Math.round(net));
+
+    [sProds, sPrice, sSales].forEach(s => {
+      const pct = ((s.value - s.min) / (s.max - s.min)) * 100;
+      s.style.background = `linear-gradient(90deg, #f5a623 ${pct}%, rgba(255,255,255,.25) ${pct}%)`;
+    });
+  }
+
+  [sProds, sPrice, sSales].forEach(s => s.addEventListener('input', updateCalc));
+  updateCalc();
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 70;
+        window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+      }
+    });
+  });
 </script>
+
 </body>
 </html>
