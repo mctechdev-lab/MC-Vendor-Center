@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a56db" />
+  <title>Application Under Review — MC Vendor Center</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --blue:      #1a56db;
+      --blue-dark: #1543ad;
+      --blue-dim:  rgba(26,86,219,.07);
+      --blue-dim2: rgba(26,86,219,.12);
+      --blue-bd:   rgba(26,86,219,.20);
+      --gold:      #f5a623;
+      --gold2:     #f97316;
+      --gold-dim:  rgba(245,166,35,.10);
+      --gold-bd:   rgba(245,166,35,.28);
+      --bg:        #f6f8fd;
+      --surface:   #ffffff;
+      --border:    rgba(26,86,219,.11);
+      --ink:       #0f1b3d;
+      --muted:     #5b6987;
+      --muted2:    #93a0bd;
+      --green:     #0ea968;
+      --green-dim: rgba(14,169,104,.10);
+      --green-bd:  rgba(14,169,104,.25);
+      --amber:     #f59e0b;
+      --amber-dim: rgba(245,158,11,.10);
+      --amber-bd:  rgba(245,158,11,.28);
+      --font-d:    'Syne', sans-serif;
+      --font-b:    'Plus Jakarta Sans', sans-serif;
+      --r-md:      14px; --r-lg: 20px; --r-xl: 28px;
+      --ease:      cubic-bezier(.22,.68,0,1.2);
+      --sh-sm:     0 2px 12px rgba(15,27,61,.06);
+      --sh-md:     0 8px 28px rgba(15,27,61,.09);
+      --sh-blue:   0 8px 28px rgba(26,86,219,.18);
+      --sh-gold:   0 8px 28px rgba(245,166,35,.25);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-b);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100svh;
+      display: flex; flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; border: none; outline: none; background: none; }
+
+    /* TOPBAR */
+    .topbar {
+      height: 56px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(16px,5vw,28px);
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      box-shadow: var(--sh-sm); flex-shrink: 0;
+    }
+    .brand { display: flex; align-items: center; gap: 9px; }
+    .brand-mark {
+      width: 32px; height: 32px;
+      background: linear-gradient(140deg, var(--blue), var(--blue-dark));
+      border-radius: 8px; display: grid; place-items: center;
+      font-family: var(--font-d); font-weight: 900; font-size: 12px;
+      color: #fff; box-shadow: var(--sh-blue); flex-shrink: 0;
+    }
+    .brand-text strong { font-family: var(--font-d); font-weight: 800; font-size: 13px; color: var(--ink); display: block; }
+    .brand-text span { font-size: 10px; font-weight: 700; color: var(--gold2); letter-spacing: .08em; text-transform: uppercase; }
+    .topbar-logout {
+      font-size: 13px; font-weight: 700; color: var(--muted);
+      display: flex; align-items: center; gap: 6px; cursor: pointer;
+      transition: color .2s;
+    }
+    .topbar-logout:hover { color: #dc2626; }
+
+    /* LOADING */
+    .loading-screen {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 80px 20px; text-align: center; flex: 1;
+    }
+    .load-spinner { width: 44px; height: 44px; border: 3px solid var(--blue-dim2); border-top-color: var(--blue); border-radius: 50%; animation: spin .8s linear infinite; margin-bottom: 16px; }
+    .load-title { font-family: var(--font-d); font-weight: 800; font-size: 16px; margin-bottom: 6px; }
+    .load-sub { font-size: 13px; color: var(--muted); }
+
+    /* MAIN */
+    .main { flex: 1; padding: clamp(20px,5vw,40px) clamp(16px,5vw,24px); display: none; }
+    .main.show { display: block; }
+    .inner { max-width: 520px; margin: 0 auto; }
+
+    /* STATUS CARD */
+    .status-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      box-shadow: var(--sh-md);
+      overflow: hidden;
+      margin-bottom: 16px;
+      animation: fadeIn .45s var(--ease) both;
+    }
+
+    .status-banner {
+      background: linear-gradient(135deg, var(--amber) 0%, #f97316 100%);
+      padding: clamp(28px,6vw,40px) clamp(20px,5vw,32px);
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .status-banner::before {
+      content: ''; position: absolute; top: -50px; right: -50px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(255,255,255,.15), transparent 70%);
+      pointer-events: none;
+    }
+    .status-icon {
+      width: 72px; height: 72px;
+      background: rgba(255,255,255,.20);
+      border: 3px solid rgba(255,255,255,.30);
+      border-radius: 50%; display: grid; place-items: center;
+      font-size: 30px; color: #fff; margin: 0 auto 16px;
+      animation: pulse-ring 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse-ring {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,.3); }
+      50%      { box-shadow: 0 0 0 14px rgba(255,255,255,0); }
+    }
+    .status-banner h1 { font-family: var(--font-d); font-weight: 900; font-size: clamp(20px,5vw,26px); color: #fff; margin-bottom: 6px; letter-spacing: -.02em; }
+    .status-banner p { font-size: 13px; color: rgba(255,255,255,.88); font-weight: 500; line-height: 1.6; }
+
+    .status-body { padding: clamp(18px,4vw,28px); }
+
+    /* VENDOR NAME TAG */
+    .vendor-tag {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--r-md); padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+    .vendor-avatar {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      border-radius: 12px; display: grid; place-items: center;
+      font-family: var(--font-d); font-weight: 900; font-size: 18px;
+      color: #fff; box-shadow: var(--sh-blue);
+    }
+    .vendor-info .v-name { font-family: var(--font-d); font-weight: 800; font-size: 15px; color: var(--ink); }
+    .vendor-info .v-slug { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 1px; }
+
+    /* TIMELINE */
+    .timeline { margin-bottom: 24px; }
+    .timeline-title { font-size: 12px; font-weight: 800; color: var(--muted2); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; }
+    .tl-item { display: flex; gap: 14px; margin-bottom: 12px; }
+    .tl-dot-wrap { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .tl-dot {
+      width: 28px; height: 28px; flex-shrink: 0;
+      border-radius: 50%; display: grid; place-items: center;
+      font-size: 12px; font-weight: 800;
+    }
+    .tl-dot.done  { background: var(--green); color: #fff; }
+    .tl-dot.wait  { background: var(--amber-dim); border: 2px solid var(--amber-bd); color: var(--amber); }
+    .tl-dot.lock  { background: var(--bg); border: 2px solid var(--border); color: var(--muted2); }
+    .tl-line { flex: 1; width: 2px; background: var(--border); margin: 2px 0; min-height: 20px; }
+    .tl-line.done { background: var(--green); }
+    .tl-content { flex: 1; padding-bottom: 6px; }
+    .tl-label { font-weight: 700; font-size: 13px; color: var(--ink); margin-bottom: 2px; }
+    .tl-label.muted { color: var(--muted2); }
+    .tl-sub { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* COUNTDOWN */
+    .countdown-card {
+      background: var(--amber-dim);
+      border: 1px solid var(--amber-bd);
+      border-radius: var(--r-md);
+      padding: 16px; text-align: center; margin-bottom: 20px;
+    }
+    .countdown-label { font-size: 11px; font-weight: 800; color: var(--amber); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+    .countdown-timer { font-family: var(--font-d); font-weight: 900; font-size: clamp(28px,7vw,36px); color: var(--ink); letter-spacing: .04em; }
+    .countdown-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    /* INFO ITEMS */
+    .info-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .info-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--r-md); padding: 13px 14px;
+    }
+    .info-item i { font-size: 16px; color: var(--blue); flex-shrink: 0; margin-top: 1px; }
+    .info-item .i-title { font-weight: 700; font-size: 13px; color: var(--ink); margin-bottom: 2px; }
+    .info-item .i-sub { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ACTIONS */
+    .action-btns { display: flex; flex-direction: column; gap: 10px; }
+    .btn-wa {
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      padding: 14px 24px; border-radius: var(--r-md);
+      font-size: 14px; font-weight: 800; color: #fff;
+      background: #25d366;
+      box-shadow: 0 4px 20px rgba(37,211,102,.22);
+      transition: transform .2s var(--ease), box-shadow .2s;
+    }
+    .btn-wa:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,.32); }
+    .btn-outline {
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      padding: 13px 24px; border-radius: var(--r-md);
+      font-size: 14px; font-weight: 700; color: var(--muted);
+      border: 1.5px solid var(--border); background: var(--surface);
+      transition: background .2s, border-color .2s, color .2s;
+    }
+    .btn-outline:hover { background: var(--bg); border-color: var(--blue-bd); color: var(--blue); }
+
+    /* REFRESH STATUS */
+    .refresh-row {
+      text-align: center; margin-top: 14px;
+      font-size: 12px; color: var(--muted2);
+    }
+    .refresh-btn {
+      color: var(--blue); font-weight: 700; cursor: pointer;
+      background: none; border: none; font-family: var(--font-b); font-size: 12px;
+    }
+
+    /* FOOTER */
+    footer { padding: 16px; text-align: center; font-size: 12px; color: var(--muted2); flex-shrink: 0; }
+    footer a { color: var(--blue); font-weight: 600; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+    @media (min-width: 480px) {
+      .action-btns { flex-direction: row; }
+      .btn-wa, .btn-outline { flex: 1; }
+    }
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      footer { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">MC</div>
+    <div class="brand-text">
+      <strong>Vendor Center</strong>
+      <span>MC Store Nigeria</span>
+    </div>
+  </a>
+  <div class="topbar-logout" onclick="logout()">
+    <i class="fa-solid fa-right-from-bracket"></i> Log out
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="loading-screen" id="loading-screen">
+  <div class="load-spinner"></div>
+  <div class="load-title">Checking your application...</div>
+  <div class="load-sub">Please wait a moment</div>
+</div>
+
+<!-- MAIN -->
+<main class="main" id="main">
+  <div class="inner">
+
+    <div class="status-card">
+      <div class="status-banner">
+        <div class="status-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <h1>Application under review</h1>
+        <p>Your vendor application has been received.<br />Our team is currently reviewing it.</p>
+      </div>
+
+      <div class="status-body">
+
+        <!-- VENDOR TAG -->
+        <div class="vendor-tag">
+          <div class="vendor-avatar" id="v-avatar">?</div>
+          <div class="vendor-info">
+            <div class="v-name" id="v-name">Loading...</div>
+            <div class="v-slug" id="v-slug">mcstore.com.ng/shop/...</div>
+          </div>
+        </div>
+
+        <!-- COUNTDOWN -->
+        <div class="countdown-card">
+          <div class="countdown-label"><i class="fa-solid fa-hourglass-half"></i> Estimated decision</div>
+          <div class="countdown-timer" id="countdown">--:--:--</div>
+          <div class="countdown-sub" id="countdown-sub">Calculating review window...</div>
+        </div>
+
+        <!-- TIMELINE -->
+        <div class="timeline">
+          <div class="timeline-title">Application progress</div>
+
+          <div class="tl-item">
+            <div class="tl-dot-wrap">
+              <div class="tl-dot done"><i class="fa-solid fa-check"></i></div>
+              <div class="tl-line done"></div>
+            </div>
+            <div class="tl-content">
+              <div class="tl-label">Account created</div>
+              <div class="tl-sub" id="tl-created">—</div>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-dot-wrap">
+              <div class="tl-dot done"><i class="fa-solid fa-check"></i></div>
+              <div class="tl-line done"></div>
+            </div>
+            <div class="tl-content">
+              <div class="tl-label">Registration completed</div>
+              <div class="tl-sub" id="tl-submitted">—</div>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-dot-wrap">
+              <div class="tl-dot wait"><i class="fa-solid fa-hourglass-half"></i></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-content">
+              <div class="tl-label">Under review by MC Store team</div>
+              <div class="tl-sub">Usually within 24 hours on business days</div>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-dot-wrap">
+              <div class="tl-dot lock"><i class="fa-solid fa-lock"></i></div>
+            </div>
+            <div class="tl-content">
+              <div class="tl-label muted">Approval &amp; dashboard access</div>
+              <div class="tl-sub">You'll be notified by WhatsApp and email</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- INFO LIST -->
+        <div class="info-list">
+          <div class="info-item">
+            <i class="fa-brands fa-whatsapp" style="color:#25d366;"></i>
+            <div>
+              <div class="i-title">WhatsApp notification</div>
+              <div class="i-sub">We'll send a message to your registered WhatsApp number as soon as a decision is made.</div>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-envelope"></i>
+            <div>
+              <div class="i-title">Email notification</div>
+              <div class="i-sub">You'll also receive an email to your registered address with the decision and next steps.</div>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+              <div class="i-title">Need to make a change?</div>
+              <div class="i-sub">Contact us on WhatsApp before your application is reviewed if you need to update any details.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="action-btns">
+          <a href="https://wa.me/2348056230366?text=Hi%2C%20I%20submitted%20a%20vendor%20application%20and%20need%20help" target="_blank" rel="noopener" class="btn-wa">
+            <i class="fa-brands fa-whatsapp"></i>
+            Contact support
+          </a>
+          <button class="btn-outline" onclick="checkStatus()">
+            <i class="fa-solid fa-rotate-right"></i>
+            Refresh status
+          </button>
+        </div>
+
+        <div class="refresh-row">
+          Last checked: <span id="last-checked">just now</span> ·
+          <button class="refresh-btn" onclick="checkStatus()">Check again</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 <a href="https://mcstore.com.ng">MC Store Nigeria</a> ·
+  <a href="https://wa.me/2348056230366">Need help?</a>
+</footer>
+
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyC7trJbzcIix4HgPEHCybb6E7Ztkc39kfw",
+    authDomain:        "mc-store-b6beb.firebaseapp.com",
+    projectId:         "mc-store-b6beb",
+    storageBucket:     "mc-store-b6beb.firebasestorage.app",
+    messagingSenderId: "930964754103",
+    appId:             "1:930964754103:web:0e79c3dcd6bcc4dafc8732"
+  };
+
+  const SUPABASE_URL  = "https://kswikkoqfpyxuurzxail.supabase.co";
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd2lra29xZnB5eHV1cnp4YWlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjEzMDQsImV4cCI6MjA4NjkzNzMwNH0.uuoSKWOTeXot1HJys0EO9OcIRBL0mKrNHIUHIAPCpZ4";
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = 'login.html'; return; }
+    window._currentUser = user;
+    await loadVendorData(user.uid);
+  });
+
+  async function loadVendorData(uid) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/vendors?uid=eq.${uid}&select=*`, {
+        headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
+      });
+      const data = await res.json();
+      const vendor = data[0];
+
+      if (!vendor) { window.location.href = 'onboarding.html'; return; }
+      if (vendor.status === 'approved') { window.location.href = 'dashboard.html'; return; }
+      if (vendor.status === 'rejected') { window.location.href = 'rejected.html'; return; }
+      if (!vendor.onboarding_complete)  { window.location.href = 'onboarding.html'; return; }
+
+      // Populate UI
+      const name = vendor.shop_name || vendor.legal_name || 'Your Shop';
+      const slug = vendor.shop_slug || '';
+      const initial = name.charAt(0).toUpperCase();
+
+      document.getElementById('v-avatar').textContent = initial;
+      document.getElementById('v-name').textContent   = name;
+      document.getElementById('v-slug').textContent   = `mcstore.com.ng/shop/${slug}`;
+
+      // Dates
+      const created   = vendor.created_at   ? new Date(vendor.created_at)   : new Date();
+      const submitted = vendor.submitted_at  ? new Date(vendor.submitted_at) : new Date();
+      document.getElementById('tl-created').textContent   = fmtDate(created);
+      document.getElementById('tl-submitted').textContent = fmtDate(submitted);
+
+      // Countdown — 24hrs from submission
+      const deadline = new Date(submitted.getTime() + 24 * 60 * 60 * 1000);
+      window._deadline = deadline;
+      startCountdown(deadline);
+
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('main').classList.add('show');
+
+    } catch(err) {
+      console.error(err);
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('main').classList.add('show');
+    }
+  }
+
+  window.checkStatus = async function() {
+    const btn = document.querySelector('.btn-outline');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-rotate-right fa-spin"></i> Checking...';
+    try {
+      await loadVendorData(window._currentUser.uid);
+      document.getElementById('last-checked').textContent = 'just now';
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Refresh status';
+    }
+  };
+
+  window.logout = async function() {
+    await signOut(auth);
+    window.location.href = 'login.html';
+  };
+
+  function fmtDate(d) {
+    return d.toLocaleDateString('en-NG', { weekday:'short', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  }
+
+  function startCountdown(deadline) {
+    function tick() {
+      const now  = new Date();
+      const diff = deadline - now;
+      if (diff <= 0) {
+        document.getElementById('countdown').textContent = 'Any moment now';
+        document.getElementById('countdown-sub').textContent = 'Review window has passed — decision coming soon';
+        return;
+      }
+      const h  = Math.floor(diff / 3600000);
+      const m  = Math.floor((diff % 3600000) / 60000);
+      const s  = Math.floor((diff % 60000) / 1000);
+      document.getElementById('countdown').textContent =
+        String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+      document.getElementById('countdown-sub').textContent =
+        `Expected decision by ${deadline.toLocaleDateString('en-NG',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}`;
+      setTimeout(tick, 1000);
+    }
+    tick();
+  }
+
+  // Auto-check every 5 minutes
+  setInterval(() => {
+    if (window._currentUser) window.checkStatus();
+  }, 5 * 60 * 1000);
+</script>
+
+</body>
+</html>
