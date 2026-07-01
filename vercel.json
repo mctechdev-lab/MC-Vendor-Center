@@ -1,0 +1,73 @@
+{
+  "version": 2,
+  "name": "mc-vendor-center",
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "shop/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/vendor-auth",
+      "dest": "/api/vendor-auth.js"
+    },
+    {
+      "src": "/api/send-email-code",
+      "dest": "/api/send-email-code.js"
+    },
+    {
+      "src": "/api/verify-email-code",
+      "dest": "/api/verify-email-code.js"
+    },
+    {
+      "src": "/shop/(.*)",
+      "dest": "/shop.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/app.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin",  "value": "https://vendors.mcstore.com.ng" },
+        { "key": "Access-Control-Allow-Methods", "value": "POST, GET, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" },
+        { "key": "X-Content-Type-Options",       "value": "nosniff" },
+        { "key": "X-Frame-Options",              "value": "DENY" },
+        { "key": "Referrer-Policy",              "value": "strict-origin-when-cross-origin" }
+      ]
+    },
+    {
+      "source": "/(.*).html",
+      "headers": [
+        { "key": "X-Frame-Options",        "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Cache-Control",          "value": "no-cache" }
+      ]
+    }
+  ],
+  "env": {
+    "SUPABASE_URL":              "@supabase_url",
+    "SUPABASE_SERVICE_KEY":      "@supabase_service_key",
+    "FIREBASE_SERVICE_ACCOUNT":  "@firebase_service_account",
+    "SENDBABA_API_KEY":          "@sendbaba_api_key",
+    "SENDBABA_SENDER_EMAIL":     "@sendbaba_sender_email",
+    "ALLOWED_ORIGIN":            "@allowed_origin"
+  }
+}
