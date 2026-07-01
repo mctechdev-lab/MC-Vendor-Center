@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a56db" />
+  <title>Create Vendor Account — MC Vendor Center</title>
+  <meta name="description" content="Create your MC Store vendor account and start selling phone accessories nationwide." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --blue:       #1a56db;
+      --blue-dark:  #1543ad;
+      --blue-dim:   rgba(26,86,219,.07);
+      --blue-dim2:  rgba(26,86,219,.12);
+      --blue-bd:    rgba(26,86,219,.20);
+      --gold:       #f5a623;
+      --gold2:      #f97316;
+      --gold-dim:   rgba(245,166,35,.10);
+      --gold-bd:    rgba(245,166,35,.28);
+      --bg:         #f6f8fd;
+      --surface:    #ffffff;
+      --border:     rgba(26,86,219,.12);
+      --border2:    rgba(26,86,219,.20);
+      --ink:        #0f1b3d;
+      --muted:      #5b6987;
+      --muted2:     #93a0bd;
+      --green:      #0ea968;
+      --green-dim:  rgba(14,169,104,.10);
+      --green-bd:   rgba(14,169,104,.25);
+      --red:        #dc2626;
+      --red-dim:    rgba(220,38,38,.08);
+      --red-bd:     rgba(220,38,38,.20);
+      --font-d:     'Syne', sans-serif;
+      --font-b:     'Plus Jakarta Sans', sans-serif;
+      --r-sm:       10px; --r-md:  14px; --r-lg: 20px;
+      --ease:       cubic-bezier(.22,.68,0,1.2);
+      --sh-sm:      0 2px 12px rgba(15,27,61,.06);
+      --sh-md:      0 8px 28px rgba(15,27,61,.09);
+      --sh-blue:    0 8px 28px rgba(26,86,219,.18);
+      --sh-gold:    0 8px 28px rgba(245,166,35,.25);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-b);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100svh;
+      display: flex; flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; border: none; outline: none; background: none; }
+    input { font-family: inherit; }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(16px, 5vw, 32px);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--sh-sm);
+      flex-shrink: 0;
+    }
+    .brand { display: flex; align-items: center; gap: 9px; }
+    .brand-mark {
+      width: 32px; height: 32px;
+      background: linear-gradient(140deg, var(--blue), var(--blue-dark));
+      border-radius: 8px; display: grid; place-items: center;
+      font-family: var(--font-d); font-weight: 900; font-size: 12px;
+      color: #fff; box-shadow: var(--sh-blue); flex-shrink: 0;
+    }
+    .brand-text strong { font-family: var(--font-d); font-weight: 800; font-size: 13px; color: var(--ink); display: block; }
+    .brand-text span { font-size: 10px; font-weight: 700; color: var(--gold2); letter-spacing: .08em; text-transform: uppercase; }
+    .topbar-login { font-size: 13px; font-weight: 700; color: var(--muted); }
+    .topbar-login a { color: var(--blue); }
+
+    /* ── MAIN LAYOUT ── */
+    .main {
+      flex: 1; display: flex; align-items: flex-start; justify-content: center;
+      padding: clamp(20px, 5vw, 40px) clamp(16px, 5vw, 24px);
+    }
+    .card {
+      width: 100%; max-width: 440px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      box-shadow: var(--sh-md);
+      overflow: hidden;
+    }
+
+    /* ── CARD HEADER ── */
+    .card-header {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+      padding: clamp(22px, 5vw, 32px) clamp(20px, 5vw, 28px) clamp(18px, 4vw, 26px);
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .card-header::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 150px; height: 150px;
+      background: radial-gradient(circle, rgba(245,166,35,.2), transparent 70%);
+      pointer-events: none;
+    }
+    .card-header-icon {
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,.15);
+      border: 2px solid rgba(255,255,255,.25);
+      border-radius: 14px; display: grid; place-items: center;
+      font-size: 22px; color: #fff; margin: 0 auto 14px;
+    }
+    .card-header h1 { font-family: var(--font-d); font-weight: 900; font-size: clamp(20px, 5vw, 24px); color: #fff; margin-bottom: 5px; letter-spacing: -.02em; }
+    .card-header p { font-size: 13px; color: rgba(255,255,255,.80); font-weight: 500; }
+
+    /* ── CARD BODY ── */
+    .card-body { padding: clamp(20px, 5vw, 28px); }
+
+    /* ── METHOD TABS ── */
+    .method-tabs {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 6px; margin-bottom: 22px;
+      background: var(--bg); border-radius: var(--r-sm);
+      padding: 4px;
+    }
+    .method-tab {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 10px 6px; border-radius: 8px;
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      cursor: pointer; transition: all .2s;
+      border: 1px solid transparent;
+    }
+    .method-tab i { font-size: 16px; }
+    .method-tab.active {
+      background: var(--surface); color: var(--blue);
+      border-color: var(--blue-bd);
+      box-shadow: var(--sh-sm);
+    }
+
+    /* ── FORM PANELS ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── FORM FIELDS ── */
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block; font-size: 12px; font-weight: 700;
+      color: var(--ink); margin-bottom: 6px; letter-spacing: .01em;
+    }
+    .field label span { color: var(--red); }
+
+    .input-wrap { position: relative; }
+    .input-wrap i {
+      position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+      font-size: 14px; color: var(--muted2); pointer-events: none;
+    }
+    .input-wrap input {
+      width: 100%; padding: 13px 14px 13px 38px;
+      border: 1.5px solid var(--border2);
+      border-radius: var(--r-md);
+      font-size: 14px; font-weight: 500; color: var(--ink);
+      background: var(--surface);
+      transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none;
+    }
+    .input-wrap input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-dim2); }
+    .input-wrap input.error { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-dim); }
+    .input-wrap input::placeholder { color: var(--muted2); font-weight: 400; }
+
+    .pw-toggle {
+      position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+      font-size: 14px; color: var(--muted2); cursor: pointer;
+      transition: color .2s;
+    }
+    .pw-toggle:hover { color: var(--blue); }
+
+    .field-error {
+      font-size: 11px; font-weight: 600; color: var(--red);
+      margin-top: 5px; display: none; align-items: center; gap: 4px;
+    }
+    .field-error.show { display: flex; }
+    .field-error i { font-size: 10px; }
+
+    /* ── PHONE ROW ── */
+    .phone-row { display: flex; gap: 8px; }
+    .phone-prefix {
+      width: 80px; flex-shrink: 0;
+      padding: 13px 10px;
+      border: 1.5px solid var(--border2);
+      border-radius: var(--r-md);
+      font-size: 14px; font-weight: 700; color: var(--ink);
+      background: var(--bg); text-align: center;
+    }
+    .phone-row .input-wrap { flex: 1; }
+
+    /* ── OTP BOX ── */
+    .otp-group {
+      display: flex; gap: 8px; justify-content: center;
+      margin: 14px 0;
+    }
+    .otp-input {
+      width: 44px; height: 52px;
+      border: 1.5px solid var(--border2);
+      border-radius: var(--r-sm);
+      font-size: 20px; font-weight: 800;
+      text-align: center; color: var(--ink);
+      background: var(--surface);
+      transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none;
+    }
+    .otp-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-dim2); }
+    .otp-input.filled { border-color: var(--blue); background: var(--blue-dim); }
+
+    .otp-sent-msg {
+      text-align: center; font-size: 13px; color: var(--muted);
+      margin-bottom: 10px; line-height: 1.5;
+    }
+    .otp-sent-msg strong { color: var(--ink); }
+
+    .resend-row {
+      text-align: center; font-size: 12px; color: var(--muted); margin-top: 8px;
+    }
+    .resend-btn { color: var(--blue); font-weight: 700; cursor: pointer; }
+    .resend-btn:disabled { color: var(--muted2); cursor: not-allowed; }
+    .resend-timer { color: var(--muted2); font-weight: 600; }
+
+    /* ── SEND CODE BTN ── */
+    .btn-send-code {
+      width: 100%; padding: 13px;
+      border-radius: var(--r-md);
+      font-size: 14px; font-weight: 800; color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: var(--sh-blue);
+      transition: transform .2s var(--ease), box-shadow .2s;
+      margin-bottom: 14px;
+    }
+    .btn-send-code:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(26,86,219,.28); }
+    .btn-send-code:disabled { opacity: .6; transform: none; cursor: not-allowed; }
+
+    /* ── RECAPTCHA ── */
+    #recaptcha-container { display: flex; justify-content: center; margin-bottom: 14px; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 18px 0; color: var(--muted2); font-size: 12px; font-weight: 600;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── GOOGLE BTN ── */
+    .btn-google {
+      width: 100%; padding: 13px;
+      border-radius: var(--r-md);
+      font-size: 14px; font-weight: 700; color: var(--ink);
+      border: 1.5px solid var(--border2);
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: background .2s, border-color .2s, box-shadow .2s;
+      margin-bottom: 10px;
+    }
+    .btn-google:hover { background: var(--bg); border-color: var(--blue-bd); box-shadow: var(--sh-sm); }
+    .btn-google img { width: 18px; height: 18px; }
+
+    /* ── SUBMIT BTN ── */
+    .btn-submit {
+      width: 100%; padding: 15px;
+      border-radius: var(--r-md);
+      font-size: 15px; font-weight: 800; color: #fff;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      box-shadow: var(--sh-gold);
+      transition: transform .2s var(--ease), box-shadow .2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 6px;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(245,166,35,.35); }
+    .btn-submit:disabled { opacity: .65; transform: none; cursor: not-allowed; }
+    .btn-submit .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-text { display: none; }
+
+    /* ── TERMS ── */
+    .terms-note {
+      font-size: 11px; color: var(--muted2); text-align: center;
+      margin-top: 14px; line-height: 1.6;
+    }
+    .terms-note a { color: var(--blue); font-weight: 600; }
+
+    /* ── ALERT ── */
+    .alert {
+      display: none; align-items: flex-start; gap: 10px;
+      padding: 12px 14px; border-radius: var(--r-sm);
+      font-size: 13px; font-weight: 600; margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .alert.show { display: flex; }
+    .alert-error { background: var(--red-dim); border: 1px solid var(--red-bd); color: var(--red); }
+    .alert-success { background: var(--green-dim); border: 1px solid var(--green-bd); color: var(--green); }
+    .alert i { margin-top: 1px; flex-shrink: 0; }
+
+    /* ── PASSWORD STRENGTH ── */
+    .pw-strength { margin-top: 8px; }
+    .pw-strength-bar {
+      height: 3px; border-radius: 2px;
+      background: var(--border); overflow: hidden; margin-bottom: 4px;
+    }
+    .pw-strength-fill { height: 100%; border-radius: 2px; width: 0; transition: width .3s, background .3s; }
+    .pw-strength-label { font-size: 11px; font-weight: 600; color: var(--muted2); }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      padding: 16px; text-align: center;
+      font-size: 12px; color: var(--muted2);
+      flex-shrink: 0;
+    }
+    .page-footer a { color: var(--blue); font-weight: 600; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .card { animation: fadeIn .4s cubic-bezier(.22,.68,0,1.2) both; }
+
+    @media (min-width: 480px) {
+      .otp-input { width: 52px; height: 60px; font-size: 24px; }
+    }
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .page-footer { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">MC</div>
+    <div class="brand-text">
+      <strong>Vendor Center</strong>
+      <span>MC Store Nigeria</span>
+    </div>
+  </a>
+  <div class="topbar-login">Already a vendor? <a href="login.html">Log in</a></div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="card">
+
+    <!-- HEADER -->
+    <div class="card-header">
+      <div class="card-header-icon"><i class="fa-solid fa-store"></i></div>
+      <h1>Create your vendor account</h1>
+      <p>Join MC Store and start selling to buyers across Nigeria</p>
+    </div>
+
+    <!-- BODY -->
+    <div class="card-body">
+
+      <!-- ALERT -->
+      <div class="alert alert-error" id="alert-error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span id="alert-error-msg">Something went wrong. Please try again.</span>
+      </div>
+      <div class="alert alert-success" id="alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="alert-success-msg">Account created successfully!</span>
+      </div>
+
+      <!-- METHOD TABS -->
+      <div class="method-tabs">
+        <div class="method-tab active" data-tab="email" onclick="switchTab('email')">
+          <i class="fa-solid fa-envelope"></i>
+          Email
+        </div>
+        <div class="method-tab" data-tab="google" onclick="switchTab('google')">
+          <i class="fa-brands fa-google"></i>
+          Google
+        </div>
+        <div class="method-tab" data-tab="phone" onclick="switchTab('phone')">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          Phone
+        </div>
+      </div>
+
+      <!-- ══ EMAIL PANEL ══ -->
+      <div class="panel active" id="panel-email">
+        <div class="field">
+          <label>Full name <span>*</span></label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="email-name" placeholder="Your full name" autocomplete="name" />
+          </div>
+          <div class="field-error" id="err-email-name"><i class="fa-solid fa-circle-exclamation"></i> Please enter your full name</div>
+        </div>
+
+        <div class="field">
+          <label>Email address <span>*</span></label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="email-addr" placeholder="you@example.com" autocomplete="email" />
+          </div>
+          <div class="field-error" id="err-email-addr"><i class="fa-solid fa-circle-exclamation"></i> Please enter a valid email address</div>
+        </div>
+
+        <div class="field">
+          <label>Password <span>*</span></label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="email-pw" placeholder="Min. 8 characters" autocomplete="new-password" oninput="checkPwStrength(this.value)" />
+            <i class="fa-solid fa-eye pw-toggle" onclick="togglePw('email-pw', this)"></i>
+          </div>
+          <div class="pw-strength" id="pw-strength" style="display:none;">
+            <div class="pw-strength-bar"><div class="pw-strength-fill" id="pw-fill"></div></div>
+            <div class="pw-strength-label" id="pw-label"></div>
+          </div>
+          <div class="field-error" id="err-email-pw"><i class="fa-solid fa-circle-exclamation"></i> Password must be at least 8 characters</div>
+        </div>
+
+        <div class="field">
+          <label>Confirm password <span>*</span></label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="email-pw2" placeholder="Repeat your password" autocomplete="new-password" />
+            <i class="fa-solid fa-eye pw-toggle" onclick="togglePw('email-pw2', this)"></i>
+          </div>
+          <div class="field-error" id="err-email-pw2"><i class="fa-solid fa-circle-exclamation"></i> Passwords do not match</div>
+        </div>
+
+        <button class="btn-submit" id="btn-email-submit" onclick="signupEmail()">
+          <span class="btn-text"><i class="fa-solid fa-store"></i> Create vendor account</span>
+          <div class="spinner"></div>
+        </button>
+
+        <div class="divider">or continue with</div>
+        <button class="btn-google" onclick="signupGoogle()">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+          Continue with Google
+        </button>
+      </div>
+
+      <!-- ══ GOOGLE PANEL ══ -->
+      <div class="panel" id="panel-google">
+        <p style="font-size:14px;color:var(--muted);text-align:center;margin-bottom:20px;line-height:1.6;">
+          Sign up instantly with your Google account — no password needed.
+          Your email will be automatically verified.
+        </p>
+        <button class="btn-google" style="margin-bottom:0;" onclick="signupGoogle()">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+          Continue with Google
+        </button>
+        <div class="divider">or use</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-google" style="flex:1;margin-bottom:0;font-size:13px;" onclick="switchTab('email')">
+            <i class="fa-solid fa-envelope" style="color:var(--blue)"></i> Email
+          </button>
+          <button class="btn-google" style="flex:1;margin-bottom:0;font-size:13px;" onclick="switchTab('phone')">
+            <i class="fa-solid fa-mobile-screen-button" style="color:var(--blue)"></i> Phone
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ PHONE PANEL ══ -->
+      <div class="panel" id="panel-phone">
+
+        <!-- Step 1: enter phone -->
+        <div id="phone-step-1">
+          <div class="field">
+            <label>Full name <span>*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="phone-name" placeholder="Your full name" autocomplete="name" />
+            </div>
+            <div class="field-error" id="err-phone-name"><i class="fa-solid fa-circle-exclamation"></i> Please enter your full name</div>
+          </div>
+
+          <div class="field">
+            <label>Phone number <span>*</span></label>
+            <div class="phone-row">
+              <div class="phone-prefix">🇳🇬 +234</div>
+              <div class="input-wrap">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <input type="tel" id="phone-num" placeholder="08012345678" maxlength="11" autocomplete="tel" />
+              </div>
+            </div>
+            <div class="field-error" id="err-phone-num"><i class="fa-solid fa-circle-exclamation"></i> Enter a valid Nigerian phone number</div>
+          </div>
+
+          <!-- reCAPTCHA -->
+          <div id="recaptcha-container"></div>
+
+          <button class="btn-send-code" id="btn-send-otp" onclick="sendPhoneOTP()">
+            <i class="fa-solid fa-paper-plane"></i> Send verification code
+          </button>
+        </div>
+
+        <!-- Step 2: enter OTP -->
+        <div id="phone-step-2" style="display:none;">
+          <p class="otp-sent-msg">
+            We sent a 6-digit code to<br />
+            <strong id="otp-phone-display"></strong>
+          </p>
+
+          <div class="otp-group">
+            <input class="otp-input" type="tel" maxlength="1" id="otp-0" oninput="otpMove(this,0)" onkeydown="otpBack(event,0)" />
+            <input class="otp-input" type="tel" maxlength="1" id="otp-1" oninput="otpMove(this,1)" onkeydown="otpBack(event,1)" />
+            <input class="otp-input" type="tel" maxlength="1" id="otp-2" oninput="otpMove(this,2)" onkeydown="otpBack(event,2)" />
+            <input class="otp-input" type="tel" maxlength="1" id="otp-3" oninput="otpMove(this,3)" onkeydown="otpBack(event,3)" />
+            <input class="otp-input" type="tel" maxlength="1" id="otp-4" oninput="otpMove(this,4)" onkeydown="otpBack(event,4)" />
+            <input class="otp-input" type="tel" maxlength="1" id="otp-5" oninput="otpMove(this,5)" onkeydown="otpBack(event,5)" />
+          </div>
+
+          <div class="resend-row">
+            Didn't get it?
+            <button class="resend-btn" id="resend-btn" onclick="resendOTP()" disabled>
+              Resend code
+            </button>
+            <span class="resend-timer" id="resend-timer">in 60s</span>
+          </div>
+
+          <button class="btn-submit" id="btn-otp-verify" onclick="verifyPhoneOTP()" style="margin-top:16px;">
+            <span class="btn-text"><i class="fa-solid fa-check"></i> Verify & create account</span>
+            <div class="spinner"></div>
+          </button>
+
+          <button onclick="resetPhoneStep()" style="width:100%;margin-top:10px;padding:10px;font-size:13px;font-weight:600;color:var(--muted);border:1px solid var(--border);border-radius:var(--r-md);">
+            <i class="fa-solid fa-arrow-left"></i> Change number
+          </button>
+        </div>
+      </div>
+
+      <!-- TERMS -->
+      <p class="terms-note">
+        By creating an account you agree to MC Store's
+        <a href="terms.html">Terms of Service</a> and
+        <a href="privacy.html">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<footer class="page-footer">
+  &copy; 2025 <a href="https://mcstore.com.ng">MC Store Nigeria</a> &middot;
+  <a href="https://wa.me/2348056230366">Need help?</a>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     FIREBASE SDK
+═══════════════════════════════════════════ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithPopup,
+    GoogleAuthProvider,
+    RecaptchaVerifier,
+    signInWithPhoneNumber,
+    updateProfile
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  /* ── CONFIG ── */
+  const firebaseConfig = {
+    apiKey:            "AIzaSyC7trJbzcIix4HgPEHCybb6E7Ztkc39kfw",
+    authDomain:        "mc-store-b6beb.firebaseapp.com",
+    projectId:         "mc-store-b6beb",
+    storageBucket:     "mc-store-b6beb.firebasestorage.app",
+    messagingSenderId: "930964754103",
+    appId:             "1:930964754103:web:0e79c3dcd6bcc4dafc8732"
+  };
+
+  const SUPABASE_URL  = "https://kswikkoqfpyxuurzxail.supabase.co";
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd2lra29xZnB5eHV1cnp4YWlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjEzMDQsImV4cCI6MjA4NjkzNzMwNH0.uuoSKWOTeXot1HJys0EO9OcIRBL0mKrNHIUHIAPCpZ4";
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  auth.languageCode = 'en';
+
+  let confirmationResult = null;
+  let resendCountdown    = null;
+
+  /* ══ HELPERS ══ */
+  function showError(msg) {
+    document.getElementById('alert-success').classList.remove('show');
+    document.getElementById('alert-error-msg').textContent = msg;
+    document.getElementById('alert-error').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function showSuccess(msg) {
+    document.getElementById('alert-error').classList.remove('show');
+    document.getElementById('alert-success-msg').textContent = msg;
+    document.getElementById('alert-success').classList.add('show');
+  }
+  function clearAlerts() {
+    document.getElementById('alert-error').classList.remove('show');
+    document.getElementById('alert-success').classList.remove('show');
+  }
+  function setLoading(btnId, on) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = on;
+    btn.classList.toggle('loading', on);
+  }
+  function fieldError(id, show) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('show', show);
+    const input = document.getElementById(id.replace('err-',''));
+    if (input) input.classList.toggle('error', show);
+  }
+
+  /* ── After successful auth: create Supabase profile → redirect ── */
+  async function afterAuth(user, displayName) {
+    try {
+      const token = await user.getIdToken();
+      // Create vendor profile via serverless function
+      const res = await fetch('/api/vendor-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          uid:         user.uid,
+          email:       user.email || '',
+          phone:       user.phoneNumber || '',
+          displayName: displayName || user.displayName || '',
+          token
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Profile creation failed');
+      // Redirect to onboarding
+      window.location.href = 'onboarding.html';
+    } catch (err) {
+      console.error(err);
+      // Even if serverless fails, redirect to onboarding — it'll retry
+      window.location.href = 'onboarding.html';
+    }
+  }
+
+  /* ══ EMAIL SIGNUP ══ */
+  window.signupEmail = async function () {
+    clearAlerts();
+    const name  = document.getElementById('email-name').value.trim();
+    const email = document.getElementById('email-addr').value.trim();
+    const pw    = document.getElementById('email-pw').value;
+    const pw2   = document.getElementById('email-pw2').value;
+
+    let valid = true;
+    fieldError('err-email-name', !name);     if (!name)  valid = false;
+    fieldError('err-email-addr', !email || !email.includes('@')); if (!email || !email.includes('@')) valid = false;
+    fieldError('err-email-pw',   pw.length < 8); if (pw.length < 8) valid = false;
+    fieldError('err-email-pw2',  pw !== pw2);  if (pw !== pw2) valid = false;
+    if (!valid) return;
+
+    setLoading('btn-email-submit', true);
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pw);
+      await updateProfile(cred.user, { displayName: name });
+      showSuccess('Account created! Redirecting to your onboarding...');
+      await afterAuth(cred.user, name);
+    } catch (err) {
+      const msgs = {
+        'auth/email-already-in-use': 'This email is already registered. Please log in instead.',
+        'auth/invalid-email':        'Please enter a valid email address.',
+        'auth/weak-password':        'Password is too weak. Use at least 8 characters.',
+        'auth/network-request-failed': 'No internet connection. Please try again.'
+      };
+      showError(msgs[err.code] || err.message);
+    } finally {
+      setLoading('btn-email-submit', false);
+    }
+  };
+
+  /* ══ GOOGLE SIGNUP ══ */
+  window.signupGoogle = async function () {
+    clearAlerts();
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.addScope('email');
+      provider.addScope('profile');
+      const result = await signInWithPopup(auth, provider);
+      showSuccess('Google account linked! Redirecting...');
+      await afterAuth(result.user, result.user.displayName);
+    } catch (err) {
+      if (err.code === 'auth/popup-closed-by-user') return;
+      const msgs = {
+        'auth/popup-blocked': 'Popup was blocked. Please allow popups for this site.',
+        'auth/network-request-failed': 'No internet connection. Please try again.'
+      };
+      showError(msgs[err.code] || err.message);
+    }
+  };
+
+  /* ══ PHONE OTP ══ */
+  window.sendPhoneOTP = async function () {
+    clearAlerts();
+    const name  = document.getElementById('phone-name').value.trim();
+    const phone = document.getElementById('phone-num').value.trim();
+
+    let valid = true;
+    fieldError('err-phone-name', !name); if (!name) valid = false;
+    const phoneValid = /^0[7-9][0-1]\d{8}$/.test(phone);
+    fieldError('err-phone-num', !phoneValid); if (!phoneValid) valid = false;
+    if (!valid) return;
+
+    const intlPhone = '+234' + phone.substring(1);
+
+    document.getElementById('btn-send-otp').disabled = true;
+
+    try {
+      // Setup reCAPTCHA
+      if (!window._recaptchaVerifier) {
+        window._recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+          size: 'normal',
+          callback: () => {}
+        });
+      }
+
+      confirmationResult = await signInWithPhoneNumber(auth, intlPhone, window._recaptchaVerifier);
+
+      // Show OTP step
+      document.getElementById('phone-step-1').style.display = 'none';
+      document.getElementById('phone-step-2').style.display = 'block';
+      document.getElementById('otp-phone-display').textContent = intlPhone;
+      document.getElementById('otp-0').focus();
+
+      // Store name for after OTP
+      window._pendingPhoneName = name;
+
+      // Start resend timer
+      startResendTimer();
+
+    } catch (err) {
+      document.getElementById('btn-send-otp').disabled = false;
+      const msgs = {
+        'auth/invalid-phone-number':   'Phone number is not valid.',
+        'auth/too-many-requests':      'Too many attempts. Please wait and try again.',
+        'auth/network-request-failed': 'No internet connection. Please try again.'
+      };
+      showError(msgs[err.code] || 'Failed to send OTP: ' + err.message);
+    }
+  };
+
+  window.verifyPhoneOTP = async function () {
+    clearAlerts();
+    const code = [0,1,2,3,4,5].map(i => document.getElementById(`otp-${i}`).value).join('');
+    if (code.length < 6) { showError('Please enter the full 6-digit code.'); return; }
+
+    setLoading('btn-otp-verify', true);
+    try {
+      const result = await confirmationResult.confirm(code);
+      await updateProfile(result.user, { displayName: window._pendingPhoneName || '' });
+      showSuccess('Phone verified! Redirecting to your onboarding...');
+      await afterAuth(result.user, window._pendingPhoneName);
+    } catch (err) {
+      const msgs = {
+        'auth/invalid-verification-code': 'Incorrect code. Please check and try again.',
+        'auth/code-expired':               'Code has expired. Please request a new one.',
+        'auth/network-request-failed':     'No internet connection. Please try again.'
+      };
+      showError(msgs[err.code] || 'Verification failed: ' + err.message);
+    } finally {
+      setLoading('btn-otp-verify', false);
+    }
+  };
+
+  function startResendTimer() {
+    let secs = 60;
+    const timerEl = document.getElementById('resend-timer');
+    const resendBtn = document.getElementById('resend-btn');
+    resendBtn.disabled = true;
+    timerEl.style.display = 'inline';
+    clearInterval(resendCountdown);
+    resendCountdown = setInterval(() => {
+      secs--;
+      timerEl.textContent = `in ${secs}s`;
+      if (secs <= 0) {
+        clearInterval(resendCountdown);
+        resendBtn.disabled = false;
+        timerEl.style.display = 'none';
+      }
+    }, 1000);
+  }
+
+  window.resendOTP = async function () {
+    clearAlerts();
+    if (window._recaptchaVerifier) {
+      window._recaptchaVerifier.clear();
+      window._recaptchaVerifier = null;
+    }
+    document.getElementById('phone-step-1').style.display = 'block';
+    document.getElementById('phone-step-2').style.display = 'none';
+  };
+
+  window.resetPhoneStep = function () {
+    document.getElementById('phone-step-1').style.display = 'block';
+    document.getElementById('phone-step-2').style.display = 'none';
+    [0,1,2,3,4,5].forEach(i => { document.getElementById(`otp-${i}`).value = ''; });
+    clearInterval(resendCountdown);
+  };
+
+  /* ══ OTP INPUT NAVIGATION ══ */
+  window.otpMove = function (el, idx) {
+    el.value = el.value.replace(/\D/g,'').slice(-1);
+    el.classList.toggle('filled', !!el.value);
+    if (el.value && idx < 5) document.getElementById(`otp-${idx+1}`).focus();
+    // Auto-verify when all 6 filled
+    const code = [0,1,2,3,4,5].map(i => document.getElementById(`otp-${i}`).value).join('');
+    if (code.length === 6) window.verifyPhoneOTP();
+  };
+  window.otpBack = function (e, idx) {
+    if (e.key === 'Backspace' && !document.getElementById(`otp-${idx}`).value && idx > 0) {
+      document.getElementById(`otp-${idx-1}`).focus();
+    }
+  };
+</script>
+
+<!-- NON-MODULE HELPERS (tab switch, password strength, toggle) -->
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.method-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`panel-${tab}`).classList.add('active');
+
+    // Clear alerts on tab switch
+    document.getElementById('alert-error').classList.remove('show');
+    document.getElementById('alert-success').classList.remove('show');
+  }
+
+  function togglePw(inputId, icon) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+  }
+
+  function checkPwStrength(pw) {
+    const wrap = document.getElementById('pw-strength');
+    const fill = document.getElementById('pw-fill');
+    const label = document.getElementById('pw-label');
+    if (!pw) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+
+    let score = 0;
+    if (pw.length >= 8)  score++;
+    if (pw.length >= 12) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+    const levels = [
+      { pct: '20%', color: '#ef4444', text: 'Too weak' },
+      { pct: '40%', color: '#f97316', text: 'Weak' },
+      { pct: '60%', color: '#f5a623', text: 'Fair' },
+      { pct: '80%', color: '#22c55e', text: 'Strong' },
+      { pct: '100%', color: '#0ea968', text: 'Very strong' }
+    ];
+    const lvl = levels[Math.min(score - 1, 4)] || levels[0];
+    fill.style.width = lvl.pct;
+    fill.style.background = lvl.color;
+    label.textContent = lvl.text;
+    label.style.color = lvl.color;
+  }
+</script>
+
+</body>
+</html>
