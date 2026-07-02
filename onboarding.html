@@ -503,9 +503,23 @@
             </div>
             <div class="field-hint">This is the email linked to your vendor account.</div>
           </div>
-          <button class="btn-send-code" id="s0-send-btn" onclick="sendEmailCode()">
+
+          <!-- Temporary bypass notice -->
+          <div class="alert alert-warning show" style="margin-bottom:14px;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Email verification is temporarily unavailable while we set up our mail service. You can continue with your registration — your email will be verified by our team during the review process.</span>
+          </div>
+
+          <button class="btn-next" onclick="bypassEmailVerification()">
+            <span class="btn-label"><i class="fa-solid fa-arrow-right"></i> Continue to shop info</span>
+            <div class="spinner"></div>
+          </button>
+
+          <!-- Hidden send code button — restore when domain is ready -->
+          <button class="btn-send-code" id="s0-send-btn" onclick="sendEmailCode()" style="display:none;">
             <i class="fa-solid fa-paper-plane"></i> Send verification code
           </button>
+
           <div id="s0-phone-note" style="display:none;" class="alert alert-success show">
             <i class="fa-solid fa-circle-check"></i>
             <span>You signed up with phone number — your number is already verified. Click continue.</span>
@@ -1224,6 +1238,19 @@
   };
 
   /* ═══ STAGE 0: EMAIL VERIFICATION ═══ */
+  /* ═══ STAGE 0: BYPASS (temporary — restore when domain ready) ═══ */
+  window.bypassEmailVerification = async function() {
+    try {
+      await sbUpdate(window._currentUser.uid, {
+        email_verified: true,
+        onboarding_step: 1
+      });
+      goToStage(1);
+    } catch(err) {
+      goToStage(1); // proceed anyway even if update fails
+    }
+  };
+
   window.sendEmailCode = async function(isResend = false) {
     hideStageError(0);
     const email = document.getElementById('s0-email').value.trim();
