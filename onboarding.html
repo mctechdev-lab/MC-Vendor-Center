@@ -1222,8 +1222,14 @@
       body: JSON.stringify(payload)
     });
     if (!res.ok) {
-      const err = await res.text();
-      throw new Error(err);
+      const errText = await res.text();
+      let errMsg = errText;
+      try {
+        const parsed = JSON.parse(errText);
+        errMsg = parsed.message || parsed.hint || parsed.details || parsed.error || errText;
+      } catch(e) { /* keep raw */ }
+      console.error('[Supabase Error]', errMsg);
+      throw new Error(errMsg);
     }
   }
 
@@ -1487,7 +1493,7 @@
       });
       goToStage(2);
     } catch (err) {
-      showStageError(1, err.message.includes('duplicate') ? 'This shop URL is already taken. Please choose a different one.' : 'Failed to save. Please try again.');
+      showStageError(1, err.message || 'Unknown error on Stage 1');
     } finally {
       setLoading(btn, false);
     }
@@ -1530,7 +1536,7 @@
       }
       goToStage(3);
     } catch (err) {
-      showStageError(2, 'Failed to save. Please try again.');
+      showStageError(2, err.message || 'Unknown error on Stage 2');
     } finally {
       setLoading(btn, false);
     }
@@ -1560,7 +1566,7 @@
       });
       goToStage(4);
     } catch (err) {
-      showStageError(3, 'Failed to save. Please try again.');
+      showStageError(3, err.message || 'Unknown error on Stage 3');
     } finally {
       setLoading(btn, false);
     }
@@ -1587,7 +1593,7 @@
       });
       goToStage(5);
     } catch (err) {
-      showStageError(4, 'Failed to save. Please try again.');
+      showStageError(4, err.message || 'Unknown error on Stage 4');
     } finally {
       setLoading(btn, false);
     }
@@ -1630,7 +1636,7 @@
       buildReviewContent();
       goToStage(6);
     } catch (err) {
-      showStageError(5, 'Upload failed. Please check your connection and try again.');
+      showStageError(5, err.message || 'Unknown error on Stage 5');
     } finally {
       setLoading(btn, false);
     }
@@ -1715,7 +1721,7 @@
       });
       goToStage(7); // shows success screen
     } catch (err) {
-      showStageError(6, 'Submission failed. Please try again.');
+      showStageError(6, err.message || 'Unknown error on Stage 6');
     } finally {
       setLoading(btn, false);
     }
