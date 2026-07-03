@@ -62,12 +62,4 @@
       ]
     }
   ],
-  "env": {
-    "SUPABASE_URL":              "@supabase_url",
-    "SUPABASE_SERVICE_KEY":      "@supabase_service_key",
-    "FIREBASE_SERVICE_ACCOUNT":  "@firebase_service_account",
-    "SENDBABA_API_KEY":          "@sendbaba_api_key",
-    "SENDBABA_SENDER_EMAIL":     "@sendbaba_sender_email",
-    "ALLOWED_ORIGIN":            "@allowed_origin"
-  }
 }
