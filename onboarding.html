@@ -418,7 +418,10 @@
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-top">
     <div class="progress-label" id="progress-label">Verifying your email</div>
-    <div class="progress-count" id="progress-count">Step 0 of 6</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div id="autosave-indicator" style="font-size:11px;font-weight:700;color:var(--muted2);display:flex;align-items:center;gap:4px;"></div>
+      <div class="progress-count" id="progress-count">Step 0 of 6</div>
+    </div>
   </div>
   <div class="progress-track">
     <div class="progress-fill" id="progress-fill"></div>
@@ -576,7 +579,7 @@
           <label>Shop name <span class="req">*</span></label>
           <div class="input-wrap">
             <i class="fi fa-solid fa-store"></i>
-            <input type="text" id="s1-shopname" placeholder="e.g. Gift Accessories Hub" maxlength="60" oninput="updateSlug(this.value)" />
+            <input type="text" id="s1-shopname" placeholder="e.g. Gift Accessories Hub" maxlength="60" oninput="updateSlug(this.value);scheduleAutosave();" />
           </div>
           <div class="slug-preview">mcstore.com.ng/shop/<span id="slug-preview">your-shop-name</span></div>
           <div class="field-error" id="err-s1-shopname"><i class="fa-solid fa-circle-exclamation"></i> Shop name is required</div>
@@ -675,7 +678,7 @@
           <label>Full legal name <span class="req">*</span></label>
           <div class="input-wrap">
             <i class="fi fa-solid fa-user"></i>
-            <input type="text" id="s2-name" placeholder="As it appears on your ID" />
+            <input type="text" id="s2-name" placeholder="As it appears on your ID" oninput="scheduleAutosave()" />
           </div>
           <div class="field-error" id="err-s2-name"><i class="fa-solid fa-circle-exclamation"></i> Full name is required</div>
         </div>
@@ -684,7 +687,7 @@
           <label>WhatsApp number <span class="req">*</span></label>
           <div class="input-wrap">
             <i class="fi fa-brands fa-whatsapp"></i>
-            <input type="tel" id="s2-whatsapp" placeholder="08012345678" maxlength="11" />
+            <input type="tel" id="s2-whatsapp" placeholder="08012345678" maxlength="11" oninput="scheduleAutosave()" />
           </div>
           <div class="field-hint">Customers and our team will use this to reach you</div>
           <div class="field-error" id="err-s2-whatsapp"><i class="fa-solid fa-circle-exclamation"></i> Valid Nigerian number required</div>
@@ -779,7 +782,7 @@
           <label>Ship-from city <span class="req">*</span></label>
           <div class="input-wrap">
             <i class="fi fa-solid fa-city"></i>
-            <input type="text" id="s3-city" placeholder="e.g. Bodija, Ibadan" />
+            <input type="text" id="s3-city" placeholder="e.g. Bodija, Ibadan" oninput="scheduleAutosave()" />
           </div>
           <div class="field-hint">This is where our courier will pick up orders from</div>
           <div class="field-error" id="err-s3-city"><i class="fa-solid fa-circle-exclamation"></i> Ship-from city is required</div>
@@ -1074,6 +1077,29 @@
         // Resume from saved step
         const resumeStep = vendor.onboarding_step || 0;
         document.getElementById('loading-screen').classList.remove('show');
+
+        // ── Restore previously saved field values ──
+        if (vendor.shop_name)     { const el = document.getElementById('s1-shopname'); if(el) { el.value = vendor.shop_name; updateSlug(vendor.shop_name); } }
+        if (vendor.shop_slug)     { const el = document.getElementById('s1-slug'); if(el) el.value = vendor.shop_slug; document.getElementById('slug-preview').textContent = vendor.shop_slug; }
+        if (vendor.shop_category) { const el = document.getElementById('s1-category'); if(el) el.value = vendor.shop_category; }
+        if (vendor.shop_desc)     { const el = document.getElementById('s1-desc'); if(el) { el.value = vendor.shop_desc; document.getElementById('desc-count').textContent = vendor.shop_desc.length + '/300'; } }
+        if (vendor.legal_name)    { const el = document.getElementById('s2-name'); if(el) el.value = vendor.legal_name; }
+        if (vendor.whatsapp)      { const el = document.getElementById('s2-whatsapp'); if(el) el.value = vendor.whatsapp; }
+        if (vendor.nin)           { const el = document.getElementById('s2-nin'); if(el) el.value = vendor.nin; }
+        if (vendor.business_type) { const el = document.getElementById('s2-biztype'); if(el) el.value = vendor.business_type; }
+        if (vendor.state)         { const el = document.getElementById('s2-state'); if(el) el.value = vendor.state; }
+        if (vendor.lga)           { const el = document.getElementById('s2-lga'); if(el) el.value = vendor.lga; }
+        if (vendor.address)       { const el = document.getElementById('s2-address'); if(el) el.value = vendor.address; }
+        if (vendor.ship_from_city){ const el = document.getElementById('s3-city'); if(el) el.value = vendor.ship_from_city; }
+        if (vendor.processing_days){ const el = document.getElementById('s3-processing'); if(el) el.value = vendor.processing_days; }
+        if (vendor.bank_name)     { const el = document.getElementById('s4-bank'); if(el) el.value = vendor.bank_name; }
+        if (vendor.account_number){ const el = document.getElementById('s4-acct'); if(el) el.value = vendor.account_number; }
+        if (vendor.id_type)       { const el = document.getElementById('s5-idtype'); if(el) el.value = vendor.id_type; }
+        if (vendor.business_type === 'business') {
+          const cacSection = document.getElementById('cac-section');
+          if (cacSection) cacSection.style.display = 'block';
+        }
+
         // Check if email is already verified
         if (vendor.email_verified || user.phoneNumber) {
           goToStage(resumeStep > 0 ? resumeStep : 1);
@@ -1181,22 +1207,111 @@
     document.getElementById(id)?.classList.toggle('error', show);
   }
 
+  /* ── Upsert: inserts if not exists, updates if exists ── */
   async function sbUpdate(uid, data) {
-    const res = await fetch(`${window.SUPABASE_URL}/rest/v1/vendors?uid=eq.${uid}`, {
-      method: 'PATCH',
+    // Always include uid so upsert knows which row to match
+    const payload = { uid, ...data };
+    const res = await fetch(`${window.SUPABASE_URL}/rest/v1/vendors`, {
+      method: 'POST',
       headers: {
-        'apikey': window.SUPABASE_ANON,
+        'apikey':        window.SUPABASE_ANON,
         'Authorization': `Bearer ${window.SUPABASE_ANON}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
+        'Content-Type':  'application/json',
+        'Prefer':        'resolution=merge-duplicates,return=minimal'
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(payload)
     });
     if (!res.ok) {
       const err = await res.text();
       throw new Error(err);
     }
   }
+
+  /* ── Autosave: saves current stage data every 30 seconds ── */
+  let _autosaveTimer = null;
+  function scheduleAutosave() {
+    clearTimeout(_autosaveTimer);
+    _autosaveTimer = setTimeout(doAutosave, 3000);
+  }
+
+  async function doAutosave() {
+    const uid = window._currentUser?.uid;
+    if (!uid) return;
+    try {
+      const draft = collectCurrentStageDraft();
+      if (!draft || Object.keys(draft).length === 0) return;
+      await sbUpdate(uid, { ...draft, autosaved_at: new Date().toISOString() });
+      showAutosaveIndicator('saved');
+    } catch(err) {
+      showAutosaveIndicator('error');
+    }
+  }
+
+  function collectCurrentStageDraft() {
+    const stage = window._currentStage || 0;
+    if (stage === 1) {
+      return {
+        shop_name:     document.getElementById('s1-shopname')?.value?.trim() || '',
+        shop_slug:     document.getElementById('s1-slug')?.value?.trim() || '',
+        shop_category: document.getElementById('s1-category')?.value || '',
+        shop_desc:     document.getElementById('s1-desc')?.value?.trim() || '',
+        onboarding_step: 1
+      };
+    }
+    if (stage === 2) {
+      return {
+        legal_name:    document.getElementById('s2-name')?.value?.trim() || '',
+        whatsapp:      document.getElementById('s2-whatsapp')?.value?.trim() || '',
+        business_type: document.getElementById('s2-biztype')?.value || '',
+        state:         document.getElementById('s2-state')?.value || '',
+        lga:           document.getElementById('s2-lga')?.value?.trim() || '',
+        address:       document.getElementById('s2-address')?.value?.trim() || '',
+        onboarding_step: 2
+      };
+    }
+    if (stage === 3) {
+      return {
+        ship_from_city:  document.getElementById('s3-city')?.value?.trim() || '',
+        processing_days: parseInt(document.getElementById('s3-processing')?.value || '0'),
+        onboarding_step: 3
+      };
+    }
+    if (stage === 4) {
+      return {
+        bank_name:      document.getElementById('s4-bank')?.value || '',
+        account_number: document.getElementById('s4-acct')?.value?.trim() || '',
+        onboarding_step: 4
+      };
+    }
+    return {};
+  }
+
+  function showAutosaveIndicator(state) {
+    // Find or create autosave indicator
+    let el = document.getElementById('autosave-indicator');
+    if (!el) return;
+    if (state === 'saving') {
+      el.innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i> Saving...';
+      el.style.color = 'var(--amber)';
+    } else if (state === 'saved') {
+      el.innerHTML = '<i class="fa-solid fa-cloud-check"></i> Saved';
+      el.style.color = 'var(--green)';
+    } else {
+      el.innerHTML = '<i class="fa-solid fa-cloud-xmark"></i> Save failed';
+      el.style.color = 'var(--red)';
+    }
+  }
+
+  /* Track current stage for autosave */
+  const _origGoToStage = window.goToStage;
+
+  window.goToStage = function(n) {
+    window._currentStage = n;
+    // Trigger autosave when leaving a stage
+    if (n > 0) doAutosave();
+    if (typeof _origGoToStage === 'function') _origGoToStage(n);
+    else goToStage(n);
+  };
 
   async function uploadToCloudinary(file, folder) {
     const fd = new FormData();
