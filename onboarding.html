@@ -32,6 +32,9 @@
       --green:     #0ea968;
       --green-dim: rgba(14,169,104,.10);
       --green-bd:  rgba(14,169,104,.25);
+      --amber:     #f59e0b;
+      --amber-dim: rgba(245,158,11,.10);
+      --amber-bd:  rgba(245,158,11,.25);
       --red:       #dc2626;
       --red-dim:   rgba(220,38,38,.08);
       --red-bd:    rgba(220,38,38,.20);
@@ -58,8 +61,9 @@
     a { color: inherit; text-decoration: none; }
     button { cursor: pointer; font-family: inherit; border: none; outline: none; background: none; }
     input, select, textarea { font-family: inherit; }
+    img { display: block; max-width: 100%; }
 
-    /* ── TOPBAR ── */
+    /* TOPBAR */
     .topbar {
       position: sticky; top: 0; z-index: 100;
       height: 56px; display: flex; align-items: center; justify-content: space-between;
@@ -77,237 +81,179 @@
     }
     .brand-text strong { font-family: var(--font-d); font-weight: 800; font-size: 13px; color: var(--ink); display: block; }
     .brand-text span { font-size: 10px; font-weight: 700; color: var(--gold2); letter-spacing: .08em; text-transform: uppercase; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .draft-indicator {
+      font-size: 11px; font-weight: 700; color: var(--green);
+      display: flex; align-items: center; gap: 4px;
+      transition: color .3s;
+    }
+    .draft-indicator.saving { color: var(--amber); }
     .topbar-logout {
       font-size: 13px; font-weight: 700; color: var(--muted);
-      display: flex; align-items: center; gap: 6px; cursor: pointer;
+      display: flex; align-items: center; gap: 5px; cursor: pointer;
       transition: color .2s;
     }
     .topbar-logout:hover { color: var(--red); }
 
-    /* ── PROGRESS BAR ── */
+    /* PROGRESS BAR */
     .progress-wrap {
       background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 14px clamp(16px,5vw,28px);
+      padding: 12px clamp(16px,5vw,28px);
     }
-    .progress-top {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 10px;
-    }
+    .progress-top { display: flex; justify-content: space-between; margin-bottom: 8px; }
     .progress-label { font-size: 12px; font-weight: 700; color: var(--muted); }
     .progress-count { font-size: 12px; font-weight: 800; color: var(--blue); }
-    .progress-track {
-      height: 6px; background: var(--bg);
-      border-radius: 99px; overflow: hidden;
-      border: 1px solid var(--border);
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--blue), var(--gold));
-      border-radius: 99px;
-      transition: width .5s var(--ease);
-      width: 0%;
-    }
+    .progress-track { height: 5px; background: var(--bg); border-radius: 99px; overflow: hidden; border: 1px solid var(--border); }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--gold)); border-radius: 99px; transition: width .5s var(--ease); width: 0%; }
 
-    /* ── STEPS NAV (dots) ── */
+    /* STEPS DOTS */
     .steps-nav {
-      display: flex; justify-content: center; gap: 8px;
-      padding: 12px clamp(16px,5vw,28px);
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: center; align-items: center;
+      gap: 4px; padding: 10px clamp(16px,5vw,28px);
+      background: var(--surface); border-bottom: 1px solid var(--border);
       overflow-x: auto; scrollbar-width: none;
     }
     .steps-nav::-webkit-scrollbar { display: none; }
-    .step-dot {
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      flex-shrink: 0;
-    }
+    .step-dot { display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0; }
     .dot-circle {
-      width: 32px; height: 32px; border-radius: 50%;
+      width: 30px; height: 30px; border-radius: 50%;
       display: grid; place-items: center;
-      font-size: 12px; font-weight: 800;
+      font-size: 11px; font-weight: 800;
       border: 2px solid var(--border2); color: var(--muted2);
-      background: var(--bg);
-      transition: all .3s var(--ease);
-      position: relative;
+      background: var(--bg); transition: all .3s var(--ease);
     }
     .dot-circle.active { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: var(--sh-blue); }
     .dot-circle.done { background: var(--green); border-color: var(--green); color: #fff; }
-    .dot-circle.done::after { content: '✓'; font-size: 13px; }
-    .dot-circle.done .dot-num { display: none; }
-    .dot-label { font-size: 9px; font-weight: 700; color: var(--muted2); text-align: center; max-width: 52px; line-height: 1.2; }
+    .dot-label { font-size: 9px; font-weight: 700; color: var(--muted2); text-align: center; max-width: 48px; line-height: 1.2; }
     .step-dot.active .dot-label { color: var(--blue); }
     .step-dot.done .dot-label { color: var(--green); }
-
-    /* connector line */
-    .dot-line { width: 24px; height: 2px; background: var(--border); border-radius: 2px; margin-top: 15px; flex-shrink: 0; transition: background .3s; }
+    .dot-line { width: 20px; height: 2px; background: var(--border); border-radius: 2px; margin-bottom: 14px; flex-shrink: 0; transition: background .3s; }
     .dot-line.done { background: var(--green); }
 
-    /* ── MAIN ── */
-    .main { flex: 1; padding: clamp(16px,4vw,28px) clamp(16px,5vw,24px); }
+    /* MAIN */
+    .main { flex: 1; padding: clamp(14px,4vw,24px) clamp(14px,5vw,20px); }
     .stage-wrap { max-width: 540px; margin: 0 auto; }
 
-    /* ── STAGE CARD ── */
-    .stage-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      box-shadow: var(--sh-md);
-      overflow: hidden;
-      display: none;
-      animation: slideIn .35s var(--ease) both;
-    }
+    /* LOADING */
+    .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; }
+    .loading-screen.hidden { display: none; }
+    .load-spinner { width: 40px; height: 40px; border: 3px solid var(--blue-dim2); border-top-color: var(--blue); border-radius: 50%; animation: spin .8s linear infinite; margin-bottom: 14px; }
+    .load-title { font-family: var(--font-d); font-weight: 800; font-size: 16px; margin-bottom: 5px; }
+    .load-sub { font-size: 13px; color: var(--muted); }
+
+    /* STAGE CARDS */
+    .stage-card { display: none; animation: slideIn .3s var(--ease) both; }
     .stage-card.active { display: block; }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
     .stage-head {
       background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-      padding: clamp(18px,4vw,24px) clamp(18px,4vw,24px);
-      display: flex; align-items: center; gap: 14px;
+      border-radius: var(--r-lg) var(--r-lg) 0 0;
+      padding: clamp(16px,4vw,22px);
+      display: flex; align-items: center; gap: 12px;
       position: relative; overflow: hidden;
     }
     .stage-head::after {
       content: ''; position: absolute; top: -30px; right: -30px;
-      width: 120px; height: 120px;
-      background: radial-gradient(circle, rgba(245,166,35,.18), transparent 70%);
+      width: 110px; height: 110px;
+      background: radial-gradient(circle, rgba(245,166,35,.20), transparent 70%);
       pointer-events: none;
     }
     .stage-head-icon {
-      width: 46px; height: 46px; flex-shrink: 0;
-      background: rgba(255,255,255,.15);
-      border: 2px solid rgba(255,255,255,.22);
-      border-radius: 12px; display: grid; place-items: center;
-      font-size: 20px; color: #fff;
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: rgba(255,255,255,.15); border: 2px solid rgba(255,255,255,.22);
+      border-radius: 11px; display: grid; place-items: center;
+      font-size: 18px; color: #fff;
     }
-    .stage-head-info { flex: 1; min-width: 0; }
-    .stage-head-title { font-family: var(--font-d); font-weight: 900; font-size: clamp(16px,4vw,20px); color: #fff; letter-spacing: -.02em; margin-bottom: 2px; }
+    .stage-head-title { font-family: var(--font-d); font-weight: 900; font-size: clamp(15px,4vw,19px); color: #fff; letter-spacing: -.02em; margin-bottom: 2px; }
     .stage-head-sub { font-size: 12px; color: rgba(255,255,255,.80); font-weight: 500; }
 
-    .stage-body { padding: clamp(18px,4vw,24px); }
+    .stage-body {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--r-lg) var(--r-lg);
+      padding: clamp(16px,4vw,22px);
+      box-shadow: var(--sh-md);
+    }
 
-    /* ── FIELDS ── */
-    .field { margin-bottom: 15px; }
+    /* FIELDS */
+    .field { margin-bottom: 14px; }
     .field label { display: block; font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
     .field label .req { color: var(--red); }
-    .field label .opt { color: var(--muted2); font-weight: 500; font-size: 11px; }
-
+    .field label .opt { color: var(--muted2); font-size: 11px; font-weight: 500; }
     .input-wrap { position: relative; }
-    .input-wrap .fi {
-      position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
-      font-size: 14px; color: var(--muted2); pointer-events: none; z-index: 1;
-    }
-    .input-wrap.textarea-wrap .fi { top: 14px; transform: none; }
-
-    input[type=text], input[type=email], input[type=tel],
-    input[type=number], input[type=url], select, textarea {
-      width: 100%; padding: 12px 14px 12px 38px;
+    .input-wrap .fi { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--muted2); pointer-events: none; z-index: 1; }
+    .input-wrap.ta-wrap .fi { top: 13px; transform: none; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 12px 12px 12px 36px;
       border: 1.5px solid var(--border2); border-radius: var(--r-md);
       font-size: 14px; font-weight: 500; color: var(--ink);
       background: var(--surface);
       transition: border-color .2s, box-shadow .2s;
       -webkit-appearance: none; appearance: none;
     }
-    input:focus, select:focus, textarea:focus {
+    .field input:focus, .field select:focus, .field textarea:focus {
       outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-dim2);
     }
-    input.error, select.error, textarea.error {
-      border-color: var(--red); box-shadow: 0 0 0 3px var(--red-dim);
+    .field input::placeholder, .field textarea::placeholder { color: var(--muted2); font-weight: 400; }
+    .field textarea { resize: vertical; min-height: 80px; padding-top: 12px; }
+    .field select {
+      padding-right: 32px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%2393a0bd' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
     }
-    input::placeholder, textarea::placeholder { color: var(--muted2); font-weight: 400; }
-    select { padding-right: 36px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2393a0bd' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
-    textarea { resize: vertical; min-height: 90px; padding-top: 12px; }
-    .no-icon { padding-left: 14px !important; }
-
-    .field-hint { font-size: 11px; color: var(--muted2); margin-top: 5px; font-weight: 500; }
+    .no-icon { padding-left: 12px !important; }
+    .field-hint { font-size: 11px; color: var(--muted2); margin-top: 5px; }
     .field-error { font-size: 11px; font-weight: 700; color: var(--red); margin-top: 5px; display: none; align-items: center; gap: 4px; }
     .field-error.show { display: flex; }
-
-    /* CHAR COUNTER */
-    .char-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .char-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
     .char-count { font-size: 11px; font-weight: 600; color: var(--muted2); }
-
-    /* SLUG PREVIEW */
-    .slug-preview {
-      margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--muted);
-      display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
-    }
+    .slug-preview { margin-top: 5px; font-size: 12px; font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
     .slug-preview span { color: var(--blue); word-break: break-all; }
 
-    /* UPLOAD BOX */
+    /* UPLOAD */
     .upload-box {
       border: 2px dashed var(--border2); border-radius: var(--r-md);
-      padding: 20px; text-align: center; cursor: pointer;
-      transition: border-color .2s, background .2s;
-      position: relative; overflow: hidden;
+      padding: 18px; text-align: center; cursor: pointer;
+      transition: border-color .2s, background .2s; position: relative;
     }
     .upload-box:hover { border-color: var(--blue); background: var(--blue-dim); }
     .upload-box input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-    .upload-box i { font-size: 28px; color: var(--blue); margin-bottom: 8px; }
+    .upload-box i { font-size: 26px; color: var(--blue); margin-bottom: 7px; }
     .upload-box p { font-size: 13px; color: var(--muted); font-weight: 600; }
     .upload-box small { font-size: 11px; color: var(--muted2); }
-    .upload-preview { margin-top: 10px; display: none; }
-    .upload-preview img { max-height: 100px; border-radius: var(--r-sm); margin: 0 auto; object-fit: cover; }
+    .upload-preview { margin-top: 8px; display: none; }
+    .upload-preview img { max-height: 90px; border-radius: var(--r-sm); margin: 0 auto; object-fit: cover; }
     .upload-preview.show { display: block; }
 
-    /* STATES CHECKBOXES */
+    /* STATES */
     .states-grid {
       display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 6px; max-height: 220px; overflow-y: auto;
-      border: 1.5px solid var(--border2); border-radius: var(--r-md);
-      padding: 10px;
+      gap: 5px; max-height: 200px; overflow-y: auto;
+      border: 1.5px solid var(--border2); border-radius: var(--r-md); padding: 8px;
     }
     .state-check {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 7px;
       font-size: 12px; font-weight: 600; color: var(--ink);
-      cursor: pointer; padding: 5px 6px; border-radius: 6px;
-      transition: background .15s;
+      cursor: pointer; padding: 4px 6px; border-radius: 6px; transition: background .15s;
     }
     .state-check:hover { background: var(--blue-dim); }
-    .state-check input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--blue); }
-    .select-all-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .state-check input[type=checkbox] { width: 14px; height: 14px; accent-color: var(--blue); }
+    .select-all-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
     .select-all-btn { font-size: 12px; font-weight: 700; color: var(--blue); cursor: pointer; background: none; border: none; }
 
-    /* OTP BOXES */
-    .otp-group { display: flex; gap: 8px; justify-content: center; margin: 14px 0; }
-    .otp-input {
-      width: 44px; height: 52px;
-      border: 1.5px solid var(--border2); border-radius: var(--r-sm);
-      font-size: 20px; font-weight: 800; text-align: center; color: var(--ink);
-      background: var(--surface); transition: border-color .2s, box-shadow .2s;
-      -webkit-appearance: none;
-    }
-    .otp-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-dim2); }
-    .otp-input.filled { border-color: var(--blue); background: var(--blue-dim); }
-
-    /* REVIEW TABLE */
-    .review-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .review-table tr { border-bottom: 1px solid var(--border); }
-    .review-table tr:last-child { border-bottom: none; }
-    .review-table td { padding: 10px 0; vertical-align: top; }
-    .review-table td:first-child { color: var(--muted); font-weight: 700; width: 40%; font-size: 12px; padding-right: 10px; }
-    .review-table td:last-child { color: var(--ink); font-weight: 600; word-break: break-word; }
-    .review-section-title {
-      font-family: var(--font-d); font-weight: 800; font-size: 13px;
-      color: var(--blue); margin: 18px 0 10px;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .review-section-title i { font-size: 12px; }
-    .review-edit-btn {
-      font-size: 11px; font-weight: 700; color: var(--blue);
-      cursor: pointer; margin-left: auto;
-      background: var(--blue-dim); border: 1px solid var(--blue-bd);
-      padding: 3px 10px; border-radius: 99px;
-    }
-
     /* ALERT */
-    .alert { display: none; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: var(--r-sm); font-size: 13px; font-weight: 600; margin-bottom: 16px; line-height: 1.5; }
+    .alert { display: none; align-items: flex-start; gap: 9px; padding: 11px 13px; border-radius: var(--r-sm); font-size: 13px; font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
     .alert.show { display: flex; }
-    .alert-error { background: var(--red-dim); border: 1px solid var(--red-bd); color: var(--red); }
+    .alert-error   { background: var(--red-dim); border: 1px solid var(--red-bd); color: var(--red); }
     .alert-success { background: var(--green-dim); border: 1px solid var(--green-bd); color: var(--green); }
+    .alert-warning { background: var(--amber-dim); border: 1px solid var(--amber-bd); color: var(--amber); }
     .alert i { margin-top: 2px; flex-shrink: 0; }
 
     /* BUTTONS */
     .btn-next {
-      width: 100%; padding: 15px; border-radius: var(--r-md);
+      width: 100%; padding: 14px; border-radius: var(--r-md);
       font-size: 15px; font-weight: 800; color: #fff;
       background: linear-gradient(135deg, var(--gold), var(--gold2));
       box-shadow: var(--sh-gold);
@@ -315,9 +261,9 @@
       display: flex; align-items: center; justify-content: center; gap: 8px;
       margin-top: 8px;
     }
-    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(245,166,35,.35); }
+    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(245,166,35,.35); }
     .btn-next:disabled { opacity: .6; transform: none; cursor: not-allowed; }
-    .btn-next .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+    .btn-next .spinner { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
     .btn-next.loading .spinner { display: block; }
     .btn-next.loading .btn-label { display: none; }
 
@@ -326,75 +272,80 @@
       font-size: 14px; font-weight: 700; color: var(--muted);
       border: 1.5px solid var(--border2); background: var(--surface);
       display: flex; align-items: center; justify-content: center; gap: 7px;
-      margin-top: 10px; transition: background .2s, border-color .2s;
+      margin-top: 8px; transition: background .2s, color .2s, border-color .2s;
     }
     .btn-back:hover { background: var(--bg); border-color: var(--blue-bd); color: var(--blue); }
 
-    .btn-send-code {
-      width: 100%; padding: 13px; border-radius: var(--r-md);
-      font-size: 14px; font-weight: 800; color: #fff;
+    .btn-submit {
+      width: 100%; padding: 15px; border-radius: var(--r-md);
+      font-size: 15px; font-weight: 800; color: #fff;
       background: linear-gradient(135deg, var(--blue), var(--blue-dark));
       box-shadow: var(--sh-blue);
-      transition: transform .2s var(--ease), box-shadow .2s; margin-bottom: 14px;
+      transition: transform .2s var(--ease), box-shadow .2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 8px;
     }
-    .btn-send-code:hover { transform: translateY(-2px); }
-    .btn-send-code:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(26,86,219,.28); }
+    .btn-submit:disabled { opacity: .6; transform: none; cursor: not-allowed; }
+    .btn-submit .spinner { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-label { display: none; }
 
-    /* SUCCESS SCREEN */
+    /* REVIEW TABLE */
+    .review-section-title {
+      font-family: var(--font-d); font-weight: 800; font-size: 13px;
+      color: var(--blue); margin: 16px 0 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .review-edit-btn {
+      font-size: 11px; font-weight: 700; color: var(--blue);
+      cursor: pointer; margin-left: auto;
+      background: var(--blue-dim); border: 1px solid var(--blue-bd);
+      padding: 3px 9px; border-radius: 99px;
+    }
+    .review-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .review-table tr { border-bottom: 1px solid var(--border); }
+    .review-table tr:last-child { border-bottom: none; }
+    .review-table td { padding: 9px 0; vertical-align: top; }
+    .review-table td:first-child { color: var(--muted); font-weight: 700; width: 38%; font-size: 12px; padding-right: 8px; }
+    .review-table td:last-child { color: var(--ink); font-weight: 600; word-break: break-word; }
+
+    /* SUCCESS */
     .success-screen {
       display: none; flex-direction: column; align-items: center;
-      text-align: center; padding: clamp(32px,8vw,60px) clamp(20px,5vw,40px);
+      text-align: center; padding: clamp(32px,8vw,56px) clamp(20px,5vw,36px);
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--r-lg); box-shadow: var(--sh-md); margin: 0 auto;
-      max-width: 480px;
-      animation: slideIn .4s var(--ease) both;
+      max-width: 480px; animation: slideIn .4s var(--ease) both;
     }
     .success-screen.show { display: flex; }
     .success-icon {
-      width: 72px; height: 72px;
+      width: 68px; height: 68px;
       background: var(--green-dim); border: 3px solid var(--green-bd);
       border-radius: 50%; display: grid; place-items: center;
-      font-size: 30px; color: var(--green); margin-bottom: 20px;
+      font-size: 28px; color: var(--green); margin-bottom: 18px;
     }
-    .success-screen h2 { font-family: var(--font-d); font-weight: 900; font-size: clamp(20px,5vw,26px); color: var(--ink); margin-bottom: 10px; letter-spacing: -.02em; }
-    .success-screen p { font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 340px; margin-bottom: 24px; }
-
-    /* LOADING SCREEN */
-    .loading-screen {
-      display: none; flex-direction: column; align-items: center;
-      justify-content: center; padding: 60px 20px; text-align: center;
+    .success-screen h2 { font-family: var(--font-d); font-weight: 900; font-size: clamp(19px,5vw,24px); color: var(--ink); margin-bottom: 10px; }
+    .success-screen p { font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 320px; margin-bottom: 22px; }
+    .btn-pending {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; max-width: 300px; padding: 14px;
+      border-radius: var(--r-md); font-size: 15px; font-weight: 800; color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: var(--sh-blue);
     }
-    .loading-screen.show { display: flex; }
-    .load-spinner { width: 44px; height: 44px; border: 3px solid var(--blue-dim2); border-top-color: var(--blue); border-radius: 50%; animation: spin .8s linear infinite; margin-bottom: 16px; }
-    .load-title { font-family: var(--font-d); font-weight: 800; font-size: 16px; margin-bottom: 6px; }
-    .load-sub { font-size: 13px; color: var(--muted); }
-
-    /* RESEND */
-    .resend-row { text-align: center; font-size: 12px; color: var(--muted); margin-top: 8px; }
-    .resend-btn { color: var(--blue); font-weight: 700; cursor: pointer; background: none; border: none; font-family: var(--font-b); font-size: 12px; }
-    .resend-btn:disabled { color: var(--muted2); cursor: not-allowed; }
-
-    /* BANK VERIFY */
-    .bank-name-display {
-      margin-top: 8px; padding: 10px 14px;
-      background: var(--green-dim); border: 1px solid var(--green-bd);
-      border-radius: var(--r-sm); font-size: 13px; font-weight: 700; color: var(--green);
-      display: none; align-items: center; gap: 8px;
-    }
-    .bank-name-display.show { display: flex; }
 
     /* FOOTER */
-    .page-footer { padding: 16px; text-align: center; font-size: 12px; color: var(--muted2); flex-shrink: 0; }
-    .page-footer a { color: var(--blue); font-weight: 600; }
+    footer { padding: 14px; text-align: center; font-size: 12px; color: var(--muted2); flex-shrink: 0; }
+    footer a { color: var(--blue); font-weight: 600; }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (min-width: 480px) {
-      .otp-input { width: 52px; height: 60px; font-size: 24px; }
       .states-grid { grid-template-columns: repeat(3, 1fr); }
     }
     @supports (padding-bottom: env(safe-area-inset-bottom)) {
-      .page-footer { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+      footer { padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
     }
   </style>
 </head>
@@ -409,65 +360,55 @@
       <span>MC Store Nigeria</span>
     </div>
   </a>
-  <div class="topbar-logout" onclick="logout()">
-    <i class="fa-solid fa-right-from-bracket"></i> Log out
-  </div>
-</div>
-
-<!-- PROGRESS BAR -->
-<div class="progress-wrap" id="progress-wrap">
-  <div class="progress-top">
-    <div class="progress-label" id="progress-label">Verifying your email</div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div id="autosave-indicator" style="font-size:11px;font-weight:700;color:var(--muted2);display:flex;align-items:center;gap:4px;"></div>
-      <div class="progress-count" id="progress-count">Step 0 of 6</div>
+  <div class="topbar-right">
+    <div class="draft-indicator" id="draft-indicator">
+      <i class="fa-solid fa-cloud-check"></i>
+      <span>Draft saved</span>
+    </div>
+    <div class="topbar-logout" onclick="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i> Log out
     </div>
   </div>
-  <div class="progress-track">
-    <div class="progress-fill" id="progress-fill"></div>
-  </div>
 </div>
 
-<!-- STEPS NAV -->
-<div class="steps-nav" id="steps-nav">
-  <div class="step-dot" id="dot-0">
-    <div class="dot-circle active" id="circle-0"><span class="dot-num">✉</span></div>
-    <div class="dot-label">Verify</div>
+<!-- PROGRESS -->
+<div class="progress-wrap" id="progress-wrap">
+  <div class="progress-top">
+    <div class="progress-label" id="progress-label">Getting started</div>
+    <div class="progress-count" id="progress-count">Step 1 of 6</div>
   </div>
-  <div class="dot-line" id="line-0"></div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
 
-  <div class="step-dot" id="dot-1">
-    <div class="dot-circle" id="circle-1"><span class="dot-num">1</span></div>
+<!-- STEP DOTS -->
+<div class="steps-nav" id="steps-nav">
+  <div class="step-dot active" id="dot-1">
+    <div class="dot-circle active" id="circle-1"><span>1</span></div>
     <div class="dot-label">Shop Info</div>
   </div>
   <div class="dot-line" id="line-1"></div>
-
   <div class="step-dot" id="dot-2">
-    <div class="dot-circle" id="circle-2"><span class="dot-num">2</span></div>
+    <div class="dot-circle" id="circle-2"><span>2</span></div>
     <div class="dot-label">Business</div>
   </div>
   <div class="dot-line" id="line-2"></div>
-
   <div class="step-dot" id="dot-3">
-    <div class="dot-circle" id="circle-3"><span class="dot-num">3</span></div>
+    <div class="dot-circle" id="circle-3"><span>3</span></div>
     <div class="dot-label">Shipping</div>
   </div>
   <div class="dot-line" id="line-3"></div>
-
   <div class="step-dot" id="dot-4">
-    <div class="dot-circle" id="circle-4"><span class="dot-num">4</span></div>
+    <div class="dot-circle" id="circle-4"><span>4</span></div>
     <div class="dot-label">Payment</div>
   </div>
   <div class="dot-line" id="line-4"></div>
-
   <div class="step-dot" id="dot-5">
-    <div class="dot-circle" id="circle-5"><span class="dot-num">5</span></div>
+    <div class="dot-circle" id="circle-5"><span>5</span></div>
     <div class="dot-label">Identity</div>
   </div>
   <div class="dot-line" id="line-5"></div>
-
   <div class="step-dot" id="dot-6">
-    <div class="dot-circle" id="circle-6"><span class="dot-num">6</span></div>
+    <div class="dot-circle" id="circle-6"><span>6</span></div>
     <div class="dot-label">Review</div>
   </div>
 </div>
@@ -476,112 +417,32 @@
 <main class="main">
   <div class="stage-wrap">
 
-    <!-- LOADING SCREEN -->
-    <div class="loading-screen show" id="loading-screen">
+    <!-- LOADING -->
+    <div class="loading-screen" id="loading-screen">
       <div class="load-spinner"></div>
       <div class="load-title">Loading your profile...</div>
-      <div class="load-sub">Please wait a moment</div>
+      <div class="load-sub">Please wait</div>
     </div>
 
-    <!-- ═══ STAGE 0: EMAIL VERIFICATION ═══ -->
-    <div class="stage-card" id="stage-0">
-      <div class="stage-head">
-        <div class="stage-head-icon"><i class="fa-solid fa-envelope-circle-check"></i></div>
-        <div class="stage-head-info">
-          <div class="stage-head-title">Verify your email</div>
-          <div class="stage-head-sub">We'll send a 6-digit code to confirm your address</div>
-        </div>
-      </div>
-      <div class="stage-body">
-        <div class="alert alert-error" id="s0-error"><i class="fa-solid fa-circle-exclamation"></i><span id="s0-error-msg"></span></div>
-        <div class="alert alert-success" id="s0-success"><i class="fa-solid fa-circle-check"></i><span id="s0-success-msg"></span></div>
-
-        <!-- Step A: send code -->
-        <div id="s0-step-a">
-          <div class="field">
-            <label>Your email address</label>
-            <div class="input-wrap">
-              <i class="fi fa-solid fa-envelope"></i>
-              <input type="email" id="s0-email" placeholder="Loading..." readonly />
-            </div>
-            <div class="field-hint">This is the email linked to your vendor account.</div>
-          </div>
-
-          <!-- Temporary bypass notice -->
-          <div class="alert alert-warning show" style="margin-bottom:14px;">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>Email verification is temporarily unavailable while we set up our mail service. You can continue with your registration — your email will be verified by our team during the review process.</span>
-          </div>
-
-          <button class="btn-next" onclick="bypassEmailVerification()">
-            <span class="btn-label"><i class="fa-solid fa-arrow-right"></i> Continue to shop info</span>
-            <div class="spinner"></div>
-          </button>
-
-          <!-- Hidden send code button — restore when domain is ready -->
-          <button class="btn-send-code" id="s0-send-btn" onclick="sendEmailCode()" style="display:none;">
-            <i class="fa-solid fa-paper-plane"></i> Send verification code
-          </button>
-
-          <div id="s0-phone-note" style="display:none;" class="alert alert-success show">
-            <i class="fa-solid fa-circle-check"></i>
-            <span>You signed up with phone number — your number is already verified. Click continue.</span>
-          </div>
-          <button class="btn-next" id="s0-phone-continue" style="display:none;" onclick="goToStage(1)">
-            <span class="btn-label"><i class="fa-solid fa-arrow-right"></i> Continue to shop info</span>
-            <div class="spinner"></div>
-          </button>
-        </div>
-
-        <!-- Step B: enter code -->
-        <div id="s0-step-b" style="display:none;">
-          <p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:10px;line-height:1.6;">
-            Enter the 6-digit code sent to<br />
-            <strong id="s0-email-display" style="color:var(--ink);"></strong>
-          </p>
-          <div class="otp-group">
-            <input class="otp-input" type="tel" maxlength="1" id="e0" oninput="eOtpMove(this,0)" onkeydown="eOtpBack(event,0)" />
-            <input class="otp-input" type="tel" maxlength="1" id="e1" oninput="eOtpMove(this,1)" onkeydown="eOtpBack(event,1)" />
-            <input class="otp-input" type="tel" maxlength="1" id="e2" oninput="eOtpMove(this,2)" onkeydown="eOtpBack(event,2)" />
-            <input class="otp-input" type="tel" maxlength="1" id="e3" oninput="eOtpMove(this,3)" onkeydown="eOtpBack(event,3)" />
-            <input class="otp-input" type="tel" maxlength="1" id="e4" oninput="eOtpMove(this,4)" onkeydown="eOtpBack(event,4)" />
-            <input class="otp-input" type="tel" maxlength="1" id="e5" oninput="eOtpMove(this,5)" onkeydown="eOtpBack(event,5)" />
-          </div>
-          <div class="resend-row">
-            Didn't get it?
-            <button class="resend-btn" id="e-resend-btn" onclick="sendEmailCode(true)" disabled>Resend</button>
-            <span id="e-resend-timer" style="color:var(--muted2);font-weight:600;font-size:12px;"></span>
-          </div>
-          <button class="btn-next" id="s0-verify-btn" onclick="verifyEmailCode()" style="margin-top:16px;">
-            <span class="btn-label"><i class="fa-solid fa-check"></i> Verify email</span>
-            <div class="spinner"></div>
-          </button>
-          <button class="btn-back" onclick="document.getElementById('s0-step-a').style.display='block';document.getElementById('s0-step-b').style.display='none';">
-            <i class="fa-solid fa-arrow-left"></i> Change email
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ STAGE 1: SHOP INFORMATION ═══ -->
+    <!-- ═══ STAGE 1: SHOP INFO ═══ -->
     <div class="stage-card" id="stage-1">
       <div class="stage-head">
         <div class="stage-head-icon"><i class="fa-solid fa-store"></i></div>
-        <div class="stage-head-info">
+        <div>
           <div class="stage-head-title">Shop Information</div>
           <div class="stage-head-sub">Tell buyers about your store</div>
         </div>
       </div>
       <div class="stage-body">
-        <div class="alert alert-error" id="s1-error"><i class="fa-solid fa-circle-exclamation"></i><span id="s1-error-msg"></span></div>
+        <div class="alert alert-error" id="s1-err"><i class="fa-solid fa-circle-exclamation"></i><span id="s1-err-msg"></span></div>
 
         <div class="field">
           <label>Shop name <span class="req">*</span></label>
           <div class="input-wrap">
             <i class="fi fa-solid fa-store"></i>
-            <input type="text" id="s1-shopname" placeholder="e.g. Gift Accessories Hub" maxlength="60" oninput="updateSlug(this.value);scheduleAutosave();" />
+            <input type="text" id="s1-shopname" placeholder="e.g. Gift Accessories Hub" maxlength="60" oninput="updateSlug(this.value);saveDraft();" />
           </div>
-          <div class="slug-preview">mcstore.com.ng/shop/<span id="slug-preview">your-shop-name</span></div>
+          <div class="slug-preview">mcstore.com.ng/shop/<span id="slug-preview">your-shop</span></div>
           <div class="field-error" id="err-s1-shopname"><i class="fa-solid fa-circle-exclamation"></i> Shop name is required</div>
         </div>
 
@@ -589,17 +450,17 @@
           <label>Shop URL slug <span class="req">*</span></label>
           <div class="input-wrap">
             <i class="fi fa-solid fa-link"></i>
-            <input type="text" id="s1-slug" placeholder="gift-accessories-hub" maxlength="40" oninput="sanitizeSlug(this)" />
+            <input type="text" id="s1-slug" placeholder="gift-accessories-hub" maxlength="40" oninput="sanitizeSlug(this);saveDraft();" />
           </div>
           <div class="field-hint">Lowercase letters, numbers and hyphens only</div>
-          <div class="field-error" id="err-s1-slug"><i class="fa-solid fa-circle-exclamation"></i> Slug is required (lowercase, no spaces)</div>
+          <div class="field-error" id="err-s1-slug"><i class="fa-solid fa-circle-exclamation"></i> Slug required (lowercase, no spaces)</div>
         </div>
 
         <div class="field">
           <label>Category <span class="req">*</span></label>
           <div class="input-wrap">
             <i class="fi fa-solid fa-tag"></i>
-            <select id="s1-category">
+            <select id="s1-category" onchange="saveDraft()">
               <option value="">Select a category</option>
               <option value="Electronics">Electronics</option>
               <option value="Mobile Phones">Mobile Phones</option>
@@ -626,88 +487,84 @@
             <label>Shop description <span class="req">*</span></label>
             <span class="char-count" id="desc-count">0/300</span>
           </div>
-          <div class="input-wrap textarea-wrap">
+          <div class="input-wrap ta-wrap">
             <i class="fi fa-solid fa-align-left"></i>
-            <textarea id="s1-desc" placeholder="Tell customers what you sell and why they should buy from you..." maxlength="300" oninput="document.getElementById('desc-count').textContent=this.value.length+'/300'"></textarea>
+            <textarea id="s1-desc" placeholder="Tell customers what you sell and why they should buy from you..." maxlength="300" oninput="document.getElementById('desc-count').textContent=this.value.length+'/300';saveDraft();"></textarea>
           </div>
-          <div class="field-error" id="err-s1-desc"><i class="fa-solid fa-circle-exclamation"></i> Description is required (min 30 characters)</div>
+          <div class="field-error" id="err-s1-desc"><i class="fa-solid fa-circle-exclamation"></i> Description is required (min 20 characters)</div>
         </div>
 
         <div class="field">
-          <label>Shop logo <span class="opt">(optional but recommended)</span></label>
-          <div class="upload-box" id="logo-box">
-            <input type="file" id="s1-logo" accept="image/*" onchange="previewUpload(this,'logo-preview','logo-box')" />
+          <label>Shop logo <span class="opt">(optional)</span></label>
+          <div class="upload-box">
+            <input type="file" id="s1-logo" accept="image/*" onchange="previewUpload(this,'logo-preview-img','logo-preview')" />
             <i class="fa-solid fa-image"></i>
-            <p>Tap to upload your shop logo</p>
-            <small>JPG, PNG or WebP · Max 2MB · Square works best</small>
+            <p>Tap to upload your logo</p>
+            <small>JPG or PNG · Max 2MB · Square works best</small>
           </div>
           <div class="upload-preview" id="logo-preview"><img id="logo-preview-img" /></div>
         </div>
 
         <div class="field">
           <label>Shop banner <span class="opt">(optional)</span></label>
-          <div class="upload-box" id="banner-box">
-            <input type="file" id="s1-banner" accept="image/*" onchange="previewUpload(this,'banner-preview','banner-box')" />
+          <div class="upload-box">
+            <input type="file" id="s1-banner" accept="image/*" onchange="previewUpload(this,'banner-preview-img','banner-preview')" />
             <i class="fa-solid fa-panorama"></i>
             <p>Tap to upload a banner image</p>
-            <small>JPG, PNG · Max 3MB · 1200×400 recommended</small>
+            <small>JPG or PNG · Max 3MB · 1200×400 recommended</small>
           </div>
           <div class="upload-preview" id="banner-preview"><img id="banner-preview-img" /></div>
         </div>
 
-        <button class="btn-next" onclick="saveStage1()">
+        <button class="btn-next" onclick="goStage(2)">
           <span class="btn-label">Continue <i class="fa-solid fa-arrow-right"></i></span>
           <div class="spinner"></div>
         </button>
       </div>
     </div>
 
-    <!-- ═══ STAGE 2: BUSINESS INFORMATION ═══ -->
+    <!-- ═══ STAGE 2: BUSINESS INFO ═══ -->
     <div class="stage-card" id="stage-2">
       <div class="stage-head">
         <div class="stage-head-icon"><i class="fa-solid fa-briefcase"></i></div>
-        <div class="stage-head-info">
+        <div>
           <div class="stage-head-title">Business Information</div>
           <div class="stage-head-sub">Your legal and personal details</div>
         </div>
       </div>
       <div class="stage-body">
-        <div class="alert alert-error" id="s2-error"><i class="fa-solid fa-circle-exclamation"></i><span id="s2-error-msg"></span></div>
+        <div class="alert alert-error" id="s2-err"><i class="fa-solid fa-circle-exclamation"></i><span id="s2-err-msg"></span></div>
 
         <div class="field">
           <label>Full legal name <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-solid fa-user"></i>
-            <input type="text" id="s2-name" placeholder="As it appears on your ID" oninput="scheduleAutosave()" />
+          <div class="input-wrap"><i class="fi fa-solid fa-user"></i>
+            <input type="text" id="s2-name" placeholder="As it appears on your ID" oninput="saveDraft()" />
           </div>
-          <div class="field-error" id="err-s2-name"><i class="fa-solid fa-circle-exclamation"></i> Full name is required</div>
+          <div class="field-error" id="err-s2-name"><i class="fa-solid fa-circle-exclamation"></i> Full name required</div>
         </div>
 
         <div class="field">
           <label>WhatsApp number <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-brands fa-whatsapp"></i>
-            <input type="tel" id="s2-whatsapp" placeholder="08012345678" maxlength="11" oninput="scheduleAutosave()" />
+          <div class="input-wrap"><i class="fi fa-brands fa-whatsapp"></i>
+            <input type="tel" id="s2-whatsapp" placeholder="08012345678" maxlength="11" oninput="saveDraft()" />
           </div>
-          <div class="field-hint">Customers and our team will use this to reach you</div>
+          <div class="field-hint">Customers and our team will reach you here</div>
           <div class="field-error" id="err-s2-whatsapp"><i class="fa-solid fa-circle-exclamation"></i> Valid Nigerian number required</div>
         </div>
 
         <div class="field">
           <label>NIN (National ID Number) <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-solid fa-id-card"></i>
-            <input type="text" id="s2-nin" placeholder="11-digit NIN" maxlength="11" />
+          <div class="input-wrap"><i class="fi fa-solid fa-id-card"></i>
+            <input type="text" id="s2-nin" placeholder="11-digit NIN" maxlength="11" oninput="saveDraft()" />
           </div>
-          <div class="field-hint">Used for KYC only. Not shown publicly.</div>
+          <div class="field-hint">For KYC only — not shown publicly</div>
           <div class="field-error" id="err-s2-nin"><i class="fa-solid fa-circle-exclamation"></i> Valid 11-digit NIN required</div>
         </div>
 
         <div class="field">
           <label>Business type <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-solid fa-building"></i>
-            <select id="s2-biztype">
+          <div class="input-wrap"><i class="fi fa-solid fa-building"></i>
+            <select id="s2-biztype" onchange="saveDraft()">
               <option value="">Select type</option>
               <option value="individual">Individual / Personal</option>
               <option value="business">Registered Business (with CAC)</option>
@@ -718,9 +575,8 @@
 
         <div class="field">
           <label>State <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-solid fa-location-dot"></i>
-            <select id="s2-state">
+          <div class="input-wrap"><i class="fi fa-solid fa-location-dot"></i>
+            <select id="s2-state" onchange="saveDraft()">
               <option value="">Select your state</option>
               <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option>
               <option>Anambra</option><option>Bauchi</option><option>Bayelsa</option>
@@ -742,57 +598,53 @@
 
         <div class="field">
           <label>LGA <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-solid fa-map-pin"></i>
-            <input type="text" id="s2-lga" placeholder="Local Government Area" />
+          <div class="input-wrap"><i class="fi fa-solid fa-map-pin"></i>
+            <input type="text" id="s2-lga" placeholder="Local Government Area" oninput="saveDraft()" />
           </div>
           <div class="field-error" id="err-s2-lga"><i class="fa-solid fa-circle-exclamation"></i> LGA is required</div>
         </div>
 
         <div class="field">
           <label>Full address <span class="req">*</span></label>
-          <div class="input-wrap textarea-wrap">
-            <i class="fi fa-solid fa-house"></i>
-            <textarea id="s2-address" placeholder="House/shop number, street name, area..." maxlength="200"></textarea>
+          <div class="input-wrap ta-wrap"><i class="fi fa-solid fa-house"></i>
+            <textarea id="s2-address" placeholder="House/shop number, street, area..." maxlength="200" oninput="saveDraft()"></textarea>
           </div>
           <div class="field-error" id="err-s2-address"><i class="fa-solid fa-circle-exclamation"></i> Address is required</div>
         </div>
 
-        <button class="btn-next" onclick="saveStage2()">
+        <button class="btn-next" onclick="goStage(3)">
           <span class="btn-label">Continue <i class="fa-solid fa-arrow-right"></i></span>
           <div class="spinner"></div>
         </button>
-        <button class="btn-back" onclick="goToStage(1)"><i class="fa-solid fa-arrow-left"></i> Back to Shop Info</button>
+        <button class="btn-back" onclick="goStage(1)"><i class="fa-solid fa-arrow-left"></i> Back</button>
       </div>
     </div>
 
-    <!-- ═══ STAGE 3: SHIPPING DETAILS ═══ -->
+    <!-- ═══ STAGE 3: SHIPPING ═══ -->
     <div class="stage-card" id="stage-3">
       <div class="stage-head">
         <div class="stage-head-icon"><i class="fa-solid fa-truck-fast"></i></div>
-        <div class="stage-head-info">
+        <div>
           <div class="stage-head-title">Shipping Details</div>
           <div class="stage-head-sub">How and where you ship from</div>
         </div>
       </div>
       <div class="stage-body">
-        <div class="alert alert-error" id="s3-error"><i class="fa-solid fa-circle-exclamation"></i><span id="s3-error-msg"></span></div>
+        <div class="alert alert-error" id="s3-err"><i class="fa-solid fa-circle-exclamation"></i><span id="s3-err-msg"></span></div>
 
         <div class="field">
           <label>Ship-from city <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-solid fa-city"></i>
-            <input type="text" id="s3-city" placeholder="e.g. Bodija, Ibadan" oninput="scheduleAutosave()" />
+          <div class="input-wrap"><i class="fi fa-solid fa-city"></i>
+            <input type="text" id="s3-city" placeholder="e.g. Bodija, Ibadan" oninput="saveDraft()" />
           </div>
-          <div class="field-hint">This is where our courier will pick up orders from</div>
+          <div class="field-hint">Our courier will pick up orders from this location</div>
           <div class="field-error" id="err-s3-city"><i class="fa-solid fa-circle-exclamation"></i> Ship-from city is required</div>
         </div>
 
         <div class="field">
           <label>Order processing time <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-solid fa-clock"></i>
-            <select id="s3-processing">
+          <div class="input-wrap"><i class="fi fa-solid fa-clock"></i>
+            <select id="s3-processing" onchange="saveDraft()">
               <option value="">Select processing time</option>
               <option value="1">Same day (within 24 hours)</option>
               <option value="2">1–2 business days</option>
@@ -800,7 +652,7 @@
               <option value="5">3–5 business days</option>
             </select>
           </div>
-          <div class="field-hint">How long it takes you to package and hand over to courier</div>
+          <div class="field-hint">How long to package and hand over to courier</div>
           <div class="field-error" id="err-s3-processing"><i class="fa-solid fa-circle-exclamation"></i> Please select processing time</div>
         </div>
 
@@ -810,37 +662,34 @@
             <small style="font-size:12px;color:var(--muted);">Select all that apply</small>
             <button class="select-all-btn" onclick="toggleAllStates()">Select all</button>
           </div>
-          <div class="states-grid" id="states-grid">
-            <!-- Populated by JS -->
-          </div>
+          <div class="states-grid" id="states-grid"></div>
           <div class="field-error" id="err-s3-states"><i class="fa-solid fa-circle-exclamation"></i> Select at least one state</div>
         </div>
 
-        <button class="btn-next" onclick="saveStage3()">
+        <button class="btn-next" onclick="goStage(4)">
           <span class="btn-label">Continue <i class="fa-solid fa-arrow-right"></i></span>
           <div class="spinner"></div>
         </button>
-        <button class="btn-back" onclick="goToStage(2)"><i class="fa-solid fa-arrow-left"></i> Back to Business Info</button>
+        <button class="btn-back" onclick="goStage(2)"><i class="fa-solid fa-arrow-left"></i> Back</button>
       </div>
     </div>
 
-    <!-- ═══ STAGE 4: PAYMENT ACCOUNT ═══ -->
+    <!-- ═══ STAGE 4: PAYMENT ═══ -->
     <div class="stage-card" id="stage-4">
       <div class="stage-head">
         <div class="stage-head-icon"><i class="fa-solid fa-building-columns"></i></div>
-        <div class="stage-head-info">
+        <div>
           <div class="stage-head-title">Payment Account</div>
           <div class="stage-head-sub">Where your earnings will be sent</div>
         </div>
       </div>
       <div class="stage-body">
-        <div class="alert alert-error" id="s4-error"><i class="fa-solid fa-circle-exclamation"></i><span id="s4-error-msg"></span></div>
+        <div class="alert alert-error" id="s4-err"><i class="fa-solid fa-circle-exclamation"></i><span id="s4-err-msg"></span></div>
 
         <div class="field">
           <label>Bank name <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-solid fa-building-columns"></i>
-            <select id="s4-bank">
+          <div class="input-wrap"><i class="fi fa-solid fa-building-columns"></i>
+            <select id="s4-bank" onchange="saveDraft()">
               <option value="">Select your bank</option>
               <option>Access Bank</option><option>GTBank</option>
               <option>First Bank</option><option>Zenith Bank</option>
@@ -849,9 +698,9 @@
               <option>Fidelity Bank</option><option>FCMB</option>
               <option>Sterling Bank</option><option>Union Bank</option>
               <option>Wema Bank</option><option>Polaris Bank</option>
-              <option>Stanbic IBTC</option><option>Standard Chartered</option>
-              <option>Ecobank</option><option>Heritage Bank</option>
-              <option>Providus Bank</option><option>Other</option>
+              <option>Stanbic IBTC</option><option>Ecobank</option>
+              <option>Heritage Bank</option><option>Providus Bank</option>
+              <option>Other</option>
             </select>
           </div>
           <div class="field-error" id="err-s4-bank"><i class="fa-solid fa-circle-exclamation"></i> Please select your bank</div>
@@ -859,49 +708,41 @@
 
         <div class="field">
           <label>Account number <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-solid fa-credit-card"></i>
-            <input type="tel" id="s4-acct" placeholder="10-digit account number" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')" />
+          <div class="input-wrap"><i class="fi fa-solid fa-credit-card"></i>
+            <input type="tel" id="s4-acct" placeholder="10-digit account number" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'');saveDraft();" />
           </div>
-          <div class="field-error" id="err-s4-acct"><i class="fa-solid fa-circle-exclamation"></i> Enter a valid 10-digit account number</div>
+          <div class="field-error" id="err-s4-acct"><i class="fa-solid fa-circle-exclamation"></i> Valid 10-digit account number required</div>
         </div>
 
-        <div class="bank-name-display" id="bank-name-display">
-          <i class="fa-solid fa-circle-check"></i>
-          <span id="bank-acct-name">Account holder name</span>
-        </div>
-        <div class="field-hint" style="margin-bottom:14px;">Account name will be verified automatically when you proceed.</div>
-
-        <button class="btn-next" onclick="saveStage4()">
+        <button class="btn-next" onclick="goStage(5)">
           <span class="btn-label">Continue <i class="fa-solid fa-arrow-right"></i></span>
           <div class="spinner"></div>
         </button>
-        <button class="btn-back" onclick="goToStage(3)"><i class="fa-solid fa-arrow-left"></i> Back to Shipping</button>
+        <button class="btn-back" onclick="goStage(3)"><i class="fa-solid fa-arrow-left"></i> Back</button>
       </div>
     </div>
 
-    <!-- ═══ STAGE 5: IDENTITY VERIFICATION ═══ -->
+    <!-- ═══ STAGE 5: IDENTITY ═══ -->
     <div class="stage-card" id="stage-5">
       <div class="stage-head">
         <div class="stage-head-icon"><i class="fa-solid fa-id-badge"></i></div>
-        <div class="stage-head-info">
+        <div>
           <div class="stage-head-title">Identity Verification</div>
-          <div class="stage-head-sub">We need to confirm who you are (KYC)</div>
+          <div class="stage-head-sub">KYC — confirm who you are</div>
         </div>
       </div>
       <div class="stage-body">
-        <div class="alert alert-error" id="s5-error"><i class="fa-solid fa-circle-exclamation"></i><span id="s5-error-msg"></span></div>
+        <div class="alert alert-error" id="s5-err"><i class="fa-solid fa-circle-exclamation"></i><span id="s5-err-msg"></span></div>
 
-        <div class="alert alert-success show" style="margin-bottom:16px;">
+        <div class="alert alert-success show">
           <i class="fa-solid fa-shield-halved"></i>
-          <span>Your ID is only used for verification. It will never be shown publicly or shared.</span>
+          <span>Your ID is only used for verification and will never be shown publicly.</span>
         </div>
 
         <div class="field">
           <label>ID type <span class="req">*</span></label>
-          <div class="input-wrap">
-            <i class="fi fa-solid fa-id-card"></i>
-            <select id="s5-idtype">
+          <div class="input-wrap"><i class="fi fa-solid fa-id-card"></i>
+            <select id="s5-idtype" onchange="saveDraft()">
               <option value="">Select ID type</option>
               <option value="nin_slip">NIN Slip</option>
               <option value="voters_card">Voter's Card</option>
@@ -914,47 +755,46 @@
 
         <div class="field">
           <label>Government-issued ID photo <span class="req">*</span></label>
-          <div class="upload-box" id="id-box">
-            <input type="file" id="s5-id" accept="image/*" onchange="previewUpload(this,'id-preview','id-box')" />
+          <div class="upload-box">
+            <input type="file" id="s5-id" accept="image/*" onchange="previewUpload(this,'id-preview-img','id-preview')" />
             <i class="fa-solid fa-id-card"></i>
             <p>Tap to upload your ID</p>
-            <small>Clear photo of front of ID · JPG or PNG · Max 5MB</small>
+            <small>Clear photo of front · JPG or PNG · Max 5MB</small>
           </div>
           <div class="upload-preview" id="id-preview"><img id="id-preview-img" /></div>
           <div class="field-error" id="err-s5-id"><i class="fa-solid fa-circle-exclamation"></i> Please upload your ID photo</div>
         </div>
 
         <div class="field">
-          <label>Selfie with ID <span class="req">*</span></label>
-          <div class="upload-box" id="selfie-box">
-            <input type="file" id="s5-selfie" accept="image/*" capture="user" onchange="previewUpload(this,'selfie-preview','selfie-box')" />
+          <label>Selfie holding your ID <span class="req">*</span></label>
+          <div class="upload-box">
+            <input type="file" id="s5-selfie" accept="image/*" capture="user" onchange="previewUpload(this,'selfie-preview-img','selfie-preview')" />
             <i class="fa-solid fa-camera"></i>
             <p>Take or upload a selfie holding your ID</p>
-            <small>Make sure your face and ID are both clearly visible</small>
+            <small>Face and ID must both be clearly visible</small>
           </div>
           <div class="upload-preview" id="selfie-preview"><img id="selfie-preview-img" /></div>
           <div class="field-error" id="err-s5-selfie"><i class="fa-solid fa-circle-exclamation"></i> Please upload a selfie with your ID</div>
         </div>
 
-        <!-- CAC (only if registered business) -->
         <div id="cac-section" style="display:none;">
           <div class="field">
             <label>CAC certificate <span class="opt">(Businesses only)</span></label>
-            <div class="upload-box" id="cac-box">
-              <input type="file" id="s5-cac" accept="image/*,.pdf" onchange="previewUpload(this,'cac-preview','cac-box')" />
+            <div class="upload-box">
+              <input type="file" id="s5-cac" accept="image/*,.pdf" onchange="previewUpload(this,'cac-preview-img','cac-preview')" />
               <i class="fa-solid fa-file-certificate"></i>
-              <p>Upload your CAC registration document</p>
+              <p>Upload your CAC document</p>
               <small>PDF or image · Max 5MB</small>
             </div>
             <div class="upload-preview" id="cac-preview"><img id="cac-preview-img" /></div>
           </div>
         </div>
 
-        <button class="btn-next" onclick="saveStage5()">
+        <button class="btn-next" onclick="goStage(6)">
           <span class="btn-label">Continue to Review <i class="fa-solid fa-arrow-right"></i></span>
           <div class="spinner"></div>
         </button>
-        <button class="btn-back" onclick="goToStage(4)"><i class="fa-solid fa-arrow-left"></i> Back to Payment</button>
+        <button class="btn-back" onclick="goStage(4)"><i class="fa-solid fa-arrow-left"></i> Back</button>
       </div>
     </div>
 
@@ -962,47 +802,43 @@
     <div class="stage-card" id="stage-6">
       <div class="stage-head">
         <div class="stage-head-icon"><i class="fa-solid fa-clipboard-check"></i></div>
-        <div class="stage-head-info">
-          <div class="stage-head-title">Review & Submit</div>
+        <div>
+          <div class="stage-head-title">Review &amp; Submit</div>
           <div class="stage-head-sub">Check everything before submitting</div>
         </div>
       </div>
       <div class="stage-body">
-        <div class="alert alert-error" id="s6-error"><i class="fa-solid fa-circle-exclamation"></i><span id="s6-error-msg"></span></div>
+        <div class="alert alert-error" id="s6-err"><i class="fa-solid fa-circle-exclamation"></i><span id="s6-err-msg"></span></div>
 
-        <!-- Review summary populated by JS -->
         <div id="review-content"></div>
 
-        <div style="margin-top:20px;padding:14px;background:var(--blue-dim);border:1px solid var(--blue-bd);border-radius:var(--r-md);font-size:13px;color:var(--muted);line-height:1.6;">
-          <strong style="color:var(--ink);">What happens next?</strong><br />
-          After you submit, our team will review your application within <strong>24 hours</strong> on business days. You'll receive a WhatsApp message and email once a decision is made.
+        <div class="alert alert-warning show" style="margin-top:16px;">
+          <i class="fa-solid fa-clock"></i>
+          <span>After submitting, our team will review your application within <strong>24 hours</strong> on business days. You'll be notified by WhatsApp and email.</span>
         </div>
 
-        <button class="btn-next" id="submit-btn" onclick="submitApplication()" style="margin-top:16px;">
+        <button class="btn-submit" id="submit-btn" onclick="submitApplication()">
           <span class="btn-label"><i class="fa-solid fa-paper-plane"></i> Submit vendor application</span>
           <div class="spinner"></div>
         </button>
-        <button class="btn-back" onclick="goToStage(5)"><i class="fa-solid fa-arrow-left"></i> Back to Identity</button>
+        <button class="btn-back" onclick="goStage(5)"><i class="fa-solid fa-arrow-left"></i> Back to Identity</button>
       </div>
     </div>
 
-    <!-- SUCCESS SCREEN -->
+    <!-- SUCCESS -->
     <div class="success-screen" id="success-screen">
       <div class="success-icon"><i class="fa-solid fa-check"></i></div>
       <h2>Application submitted!</h2>
-      <p>
-        Your vendor application is now under review. Our team will respond within <strong>24 hours</strong> on business days.
-        We'll send you a WhatsApp message and email with our decision.
-      </p>
-      <a href="pending.html" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:320px;padding:15px;border-radius:var(--r-md);font-size:15px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--blue),var(--blue-dark));box-shadow:var(--sh-blue);">
+      <p>Your application is under review. Our team will respond within <strong>24 hours</strong> on business days. We'll send you a WhatsApp message and email with our decision.</p>
+      <a href="pending.html" class="btn-pending">
         <i class="fa-solid fa-clock"></i> View application status
       </a>
     </div>
 
-  </div><!-- /stage-wrap -->
+  </div>
 </main>
 
-<footer class="page-footer">
+<footer>
   &copy; 2025 <a href="https://mcstore.com.ng">MC Store Nigeria</a> &middot;
   <a href="https://wa.me/2348056230366">Need help?</a>
 </footer>
@@ -1021,103 +857,41 @@
     appId:             "1:930964754103:web:0e79c3dcd6bcc4dafc8732"
   };
 
-  const SUPABASE_URL  = "https://kswikkoqfpyxuurzxail.supabase.co";
-  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd2lra29xZnB5eHV1cnp4YWlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjEzMDQsImV4cCI6MjA4NjkzNzMwNH0.uuoSKWOTeXot1HJys0EO9OcIRBL0mKrNHIUHIAPCpZ4";
-  const CLOUDINARY_CLOUD  = "dluuvtjph";
-  const CLOUDINARY_PRESET = "ml_default";
-
-  window.SUPABASE_URL  = SUPABASE_URL;
-  window.SUPABASE_ANON = SUPABASE_ANON;
-  window.CLOUDINARY_CLOUD  = CLOUDINARY_CLOUD;
-  window.CLOUDINARY_PRESET = CLOUDINARY_PRESET;
+  window.SB_URL   = "https://kswikkoqfpyxuurzxail.supabase.co";
+  window.SB_ANON  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd2lra29xZnB5eHV1cnp4YWlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjEzMDQsImV4cCI6MjA4NjkzNzMwNH0.uuoSKWOTeXot1HJys0EO9OcIRBL0mKrNHIUHIAPCpZ4";
+  window.CDN_CLOUD  = "dluuvtjph";
+  window.CDN_PRESET = "ml_default";
 
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
   onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      window.location.href = 'login.html';
-      return;
-    }
+    if (!user) { window.location.href = 'login.html'; return; }
+    window._uid   = user.uid;
+    window._email = user.email || '';
+    window._phone = user.phoneNumber || '';
 
-    window._currentUser = user;
-
-    // Pre-fill email
-    if (user.email) {
-      document.getElementById('s0-email').value = user.email;
-      document.getElementById('s0-email-display').textContent = user.email;
-    }
-
-    // Phone user — skip email verification
-    if (user.phoneNumber && !user.email) {
-      document.getElementById('s0-phone-note').style.display = 'flex';
-      document.getElementById('s0-phone-continue').style.display = 'flex';
-      document.getElementById('s0-send-btn').style.display = 'none';
-    }
-
-    // Load saved progress from Supabase
+    // Check if already submitted
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/vendors?uid=eq.${user.uid}&select=*`, {
-        headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
+      const res = await fetch(`${window.SB_URL}/rest/v1/vendors?uid=eq.${user.uid}&select=status,onboarding_complete`, {
+        headers: { 'apikey': window.SB_ANON, 'Authorization': `Bearer ${window.SB_ANON}` }
       });
       const data = await res.json();
-      const vendor = data[0];
-
-      if (vendor) {
-        window._vendorData = vendor;
-        // If already submitted
-        if (vendor.status === 'pending' || vendor.status === 'approved') {
-          window.location.href = vendor.status === 'approved' ? 'dashboard.html' : 'pending.html';
-          return;
-        }
-        if (vendor.status === 'rejected') {
-          window.location.href = 'rejected.html';
-          return;
-        }
-        // Resume from saved step
-        const resumeStep = vendor.onboarding_step || 0;
-        document.getElementById('loading-screen').classList.remove('show');
-
-        // ── Restore previously saved field values ──
-        if (vendor.shop_name)     { const el = document.getElementById('s1-shopname'); if(el) { el.value = vendor.shop_name; updateSlug(vendor.shop_name); } }
-        if (vendor.shop_slug)     { const el = document.getElementById('s1-slug'); if(el) el.value = vendor.shop_slug; document.getElementById('slug-preview').textContent = vendor.shop_slug; }
-        if (vendor.shop_category) { const el = document.getElementById('s1-category'); if(el) el.value = vendor.shop_category; }
-        if (vendor.shop_desc)     { const el = document.getElementById('s1-desc'); if(el) { el.value = vendor.shop_desc; document.getElementById('desc-count').textContent = vendor.shop_desc.length + '/300'; } }
-        if (vendor.legal_name)    { const el = document.getElementById('s2-name'); if(el) el.value = vendor.legal_name; }
-        if (vendor.whatsapp)      { const el = document.getElementById('s2-whatsapp'); if(el) el.value = vendor.whatsapp; }
-        if (vendor.nin)           { const el = document.getElementById('s2-nin'); if(el) el.value = vendor.nin; }
-        if (vendor.business_type) { const el = document.getElementById('s2-biztype'); if(el) el.value = vendor.business_type; }
-        if (vendor.state)         { const el = document.getElementById('s2-state'); if(el) el.value = vendor.state; }
-        if (vendor.lga)           { const el = document.getElementById('s2-lga'); if(el) el.value = vendor.lga; }
-        if (vendor.address)       { const el = document.getElementById('s2-address'); if(el) el.value = vendor.address; }
-        if (vendor.ship_from_city){ const el = document.getElementById('s3-city'); if(el) el.value = vendor.ship_from_city; }
-        if (vendor.processing_days){ const el = document.getElementById('s3-processing'); if(el) el.value = vendor.processing_days; }
-        if (vendor.bank_name)     { const el = document.getElementById('s4-bank'); if(el) el.value = vendor.bank_name; }
-        if (vendor.account_number){ const el = document.getElementById('s4-acct'); if(el) el.value = vendor.account_number; }
-        if (vendor.id_type)       { const el = document.getElementById('s5-idtype'); if(el) el.value = vendor.id_type; }
-        if (vendor.business_type === 'business') {
-          const cacSection = document.getElementById('cac-section');
-          if (cacSection) cacSection.style.display = 'block';
-        }
-
-        // Check if email is already verified
-        if (vendor.email_verified || user.phoneNumber) {
-          goToStage(resumeStep > 0 ? resumeStep : 1);
-        } else {
-          goToStage(0);
-        }
-      } else {
-        document.getElementById('loading-screen').classList.remove('show');
-        goToStage(0);
+      const v = data[0];
+      if (v) {
+        if (v.status === 'approved')           { window.location.href = 'app.html'; return; }
+        if (v.status === 'pending')            { window.location.href = 'pending.html'; return; }
+        if (v.status === 'rejected')           { window.location.href = 'rejected.html'; return; }
       }
-    } catch (err) {
-      console.error(err);
-      document.getElementById('loading-screen').classList.remove('show');
-      goToStage(0);
-    }
+    } catch(e) { /* continue to onboarding */ }
+
+    // Load draft from localStorage and restore fields
+    document.getElementById('loading-screen').classList.add('hidden');
+    restoreDraft();
+    goStage(1);
   });
 
-  window.logout = async function () {
+  window.logout = async function() {
     await signOut(auth);
     window.location.href = 'login.html';
   };
@@ -1125,7 +899,6 @@
 
 <!-- MAIN LOGIC -->
 <script>
-  /* ═══ STATE ═══ */
   const NIGERIAN_STATES = [
     'Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue',
     'Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu',
@@ -1134,22 +907,31 @@
     'Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'
   ];
 
-  let currentStage = -1;
-  let formData = {};
-  let resendTimer = null;
+  const DRAFT_KEY = 'mc_vendor_draft';
+  let currentStage = 1;
+  let draftTimer = null;
 
-  /* Build states checkboxes */
+  /* ══ BUILD STATES GRID ══ */
   const statesGrid = document.getElementById('states-grid');
   NIGERIAN_STATES.forEach(state => {
     const label = document.createElement('label');
     label.className = 'state-check';
-    label.innerHTML = `<input type="checkbox" value="${state}" class="state-cb" /> ${state}`;
+    label.innerHTML = `<input type="checkbox" value="${state}" class="state-cb" onchange="saveDraft()" /> ${state}`;
     statesGrid.appendChild(label);
   });
 
-  /* ═══ NAVIGATION ═══ */
-  window.goToStage = function(n) {
-    // Hide all
+  /* ══ NAVIGATION ══ */
+  const STAGE_LABELS = ['','Shop Info','Business','Shipping','Payment','Identity','Review & Submit'];
+
+  window.goStage = function(n) {
+    // Validate before moving forward
+    if (n > currentStage) {
+      if (!validateStage(currentStage)) return;
+    }
+    // Show CAC if business type
+    const biztype = document.getElementById('s2-biztype')?.value;
+    if (biztype === 'business') document.getElementById('cac-section').style.display = 'block';
+
     document.querySelectorAll('.stage-card').forEach(c => c.classList.remove('active'));
     document.getElementById('success-screen').classList.remove('show');
 
@@ -1162,569 +944,357 @@
 
     document.getElementById(`stage-${n}`).classList.add('active');
     currentStage = n;
-    updateProgress(n);
+    updateDots(n);
+
+    // Build review on stage 6
+    if (n === 6) buildReview();
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  function updateProgress(n) {
-    const labels = ['Verify Email','Shop Info','Business','Shipping','Payment','Identity','Review'];
-    const pct = n === 0 ? 5 : Math.round((n / 6) * 100);
-
+  function updateDots(n) {
+    const pct = Math.round((n / 6) * 100);
     document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('progress-label').textContent = labels[n] || 'Complete';
-    document.getElementById('progress-count').textContent = n === 0 ? 'Step 0 of 6' : `Step ${n} of 6`;
-
-    // Update dots
-    for (let i = 0; i <= 6; i++) {
-      const circle = document.getElementById(`circle-${i}`);
-      const dot    = document.getElementById(`dot-${i}`);
-      circle.classList.remove('active','done');
-      dot.classList.remove('active','done');
-      if (i < n) { circle.classList.add('done'); dot.classList.add('done'); }
-      else if (i === n) { circle.classList.add('active'); dot.classList.add('active'); }
+    document.getElementById('progress-label').textContent = STAGE_LABELS[n] || '';
+    document.getElementById('progress-count').textContent = `Step ${n} of 6`;
+    for (let i = 1; i <= 6; i++) {
+      const c = document.getElementById(`circle-${i}`);
+      const d = document.getElementById(`dot-${i}`);
+      c.classList.remove('active','done');
+      d.classList.remove('active','done');
+      if (i < n)  { c.classList.add('done'); d.classList.add('done'); }
+      if (i === n){ c.classList.add('active'); d.classList.add('active'); }
       if (i < 6) document.getElementById(`line-${i}`)?.classList.toggle('done', i < n);
     }
   }
 
-  /* ═══ HELPERS ═══ */
-  function setLoading(btnEl, on) {
-    if (typeof btnEl === 'string') btnEl = document.querySelector(`#${btnEl}`);
-    if (!btnEl) return;
-    btnEl.disabled = on;
-    btnEl.classList.toggle('loading', on);
-  }
-  function showStageError(stage, msg) {
-    const el = document.getElementById(`s${stage}-error`);
-    const msgEl = document.getElementById(`s${stage}-error-msg`);
-    if (el && msgEl) { msgEl.textContent = msg; el.classList.add('show'); }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-  function hideStageError(stage) {
-    document.getElementById(`s${stage}-error`)?.classList.remove('show');
-  }
-  function fieldErr(id, show) {
-    document.getElementById(`err-${id}`)?.classList.toggle('show', show);
-    document.getElementById(id)?.classList.toggle('error', show);
-  }
+  /* ══ VALIDATION (frontend only — no Supabase) ══ */
+  function validateStage(stage) {
+    clearErrors(stage);
+    let ok = true;
 
-  /* ── Upsert: inserts if not exists, updates if exists ── */
-  async function sbUpdate(uid, data) {
-    // Always include uid so upsert knows which row to match
-    const payload = { uid, ...data };
-    const res = await fetch(`${window.SUPABASE_URL}/rest/v1/vendors`, {
-      method: 'POST',
-      headers: {
-        'apikey':        window.SUPABASE_ANON,
-        'Authorization': `Bearer ${window.SUPABASE_ANON}`,
-        'Content-Type':  'application/json',
-        'Prefer':        'resolution=merge-duplicates,return=minimal'
-      },
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      let errMsg = errText;
-      try {
-        const parsed = JSON.parse(errText);
-        errMsg = parsed.message || parsed.hint || parsed.details || parsed.error || errText;
-      } catch(e) { /* keep raw */ }
-      console.error('[Supabase Error]', errMsg);
-      throw new Error(errMsg);
-    }
-  }
-
-  /* ── Autosave: saves current stage data every 30 seconds ── */
-  let _autosaveTimer = null;
-  function scheduleAutosave() {
-    clearTimeout(_autosaveTimer);
-    _autosaveTimer = setTimeout(doAutosave, 3000);
-  }
-
-  async function doAutosave() {
-    const uid = window._currentUser?.uid;
-    if (!uid) return;
-    try {
-      const draft = collectCurrentStageDraft();
-      if (!draft || Object.keys(draft).length === 0) return;
-      await sbUpdate(uid, { ...draft, autosaved_at: new Date().toISOString() });
-      showAutosaveIndicator('saved');
-    } catch(err) {
-      showAutosaveIndicator('error');
-    }
-  }
-
-  function collectCurrentStageDraft() {
-    const stage = window._currentStage || 0;
     if (stage === 1) {
-      return {
-        shop_name:     document.getElementById('s1-shopname')?.value?.trim() || '',
-        shop_slug:     document.getElementById('s1-slug')?.value?.trim() || '',
-        shop_category: document.getElementById('s1-category')?.value || '',
-        shop_desc:     document.getElementById('s1-desc')?.value?.trim() || '',
-        onboarding_step: 1
-      };
+      const name = v('s1-shopname'); const slug = v('s1-slug');
+      const cat  = v('s1-category'); const desc = v('s1-desc');
+      if (!name) { showErr('s1-shopname', true); ok = false; }
+      if (!slug || !/^[a-z0-9-]+$/.test(slug)) { showErr('s1-slug', true); ok = false; }
+      if (!cat)  { showErr('s1-category', true); ok = false; }
+      if (desc.length < 20) { showErr('s1-desc', true); ok = false; }
     }
     if (stage === 2) {
-      return {
-        legal_name:    document.getElementById('s2-name')?.value?.trim() || '',
-        whatsapp:      document.getElementById('s2-whatsapp')?.value?.trim() || '',
-        business_type: document.getElementById('s2-biztype')?.value || '',
-        state:         document.getElementById('s2-state')?.value || '',
-        lga:           document.getElementById('s2-lga')?.value?.trim() || '',
-        address:       document.getElementById('s2-address')?.value?.trim() || '',
-        onboarding_step: 2
-      };
+      const name = v('s2-name'); const wa = v('s2-whatsapp');
+      const nin  = v('s2-nin');  const bt = v('s2-biztype');
+      const st   = v('s2-state'); const lga = v('s2-lga');
+      const addr = v('s2-address');
+      if (!name) { showErr('s2-name', true); ok = false; }
+      if (!/^0[7-9][0-1]\d{8}$/.test(wa)) { showErr('s2-whatsapp', true); ok = false; }
+      if (nin.length !== 11) { showErr('s2-nin', true); ok = false; }
+      if (!bt)   { showErr('s2-biztype', true); ok = false; }
+      if (!st)   { showErr('s2-state', true); ok = false; }
+      if (!lga)  { showErr('s2-lga', true); ok = false; }
+      if (!addr) { showErr('s2-address', true); ok = false; }
     }
     if (stage === 3) {
-      return {
-        ship_from_city:  document.getElementById('s3-city')?.value?.trim() || '',
-        processing_days: parseInt(document.getElementById('s3-processing')?.value || '0'),
-        onboarding_step: 3
-      };
+      const city = v('s3-city'); const proc = v('s3-processing');
+      const checked = document.querySelectorAll('.state-cb:checked').length;
+      if (!city) { showErr('s3-city', true); ok = false; }
+      if (!proc) { showErr('s3-processing', true); ok = false; }
+      if (!checked) { showErr('s3-states', true); ok = false; }
     }
     if (stage === 4) {
-      return {
-        bank_name:      document.getElementById('s4-bank')?.value || '',
-        account_number: document.getElementById('s4-acct')?.value?.trim() || '',
-        onboarding_step: 4
-      };
+      const bank = v('s4-bank'); const acct = v('s4-acct');
+      if (!bank) { showErr('s4-bank', true); ok = false; }
+      if (acct.length !== 10) { showErr('s4-acct', true); ok = false; }
     }
-    return {};
+    if (stage === 5) {
+      const idt    = v('s5-idtype');
+      const idFile = document.getElementById('s5-id').files[0];
+      const sfFile = document.getElementById('s5-selfie').files[0];
+      if (!idt)    { showErr('s5-idtype', true); ok = false; }
+      if (!idFile) { showErr('s5-id', true); ok = false; }
+      if (!sfFile) { showErr('s5-selfie', true); ok = false; }
+    }
+
+    if (!ok) window.scrollTo({ top: 0, behavior: 'smooth' });
+    return ok;
   }
 
-  function showAutosaveIndicator(state) {
-    // Find or create autosave indicator
-    let el = document.getElementById('autosave-indicator');
+  function v(id) { return document.getElementById(id)?.value?.trim() || ''; }
+  function showErr(id, show) {
+    document.getElementById(`err-${id}`)?.classList.toggle('show', show);
+    document.getElementById(id)?.classList.toggle('error-field', show);
+  }
+  function clearErrors(stage) {
+    document.querySelectorAll(`#stage-${stage} .field-error`).forEach(e => e.classList.remove('show'));
+    document.getElementById(`s${stage}-err`)?.classList.remove('show');
+  }
+
+  /* ══ DRAFT — LOCALSTORAGE ONLY ══ */
+  window.saveDraft = function() {
+    clearTimeout(draftTimer);
+    setDraftIndicator('saving');
+    draftTimer = setTimeout(() => {
+      try {
+        const states = Array.from(document.querySelectorAll('.state-cb:checked')).map(cb => cb.value);
+        const draft = {
+          s1_shopname:  v('s1-shopname'),
+          s1_slug:      v('s1-slug'),
+          s1_category:  v('s1-category'),
+          s1_desc:      document.getElementById('s1-desc')?.value || '',
+          s2_name:      v('s2-name'),
+          s2_whatsapp:  v('s2-whatsapp'),
+          s2_nin:       v('s2-nin'),
+          s2_biztype:   v('s2-biztype'),
+          s2_state:     v('s2-state'),
+          s2_lga:       v('s2-lga'),
+          s2_address:   document.getElementById('s2-address')?.value || '',
+          s3_city:      v('s3-city'),
+          s3_processing:v('s3-processing'),
+          s3_states:    states,
+          s4_bank:      v('s4-bank'),
+          s4_acct:      v('s4-acct'),
+          s5_idtype:    v('s5-idtype'),
+          saved_at:     new Date().toISOString()
+        };
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        setDraftIndicator('saved');
+      } catch(e) {
+        setDraftIndicator('error');
+      }
+    }, 800);
+  };
+
+  function restoreDraft() {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+
+      const set = (id, val) => { if (val && document.getElementById(id)) document.getElementById(id).value = val; };
+      set('s1-shopname', d.s1_shopname); if (d.s1_shopname) { updateSlug(d.s1_shopname); }
+      set('s1-slug', d.s1_slug); if (d.s1_slug) { document.getElementById('slug-preview').textContent = d.s1_slug; }
+      set('s1-category', d.s1_category);
+      if (d.s1_desc) { document.getElementById('s1-desc').value = d.s1_desc; document.getElementById('desc-count').textContent = d.s1_desc.length + '/300'; }
+      set('s2-name', d.s2_name); set('s2-whatsapp', d.s2_whatsapp);
+      set('s2-nin', d.s2_nin); set('s2-biztype', d.s2_biztype);
+      set('s2-state', d.s2_state); set('s2-lga', d.s2_lga);
+      if (d.s2_address) document.getElementById('s2-address').value = d.s2_address;
+      set('s3-city', d.s3_city); set('s3-processing', d.s3_processing);
+      if (d.s3_states && d.s3_states.length) {
+        document.querySelectorAll('.state-cb').forEach(cb => { cb.checked = d.s3_states.includes(cb.value); });
+      }
+      set('s4-bank', d.s4_bank); set('s4-acct', d.s4_acct);
+      set('s5-idtype', d.s5_idtype);
+      if (d.s2_biztype === 'business') document.getElementById('cac-section').style.display = 'block';
+
+      setDraftIndicator('saved');
+    } catch(e) { console.warn('Restore draft failed:', e); }
+  }
+
+  function setDraftIndicator(state) {
+    const el = document.getElementById('draft-indicator');
     if (!el) return;
     if (state === 'saving') {
-      el.innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i> Saving...';
-      el.style.color = 'var(--amber)';
+      el.className = 'draft-indicator saving';
+      el.innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i><span>Saving...</span>';
     } else if (state === 'saved') {
-      el.innerHTML = '<i class="fa-solid fa-cloud-check"></i> Saved';
-      el.style.color = 'var(--green)';
+      el.className = 'draft-indicator';
+      el.innerHTML = '<i class="fa-solid fa-cloud-check"></i><span>Draft saved</span>';
     } else {
-      el.innerHTML = '<i class="fa-solid fa-cloud-xmark"></i> Save failed';
+      el.className = 'draft-indicator';
       el.style.color = 'var(--red)';
+      el.innerHTML = '<i class="fa-solid fa-cloud-xmark"></i><span>Not saved</span>';
     }
   }
 
-  /* Track current stage for autosave */
-  const _origGoToStage = window.goToStage;
-
-  window.goToStage = function(n) {
-    window._currentStage = n;
-    // Trigger autosave when leaving a stage
-    if (n > 0) doAutosave();
-    if (typeof _origGoToStage === 'function') _origGoToStage(n);
-    else goToStage(n);
-  };
-
-  async function uploadToCloudinary(file, folder) {
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('upload_preset', window.CLOUDINARY_PRESET);
-    fd.append('folder', `mc_vendor/${folder}`);
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${window.CLOUDINARY_CLOUD}/image/upload`, {
-      method: 'POST', body: fd
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    return data.secure_url;
-  }
-
-  /* ═══ SLUG ═══ */
-  window.updateSlug = function(name) {
-    const slug = name.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');
-    document.getElementById('s1-slug').value = slug;
-    document.getElementById('slug-preview').textContent = slug || 'your-shop-name';
-  };
-  window.sanitizeSlug = function(input) {
-    input.value = input.value.toLowerCase().replace(/[^a-z0-9-]/g,'');
-    document.getElementById('slug-preview').textContent = input.value || 'your-shop-name';
-  };
-
-  /* ═══ UPLOAD PREVIEW ═══ */
-  window.previewUpload = function(input, previewId, boxId) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      const wrap = document.getElementById(previewId);
-      const img  = wrap.querySelector('img');
-      img.src = e.target.result;
-      wrap.classList.add('show');
-    };
-    reader.readAsDataURL(file);
-  };
-
-  /* ═══ STATES ═══ */
-  window.toggleAllStates = function() {
-    const cbs = document.querySelectorAll('.state-cb');
-    const allChecked = Array.from(cbs).every(cb => cb.checked);
-    cbs.forEach(cb => cb.checked = !allChecked);
-  };
-
-  /* ═══ STAGE 0: EMAIL VERIFICATION ═══ */
-  /* ═══ STAGE 0: BYPASS (temporary — restore when domain ready) ═══ */
-  window.bypassEmailVerification = async function() {
-    try {
-      await sbUpdate(window._currentUser.uid, {
-        email_verified: true,
-        onboarding_step: 1
-      });
-      goToStage(1);
-    } catch(err) {
-      goToStage(1); // proceed anyway even if update fails
-    }
-  };
-
-  window.sendEmailCode = async function(isResend = false) {
-    hideStageError(0);
-    const email = document.getElementById('s0-email').value.trim();
-    if (!email) return;
-
-    document.getElementById('s0-send-btn').disabled = true;
-    try {
-      const res = await fetch('/api/send-email-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, uid: window._currentUser?.uid })
-      });
-      if (!res.ok) throw new Error('Failed to send code');
-
-      document.getElementById('s0-step-a').style.display = 'none';
-      document.getElementById('s0-step-b').style.display = 'block';
-      document.getElementById('e0').focus();
-      startEmailResendTimer();
-    } catch (err) {
-      document.getElementById('s0-send-btn').disabled = false;
-      showStageError(0, 'Failed to send code. Please check your email and try again.');
-    }
-  };
-
-  window.verifyEmailCode = async function() {
-    hideStageError(0);
-    const code = [0,1,2,3,4,5].map(i => document.getElementById(`e${i}`).value).join('');
-    if (code.length < 6) { showStageError(0, 'Please enter the full 6-digit code.'); return; }
-
-    setLoading('s0-verify-btn', true);
-    try {
-      const res = await fetch('/api/verify-email-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, uid: window._currentUser?.uid })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Invalid code');
-
-      // Mark verified in Supabase
-      await sbUpdate(window._currentUser.uid, { email_verified: true, onboarding_step: 1 });
-      goToStage(1);
-    } catch (err) {
-      showStageError(0, err.message.includes('Invalid') ? 'Incorrect code. Please try again.' : err.message);
-    } finally {
-      setLoading('s0-verify-btn', false);
-    }
-  };
-
-  window.eOtpMove = function(el, idx) {
-    el.value = el.value.replace(/\D/g,'').slice(-1);
-    el.classList.toggle('filled', !!el.value);
-    if (el.value && idx < 5) document.getElementById(`e${idx+1}`).focus();
-    const code = [0,1,2,3,4,5].map(i => document.getElementById(`e${i}`).value).join('');
-    if (code.length === 6) window.verifyEmailCode();
-  };
-  window.eOtpBack = function(e, idx) {
-    if (e.key === 'Backspace' && !document.getElementById(`e${idx}`).value && idx > 0) {
-      document.getElementById(`e${idx-1}`).focus();
-    }
-  };
-
-  function startEmailResendTimer() {
-    let secs = 60;
-    const btn = document.getElementById('e-resend-btn');
-    const timer = document.getElementById('e-resend-timer');
-    btn.disabled = true;
-    timer.textContent = `in ${secs}s`;
-    clearInterval(resendTimer);
-    resendTimer = setInterval(() => {
-      secs--;
-      timer.textContent = `in ${secs}s`;
-      if (secs <= 0) {
-        clearInterval(resendTimer);
-        btn.disabled = false;
-        timer.textContent = '';
-      }
-    }, 1000);
-  }
-
-  /* ═══ STAGE 1: SHOP INFO ═══ */
-  window.saveStage1 = async function() {
-    hideStageError(1);
-    const shopname = document.getElementById('s1-shopname').value.trim();
-    const slug     = document.getElementById('s1-slug').value.trim();
-    const category = document.getElementById('s1-category').value;
-    const desc     = document.getElementById('s1-desc').value.trim();
-
-    let valid = true;
-    fieldErr('s1-shopname', !shopname); if (!shopname) valid = false;
-    fieldErr('s1-slug', !slug || !/^[a-z0-9-]+$/.test(slug)); if (!slug || !/^[a-z0-9-]+$/.test(slug)) valid = false;
-    fieldErr('s1-category', !category); if (!category) valid = false;
-    fieldErr('s1-desc', desc.length < 30); if (desc.length < 30) valid = false;
-    if (!valid) return;
-
-    const btn = document.querySelector('#stage-1 .btn-next');
-    setLoading(btn, true);
-    try {
-      // Upload logo and banner if provided
-      let logoUrl = '', bannerUrl = '';
-      const logoFile   = document.getElementById('s1-logo').files[0];
-      const bannerFile = document.getElementById('s1-banner').files[0];
-      if (logoFile)   logoUrl   = await uploadToCloudinary(logoFile, 'logos');
-      if (bannerFile) bannerUrl = await uploadToCloudinary(bannerFile, 'banners');
-
-      formData.shop = { shopname, slug, category, desc, logoUrl, bannerUrl };
-
-      await sbUpdate(window._currentUser.uid, {
-        shop_name: shopname, shop_slug: slug,
-        shop_category: category, shop_desc: desc,
-        shop_logo: logoUrl, shop_banner: bannerUrl,
-        onboarding_step: 2
-      });
-      goToStage(2);
-    } catch (err) {
-      showStageError(1, err.message || 'Unknown error on Stage 1');
-    } finally {
-      setLoading(btn, false);
-    }
-  };
-
-  /* ═══ STAGE 2: BUSINESS INFO ═══ */
-  window.saveStage2 = async function() {
-    hideStageError(2);
-    const name    = document.getElementById('s2-name').value.trim();
-    const wa      = document.getElementById('s2-whatsapp').value.trim();
-    const nin     = document.getElementById('s2-nin').value.trim();
-    const biztype = document.getElementById('s2-biztype').value;
-    const state   = document.getElementById('s2-state').value;
-    const lga     = document.getElementById('s2-lga').value.trim();
-    const address = document.getElementById('s2-address').value.trim();
-
-    let valid = true;
-    fieldErr('s2-name',    !name);    if (!name)    valid = false;
-    fieldErr('s2-whatsapp', !/^0[7-9][0-1]\d{8}$/.test(wa)); if (!/^0[7-9][0-1]\d{8}$/.test(wa)) valid = false;
-    fieldErr('s2-nin',     nin.length !== 11); if (nin.length !== 11) valid = false;
-    fieldErr('s2-biztype', !biztype); if (!biztype) valid = false;
-    fieldErr('s2-state',   !state);   if (!state)   valid = false;
-    fieldErr('s2-lga',     !lga);     if (!lga)     valid = false;
-    fieldErr('s2-address', !address); if (!address) valid = false;
-    if (!valid) return;
-
-    const btn = document.querySelector('#stage-2 .btn-next');
-    setLoading(btn, true);
-    try {
-      formData.business = { name, wa, nin, biztype, state, lga, address };
-      await sbUpdate(window._currentUser.uid, {
-        legal_name: name, whatsapp: wa, nin,
-        business_type: biztype, state, lga, address,
-        onboarding_step: 3
-      });
-
-      // Show CAC section in stage 5 if business type
-      if (biztype === 'business') {
-        document.getElementById('cac-section').style.display = 'block';
-      }
-      goToStage(3);
-    } catch (err) {
-      showStageError(2, err.message || 'Unknown error on Stage 2');
-    } finally {
-      setLoading(btn, false);
-    }
-  };
-
-  /* ═══ STAGE 3: SHIPPING ═══ */
-  window.saveStage3 = async function() {
-    hideStageError(3);
-    const city       = document.getElementById('s3-city').value.trim();
-    const processing = document.getElementById('s3-processing').value;
-    const checked    = Array.from(document.querySelectorAll('.state-cb:checked')).map(cb => cb.value);
-
-    let valid = true;
-    fieldErr('s3-city',       !city);           if (!city)            valid = false;
-    fieldErr('s3-processing', !processing);     if (!processing)      valid = false;
-    fieldErr('s3-states',     !checked.length); if (!checked.length)  valid = false;
-    if (!valid) return;
-
-    const btn = document.querySelector('#stage-3 .btn-next');
-    setLoading(btn, true);
-    try {
-      formData.shipping = { city, processing, states: checked };
-      await sbUpdate(window._currentUser.uid, {
-        ship_from_city: city, processing_days: parseInt(processing),
-        ships_to: checked, ships_nationwide: checked.length === 37,
-        onboarding_step: 4
-      });
-      goToStage(4);
-    } catch (err) {
-      showStageError(3, err.message || 'Unknown error on Stage 3');
-    } finally {
-      setLoading(btn, false);
-    }
-  };
-
-  /* ═══ STAGE 4: PAYMENT ═══ */
-  window.saveStage4 = async function() {
-    hideStageError(4);
-    const bank = document.getElementById('s4-bank').value;
-    const acct = document.getElementById('s4-acct').value.trim();
-
-    let valid = true;
-    fieldErr('s4-bank', !bank);          if (!bank)           valid = false;
-    fieldErr('s4-acct', acct.length !== 10); if (acct.length !== 10) valid = false;
-    if (!valid) return;
-
-    const btn = document.querySelector('#stage-4 .btn-next');
-    setLoading(btn, true);
-    try {
-      formData.payment = { bank, acct };
-      await sbUpdate(window._currentUser.uid, {
-        bank_name: bank, account_number: acct,
-        onboarding_step: 5
-      });
-      goToStage(5);
-    } catch (err) {
-      showStageError(4, err.message || 'Unknown error on Stage 4');
-    } finally {
-      setLoading(btn, false);
-    }
-  };
-
-  /* ═══ STAGE 5: IDENTITY ═══ */
-  window.saveStage5 = async function() {
-    hideStageError(5);
-    const idtype  = document.getElementById('s5-idtype').value;
-    const idFile  = document.getElementById('s5-id').files[0];
-    const selfie  = document.getElementById('s5-selfie').files[0];
-    const biztype = formData.business?.biztype || window._vendorData?.business_type;
-
-    let valid = true;
-    fieldErr('s5-idtype', !idtype);  if (!idtype)  valid = false;
-    fieldErr('s5-id',     !idFile);  if (!idFile)  valid = false;
-    fieldErr('s5-selfie', !selfie);  if (!selfie)  valid = false;
-    if (!valid) return;
-
-    const btn = document.querySelector('#stage-5 .btn-next');
-    setLoading(btn, true);
-    try {
-      const [idUrl, selfieUrl] = await Promise.all([
-        uploadToCloudinary(idFile, 'id_docs'),
-        uploadToCloudinary(selfie, 'selfies')
-      ]);
-
-      let cacUrl = '';
-      if (biztype === 'business') {
-        const cacFile = document.getElementById('s5-cac').files[0];
-        if (cacFile) cacUrl = await uploadToCloudinary(cacFile, 'cac_docs');
-      }
-
-      formData.identity = { idtype, idUrl, selfieUrl, cacUrl };
-      await sbUpdate(window._currentUser.uid, {
-        id_type: idtype, id_photo_url: idUrl,
-        selfie_url: selfieUrl, cac_url: cacUrl,
-        onboarding_step: 6
-      });
-      buildReviewContent();
-      goToStage(6);
-    } catch (err) {
-      showStageError(5, err.message || 'Unknown error on Stage 5');
-    } finally {
-      setLoading(btn, false);
-    }
-  };
-
-  /* ═══ STAGE 6: REVIEW ═══ */
-  function buildReviewContent() {
-    const d = formData;
-    const v = window._vendorData || {};
-    const sn = d.shop?.shopname || v.shop_name || '—';
-    const sl = d.shop?.slug || v.shop_slug || '—';
-    const cat = d.shop?.category || v.shop_category || '—';
-    const nm = d.business?.name || v.legal_name || '—';
-    const wa = d.business?.wa || v.whatsapp || '—';
-    const st = d.business?.state || v.state || '—';
-    const lg = d.business?.lga || v.lga || '—';
-    const bk = d.payment?.bank || v.bank_name || '—';
-    const ac = d.payment?.acct || v.account_number || '—';
-    const it = d.identity?.idtype || v.id_type || '—';
-    const city = d.shipping?.city || v.ship_from_city || '—';
-
+  /* ══ REVIEW ══ */
+  function buildReview() {
+    const d = getDraftData();
     document.getElementById('review-content').innerHTML = `
-      <div class="review-section-title">
-        <i class="fa-solid fa-store"></i> Shop Info
-        <button class="review-edit-btn" onclick="goToStage(1)">Edit</button>
-      </div>
+      <div class="review-section-title"><i class="fa-solid fa-store"></i> Shop Info <button class="review-edit-btn" onclick="goStage(1)">Edit</button></div>
       <table class="review-table">
-        <tr><td>Shop name</td><td>${sn}</td></tr>
-        <tr><td>URL slug</td><td>mcstore.com.ng/shop/${sl}</td></tr>
-        <tr><td>Category</td><td>${cat}</td></tr>
+        <tr><td>Shop name</td><td>${d.s1_shopname || '—'}</td></tr>
+        <tr><td>URL slug</td><td>mcstore.com.ng/shop/${d.s1_slug || '—'}</td></tr>
+        <tr><td>Category</td><td>${d.s1_category || '—'}</td></tr>
+        <tr><td>Description</td><td>${(d.s1_desc || '—').substring(0,80)}${d.s1_desc?.length > 80 ? '...' : ''}</td></tr>
       </table>
 
-      <div class="review-section-title">
-        <i class="fa-solid fa-briefcase"></i> Business Info
-        <button class="review-edit-btn" onclick="goToStage(2)">Edit</button>
-      </div>
+      <div class="review-section-title"><i class="fa-solid fa-briefcase"></i> Business Info <button class="review-edit-btn" onclick="goStage(2)">Edit</button></div>
       <table class="review-table">
-        <tr><td>Legal name</td><td>${nm}</td></tr>
-        <tr><td>WhatsApp</td><td>${wa}</td></tr>
-        <tr><td>Location</td><td>${lg}, ${st}</td></tr>
+        <tr><td>Legal name</td><td>${d.s2_name || '—'}</td></tr>
+        <tr><td>WhatsApp</td><td>${d.s2_whatsapp || '—'}</td></tr>
+        <tr><td>Business type</td><td>${d.s2_biztype || '—'}</td></tr>
+        <tr><td>Location</td><td>${d.s2_lga || '—'}, ${d.s2_state || '—'}</td></tr>
       </table>
 
-      <div class="review-section-title">
-        <i class="fa-solid fa-truck-fast"></i> Shipping
-        <button class="review-edit-btn" onclick="goToStage(3)">Edit</button>
-      </div>
+      <div class="review-section-title"><i class="fa-solid fa-truck-fast"></i> Shipping <button class="review-edit-btn" onclick="goStage(3)">Edit</button></div>
       <table class="review-table">
-        <tr><td>Ships from</td><td>${city}</td></tr>
-        <tr><td>Processing</td><td>${d.shipping?.processing || v.processing_days || '—'} day(s)</td></tr>
+        <tr><td>Ships from</td><td>${d.s3_city || '—'}</td></tr>
+        <tr><td>Processing</td><td>${d.s3_processing || '—'} day(s)</td></tr>
+        <tr><td>States covered</td><td>${d.s3_states?.length || 0} state(s)</td></tr>
       </table>
 
-      <div class="review-section-title">
-        <i class="fa-solid fa-building-columns"></i> Payment
-        <button class="review-edit-btn" onclick="goToStage(4)">Edit</button>
-      </div>
+      <div class="review-section-title"><i class="fa-solid fa-building-columns"></i> Payment <button class="review-edit-btn" onclick="goStage(4)">Edit</button></div>
       <table class="review-table">
-        <tr><td>Bank</td><td>${bk}</td></tr>
-        <tr><td>Account</td><td>${ac}</td></tr>
+        <tr><td>Bank</td><td>${d.s4_bank || '—'}</td></tr>
+        <tr><td>Account</td><td>${d.s4_acct || '—'}</td></tr>
       </table>
 
-      <div class="review-section-title">
-        <i class="fa-solid fa-id-badge"></i> Identity
-        <button class="review-edit-btn" onclick="goToStage(5)">Edit</button>
-      </div>
+      <div class="review-section-title"><i class="fa-solid fa-id-badge"></i> Identity <button class="review-edit-btn" onclick="goStage(5)">Edit</button></div>
       <table class="review-table">
-        <tr><td>ID type</td><td>${it}</td></tr>
-        <tr><td>ID photo</td><td><span style="color:var(--green);font-weight:700;">✓ Uploaded</span></td></tr>
-        <tr><td>Selfie</td><td><span style="color:var(--green);font-weight:700;">✓ Uploaded</span></td></tr>
+        <tr><td>ID type</td><td>${d.s5_idtype || '—'}</td></tr>
+        <tr><td>ID photo</td><td><span style="color:var(--green);font-weight:700;"><i class="fa-solid fa-check"></i> Uploaded</span></td></tr>
+        <tr><td>Selfie</td><td><span style="color:var(--green);font-weight:700;"><i class="fa-solid fa-check"></i> Uploaded</span></td></tr>
       </table>
     `;
   }
 
-  window.submitApplication = async function() {
-    hideStageError(6);
-    const btn = document.getElementById('submit-btn');
-    setLoading(btn, true);
+  function getDraftData() {
     try {
-      await sbUpdate(window._currentUser.uid, {
-        status: 'pending',
+      return JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}');
+    } catch(e) { return {}; }
+  }
+
+  /* ══ FINAL SUBMIT — ONLY HERE WE TOUCH SUPABASE ══ */
+  window.submitApplication = async function() {
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true; btn.classList.add('loading');
+
+    const errEl = document.getElementById('s6-err');
+    const errMsg = document.getElementById('s6-err-msg');
+    errEl.classList.remove('show');
+
+    try {
+      const d = getDraftData();
+
+      // 1. Upload ID photo to Cloudinary
+      const idFile     = document.getElementById('s5-id').files[0];
+      const selfieFile = document.getElementById('s5-selfie').files[0];
+      const cacFile    = document.getElementById('s5-cac')?.files[0];
+      const logoFile   = document.getElementById('s1-logo')?.files[0];
+      const bannerFile = document.getElementById('s1-banner')?.files[0];
+
+      const [idUrl, selfieUrl, cacUrl, logoUrl, bannerUrl] = await Promise.all([
+        idFile     ? uploadCDN(idFile,     'id_docs')  : Promise.resolve(''),
+        selfieFile ? uploadCDN(selfieFile, 'selfies')  : Promise.resolve(''),
+        cacFile    ? uploadCDN(cacFile,    'cac_docs') : Promise.resolve(''),
+        logoFile   ? uploadCDN(logoFile,   'logos')    : Promise.resolve(''),
+        bannerFile ? uploadCDN(bannerFile, 'banners')  : Promise.resolve('')
+      ]);
+
+      // 2. Single upsert to Supabase with ALL data at once
+      const payload = {
+        uid:                window._uid,
+        email:              window._email || null,
+        phone:              window._phone || null,
+        display_name:       d.s2_name || '',
+        status:             'pending',
         onboarding_complete: true,
-        submitted_at: new Date().toISOString()
+        onboarding_step:    6,
+        email_verified:     true,
+        submitted_at:       new Date().toISOString(),
+        // Stage 1
+        shop_name:     d.s1_shopname,
+        shop_slug:     d.s1_slug,
+        shop_category: d.s1_category,
+        shop_desc:     d.s1_desc,
+        shop_logo:     logoUrl,
+        shop_banner:   bannerUrl,
+        // Stage 2
+        legal_name:    d.s2_name,
+        whatsapp:      d.s2_whatsapp,
+        nin:           d.s2_nin,
+        business_type: d.s2_biztype,
+        state:         d.s2_state,
+        lga:           d.s2_lga,
+        address:       d.s2_address,
+        // Stage 3
+        ship_from_city:  d.s3_city,
+        processing_days: parseInt(d.s3_processing || '1'),
+        ships_to:        d.s3_states || [],
+        ships_nationwide:(d.s3_states || []).length >= 36,
+        // Stage 4
+        bank_name:      d.s4_bank,
+        account_number: d.s4_acct,
+        // Stage 5
+        id_type:      d.s5_idtype,
+        id_photo_url: idUrl,
+        selfie_url:   selfieUrl,
+        cac_url:      cacUrl
+      };
+
+      const res = await fetch(`${window.SB_URL}/rest/v1/vendors`, {
+        method: 'POST',
+        headers: {
+          'apikey':        window.SB_ANON,
+          'Authorization': `Bearer ${window.SB_ANON}`,
+          'Content-Type':  'application/json',
+          'Prefer':        'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify(payload)
       });
-      goToStage(7); // shows success screen
-    } catch (err) {
-      showStageError(6, err.message || 'Unknown error on Stage 6');
-    } finally {
-      setLoading(btn, false);
+
+      if (!res.ok) {
+        const errText = await res.text();
+        let msg = errText;
+        try { const p = JSON.parse(errText); msg = p.message || p.hint || p.details || errText; } catch(e){}
+        throw new Error(msg);
+      }
+
+      // 3. Clear local draft — data is now safely in Supabase
+      localStorage.removeItem(DRAFT_KEY);
+
+      // 4. Show success and redirect
+      goStage(7);
+
+    } catch(err) {
+      console.error('[Submit]', err);
+      errMsg.textContent = err.message || 'Something went wrong. Please try again.';
+      errEl.classList.add('show');
+      btn.disabled = false; btn.classList.remove('loading');
     }
+  };
+
+  /* ══ CLOUDINARY UPLOAD ══ */
+  async function uploadCDN(file, folder) {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', window.CDN_PRESET);
+    fd.append('folder', `mc_vendor/${window._uid}/${folder}`);
+    const res  = await fetch(`https://api.cloudinary.com/v1_1/${window.CDN_CLOUD}/image/upload`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.error) throw new Error(`Image upload failed: ${data.error.message}`);
+    return data.secure_url || '';
+  }
+
+  /* ══ HELPERS ══ */
+  window.updateSlug = function(name) {
+    const slug = name.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');
+    const el = document.getElementById('s1-slug');
+    if (el) el.value = slug;
+    document.getElementById('slug-preview').textContent = slug || 'your-shop';
+  };
+
+  window.sanitizeSlug = function(input) {
+    input.value = input.value.toLowerCase().replace(/[^a-z0-9-]/g,'');
+    document.getElementById('slug-preview').textContent = input.value || 'your-shop';
+  };
+
+  window.previewUpload = function(input, imgId, wrapId) {
+    const file = input.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById(imgId).src = e.target.result;
+      document.getElementById(wrapId).classList.add('show');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.toggleAllStates = function() {
+    const cbs = document.querySelectorAll('.state-cb');
+    const allChecked = Array.from(cbs).every(cb => cb.checked);
+    cbs.forEach(cb => cb.checked = !allChecked);
+    saveDraft();
   };
 </script>
 
