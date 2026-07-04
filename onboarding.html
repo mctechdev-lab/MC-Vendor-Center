@@ -1223,19 +1223,43 @@
         cac_url:      cacUrl
       };
 
-      const res = await fetch(`${window.SB_URL}/rest/v1/vendors`, {
-        method: 'POST',
-        headers: {
-          'apikey':        window.SB_ANON,
-          'Authorization': `Bearer ${window.SB_ANON}`,
-          'Content-Type':  'application/json',
-          'Prefer':        'resolution=merge-duplicates,return=minimal'
-        },
-        body: JSON.stringify(payload)
+      // 2. Check if vendor row exists first
+      const checkRes = await fetch(`${window.SB_URL}/rest/v1/vendors?uid=eq.${window._uid}&select=uid`, {
+        headers: { 'apikey': window.SB_ANON, 'Authorization': `Bearer ${window.SB_ANON}` }
       });
+      const checkData = await checkRes.json();
+      const rowExists = checkData && checkData.length > 0;
 
-      if (!res.ok) {
-        const errText = await res.text();
+      // 3. INSERT if new, PATCH if exists
+      let sbRes;
+      if (rowExists) {
+        // UPDATE existing row
+        sbRes = await fetch(`${window.SB_URL}/rest/v1/vendors?uid=eq.${window._uid}`, {
+          method: 'PATCH',
+          headers: {
+            'apikey':        window.SB_ANON,
+            'Authorization': `Bearer ${window.SB_ANON}`,
+            'Content-Type':  'application/json',
+            'Prefer':        'return=minimal'
+          },
+          body: JSON.stringify(payload)
+        });
+      } else {
+        // INSERT new row
+        sbRes = await fetch(`${window.SB_URL}/rest/v1/vendors`, {
+          method: 'POST',
+          headers: {
+            'apikey':        window.SB_ANON,
+            'Authorization': `Bearer ${window.SB_ANON}`,
+            'Content-Type':  'application/json',
+            'Prefer':        'return=minimal'
+          },
+          body: JSON.stringify(payload)
+        });
+      }
+
+      if (!sbRes.ok) {
+        const errText = await sbRes.text();
         let msg = errText;
         try { const p = JSON.parse(errText); msg = p.message || p.hint || p.details || errText; } catch(e){}
         throw new Error(msg);
