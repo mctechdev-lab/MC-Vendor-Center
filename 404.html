@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a56db" />
+  <title>Page Not Found — MC Vendor Center</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --blue:      #1a56db;
+      --blue-dark: #1543ad;
+      --blue-dim:  rgba(26,86,219,.07);
+      --blue-bd:   rgba(26,86,219,.20);
+      --gold:      #f5a623;
+      --gold2:     #f97316;
+      --bg:        #f6f8fd;
+      --surface:   #ffffff;
+      --border:    rgba(26,86,219,.12);
+      --ink:       #0f1b3d;
+      --muted:     #5b6987;
+      --muted2:    #93a0bd;
+      --font-d:    'Syne', sans-serif;
+      --font-b:    'Plus Jakarta Sans', sans-serif;
+      --r-md:      14px; --r-lg: 20px;
+      --ease:      cubic-bezier(.22,.68,0,1.2);
+      --sh-sm:     0 2px 12px rgba(15,27,61,.06);
+      --sh-blue:   0 8px 28px rgba(26,86,219,.18);
+      --sh-gold:   0 8px 28px rgba(245,166,35,.25);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-b);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100svh;
+      display: flex; flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; border: none; outline: none; background: none; }
+
+    /* TOPBAR */
+    .topbar {
+      height: 56px; display: flex; align-items: center;
+      padding: 0 clamp(16px,5vw,32px);
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      box-shadow: var(--sh-sm); flex-shrink: 0;
+    }
+    .brand { display: flex; align-items: center; gap: 9px; }
+    .brand-mark {
+      width: 32px; height: 32px;
+      background: linear-gradient(140deg, var(--blue), var(--blue-dark));
+      border-radius: 8px; display: grid; place-items: center;
+      font-family: var(--font-d); font-weight: 900; font-size: 12px;
+      color: #fff; box-shadow: var(--sh-blue); flex-shrink: 0;
+    }
+    .brand-text strong { font-family: var(--font-d); font-weight: 800; font-size: 13px; color: var(--ink); display: block; }
+    .brand-text span { font-size: 10px; font-weight: 700; color: var(--gold2); letter-spacing: .08em; text-transform: uppercase; }
+
+    /* MAIN */
+    .main {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: clamp(32px,8vw,64px) clamp(16px,5vw,24px);
+    }
+    .box {
+      max-width: 460px; width: 100%;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: clamp(32px,8vw,52px) clamp(24px,6vw,40px);
+      text-align: center; box-shadow: 0 8px 40px rgba(15,27,61,.08);
+      animation: fadeIn .5s var(--ease) both;
+    }
+
+    /* 404 NUMBER */
+    .error-num {
+      font-family: var(--font-d); font-weight: 900;
+      font-size: clamp(72px,20vw,100px);
+      background: linear-gradient(135deg, var(--blue) 0%, var(--gold) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1; margin-bottom: 6px;
+      letter-spacing: -.04em;
+    }
+
+    .error-icon {
+      width: 64px; height: 64px;
+      background: var(--blue-dim); border: 2px solid var(--blue-bd);
+      border-radius: 50%; display: grid; place-items: center;
+      font-size: 26px; color: var(--blue);
+      margin: 0 auto 18px;
+    }
+
+    .error-title {
+      font-family: var(--font-d); font-weight: 900;
+      font-size: clamp(20px,5vw,26px); color: var(--ink);
+      margin-bottom: 10px; letter-spacing: -.02em;
+    }
+
+    .error-sub {
+      font-size: 14px; color: var(--muted);
+      line-height: 1.65; margin-bottom: 28px; max-width: 320px; margin-left: auto; margin-right: auto;
+    }
+
+    /* ACTION BUTTONS */
+    .btn-home {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 28px; border-radius: var(--r-md);
+      font-size: 15px; font-weight: 800; color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: var(--sh-blue);
+      transition: transform .2s var(--ease), box-shadow .2s;
+      margin-bottom: 10px;
+    }
+    .btn-home:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(26,86,219,.28); }
+
+    .btn-wa {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 28px; border-radius: var(--r-md);
+      font-size: 14px; font-weight: 700; color: #fff;
+      background: #25d366;
+      box-shadow: 0 4px 16px rgba(37,211,102,.22);
+      transition: transform .2s;
+      margin-bottom: 10px;
+    }
+    .btn-wa:hover { transform: translateY(-2px); }
+
+    .btn-back {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 28px; border-radius: var(--r-md);
+      font-size: 14px; font-weight: 700; color: var(--muted);
+      border: 1.5px solid var(--border); background: var(--surface);
+      transition: background .2s, color .2s;
+    }
+    .btn-back:hover { background: var(--blue-dim); color: var(--blue); border-color: var(--blue-bd); }
+
+    /* QUICK LINKS */
+    .quick-links {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 8px; margin-top: 24px;
+    }
+    .quick-link {
+      display: flex; align-items: center; gap: 5px;
+      padding: 7px 14px; border-radius: 99px;
+      font-size: 12px; font-weight: 700; color: var(--blue);
+      background: var(--blue-dim); border: 1px solid var(--blue-bd);
+      transition: background .2s;
+    }
+    .quick-link:hover { background: var(--blue-bd); }
+    .quick-link i { font-size: 11px; }
+
+    /* FOOTER */
+    footer { padding: 16px; text-align: center; font-size: 12px; color: var(--muted2); flex-shrink: 0; }
+    footer a { color: var(--blue); font-weight: 600; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      footer { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">MC</div>
+    <div class="brand-text">
+      <strong>Vendor Center</strong>
+      <span>MC Store Nigeria</span>
+    </div>
+  </a>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="box">
+
+    <div class="error-num">404</div>
+    <div class="error-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+
+    <h1 class="error-title">Page not found</h1>
+    <p class="error-sub">
+      The page you're looking for doesn't exist or may have been moved.
+      Let's get you back on track.
+    </p>
+
+    <a href="index.html" class="btn-home">
+      <i class="fa-solid fa-house"></i>
+      Go to homepage
+    </a>
+
+    <a href="login.html" class="btn-back">
+      <i class="fa-solid fa-right-to-bracket"></i>
+      Log in to your account
+    </a>
+
+    <div class="quick-links">
+      <a href="signup.html" class="quick-link"><i class="fa-solid fa-store"></i> Register as vendor</a>
+      <a href="https://mcstore.com.ng" class="quick-link"><i class="fa-solid fa-bag-shopping"></i> MC Store</a>
+      <a href="https://wa.me/2348056230366" class="quick-link" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Support</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 <a href="https://mcstore.com.ng">MC Store Nigeria</a> &middot;
+  <a href="https://wa.me/2348056230366">Need help?</a>
+</footer>
+
+</body>
+</html>
