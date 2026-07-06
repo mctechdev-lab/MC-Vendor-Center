@@ -723,7 +723,7 @@
   <div class="topbar-left">
     <div class="brand-mark">MC</div>
     <div class="topbar-greeting">
-      <div class="g-label">Vendor Center</div>
+      <div class="g-label" id="top-greeting">Vendor Center</div>
       <div class="g-name" id="top-name">Loading...</div>
     </div>
   </div>
@@ -745,6 +745,12 @@
   <!-- ════ VIEW: HOME ════ -->
   <div class="view active" id="view-home">
     <div class="section-pad">
+
+      <!-- welcome card for new vendors -->
+      <div class="alert-banner alert-info" id="welcome-card" style="display:none;">
+        <i class="fa-solid fa-party-horn"></i>
+        <span>Welcome to MC Vendor Center! Start by adding your first product so customers can find your shop.</span>
+      </div>
 
       <!-- verified badge -->
       <div class="verified-badge">
@@ -1303,22 +1309,26 @@
 <script>
   /* ══ BOOT ══ */
   function bootDashboard(vendor) {
-    // Topbar
+    // Time-based greeting
+    const hr = new Date().getHours();
+    const greet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+    document.getElementById('top-greeting').textContent = greet;
+
     const name = vendor.shop_name || vendor.legal_name || 'Vendor';
     document.getElementById('top-name').textContent = name;
 
     // Shop preview card
     const initial = name.charAt(0).toUpperCase();
-    const logoEl = document.getElementById('spc-logo');
+    const logoEl  = document.getElementById('spc-logo');
     if (vendor.shop_logo) {
-      logoEl.innerHTML = `<img src="${vendor.shop_logo}" alt="logo" />`;
+      logoEl.innerHTML = `<img src="${vendor.shop_logo}" alt="logo" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" />`;
     } else {
       logoEl.textContent = initial;
     }
     document.getElementById('spc-name').textContent = name;
     document.getElementById('spc-link').textContent = `mcstore.com.ng/shop/${vendor.shop_slug || ''}`;
 
-    // Settings shop link
+    // Settings
     const shopUrl = `https://mcstore.com.ng/shop/${vendor.shop_slug || ''}`;
     document.getElementById('settings-shop-link').textContent = shopUrl;
     document.getElementById('shop-link-row').href = shopUrl;
@@ -1438,6 +1448,11 @@
 
       document.getElementById('stat-products').textContent = data.filter(p => p.status === 'live').length;
       document.getElementById('home-products').textContent = data.length;
+
+      // Show welcome card for new vendors
+      if (data.length === 0) {
+        document.getElementById('welcome-card').style.display = 'flex';
+      }
     } catch(err) { console.error('Products load failed:', err); }
   }
 
