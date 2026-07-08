@@ -428,7 +428,7 @@
       const vendor = data[0];
 
       if (!vendor) { window.location.href = 'onboarding.html'; return; }
-      if (vendor.status === 'approved') { window.location.href = 'dashboard.html'; return; }
+      if (vendor.status === 'approved') { window.location.href = 'app.html'; return; }
       if (vendor.status === 'rejected') { window.location.href = 'rejected.html'; return; }
       if (!vendor.onboarding_complete)  { window.location.href = 'onboarding.html'; return; }
 
