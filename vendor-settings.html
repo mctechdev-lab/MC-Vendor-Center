@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Settings</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--blue:#1a56db;--blue-dark:#1543ad;--blue-dim:rgba(26,86,219,.07);--blue-dim2:rgba(26,86,219,.13);--blue-bd:rgba(26,86,219,.22);--gold:#f5a623;--gold2:#f97316;--bg:#f6f8fd;--surface:#fff;--border:rgba(26,86,219,.10);--border2:rgba(26,86,219,.18);--ink:#0f1b3d;--muted:#5b6987;--muted2:#93a0bd;--green:#0ea968;--green-dim:rgba(14,169,104,.10);--green-bd:rgba(14,169,104,.25);--red:#dc2626;--font-d:'Syne',sans-serif;--font-b:'Plus Jakarta Sans',sans-serif;--r-md:14px;--r-lg:20px;--sh-sm:0 2px 10px rgba(15,27,61,.06);--sh-blue:0 6px 20px rgba(26,86,219,.18);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-b);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;padding-bottom:32px;}
+.pad{padding:16px;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;background:none;}
+a{color:inherit;text-decoration:none;}
+
+/* PROFILE CARD */
+.profile-card{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:var(--r-lg);padding:20px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;}
+.profile-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(245,166,35,.20),transparent 70%);pointer-events:none;}
+.p-avatar{width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.25);display:grid;place-items:center;font-family:var(--font-d);font-weight:900;font-size:20px;color:#fff;flex-shrink:0;overflow:hidden;}
+.p-avatar img{width:100%;height:100%;object-fit:cover;}
+.p-info .p-name{font-family:var(--font-d);font-weight:900;font-size:16px;color:#fff;}
+.p-info .p-slug{font-size:12px;color:rgba(255,255,255,.75);font-weight:600;margin-top:2px;}
+.p-info .p-status{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:11px;font-weight:700;color:rgba(255,255,255,.90);background:rgba(255,255,255,.15);padding:3px 10px;border-radius:99px;}
+
+/* SETTINGS SECTION */
+.settings-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:12px;overflow:hidden;box-shadow:var(--sh-sm);}
+.ss-head{padding:11px 16px;border-bottom:1px solid var(--border);font-size:10px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em;}
+.settings-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.settings-row:last-child{border-bottom:none;}
+.settings-row:hover{background:var(--bg);}
+.sr-icon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:14px;flex-shrink:0;}
+.sr-icon.blue{background:var(--blue-dim);color:var(--blue);}
+.sr-icon.green{background:var(--green-dim);color:var(--green);}
+.sr-icon.gold{background:rgba(245,166,35,.10);color:var(--gold2);}
+.sr-icon.red{background:rgba(220,38,38,.08);color:var(--red);}
+.sr-icon.wa{background:#dcfce7;color:#16a34a;}
+.sr-body{flex:1;}
+.sr-label{font-weight:700;font-size:13px;color:var(--ink);}
+.sr-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.sr-arrow{font-size:11px;color:var(--muted2);}
+
+/* DANGER */
+.danger-zone{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.18);border-radius:var(--r-lg);padding:16px;margin-bottom:12px;}
+.dz-title{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;}
+.btn-danger{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:var(--r-md);font-size:14px;font-weight:700;color:var(--red);border:1.5px solid rgba(220,38,38,.22);background:rgba(220,38,38,.06);margin-bottom:8px;transition:background .2s;}
+.btn-danger:hover{background:rgba(220,38,38,.10);}
+.btn-logout{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:var(--r-md);font-size:14px;font-weight:700;color:var(--muted);border:1.5px solid var(--border2);background:var(--surface);transition:background .2s;}
+.btn-logout:hover{background:var(--bg);}
+
+/* DRAWER */
+.overlay{position:fixed;inset:0;z-index:200;background:rgba(15,27,61,.45);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s;}
+.overlay.open{opacity:1;pointer-events:all;}
+.drawer{position:fixed;bottom:0;left:0;right:0;z-index:201;background:var(--surface);border-radius:24px 24px 0 0;border-top:1px solid var(--border);padding:0 0 32px;max-height:88svh;overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);}
+.overlay.open .drawer{transform:translateY(0);}
+.drawer-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 0;}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;}
+.drawer-title{font-family:var(--font-d);font-weight:900;font-size:17px;}
+.drawer-close{width:32px;height:32px;background:var(--bg);border-radius:8px;display:grid;place-items:center;font-size:14px;color:var(--muted);}
+.drawer-body{padding:4px 18px 0;}
+.field{margin-bottom:13px;}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px;}
+.input-wrap{position:relative;}
+.input-wrap .fi{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--muted2);pointer-events:none;}
+.input-wrap.ta-wrap .fi{top:13px;transform:none;}
+.field input,.field select,.field textarea{width:100%;padding:12px 12px 12px 36px;border:1.5px solid var(--border2);border-radius:var(--r-md);font-size:14px;font-weight:500;color:var(--ink);background:var(--surface);outline:none;transition:border-color .2s;-webkit-appearance:none;font-family:var(--font-b);}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-dim2);}
+.field textarea{resize:vertical;min-height:80px;padding-top:12px;}
+.btn-save{width:100%;padding:14px;border-radius:var(--r-md);font-size:14px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--blue),var(--blue-dark));box-shadow:var(--sh-blue);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;transition:transform .2s;}
+.btn-save:hover{transform:translateY(-2px);}
+.info-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.info-row:last-child{border-bottom:none;}
+.info-row .il{color:var(--muted);font-weight:700;}
+.info-row .iv{font-weight:700;color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="pad">
+
+  <!-- profile -->
+  <div class="profile-card" id="profile-card">
+    <div class="p-avatar" id="p-avatar">?</div>
+    <div class="p-info">
+      <div class="p-name" id="p-name">Loading...</div>
+      <div class="p-slug" id="p-slug">mcstore.com.ng/shop/...</div>
+      <div class="p-status"><i class="fa-solid fa-circle-check"></i> Verified Vendor</div>
+    </div>
+  </div>
+
+  <!-- shop -->
+  <div class="settings-section">
+    <div class="ss-head">Shop</div>
+    <div class="settings-row" onclick="openDrawer('shop')">
+      <div class="sr-icon blue"><i class="fa-solid fa-store"></i></div>
+      <div class="sr-body"><div class="sr-label">Shop profile</div><div class="sr-sub">Name, description, logo, banner</div></div>
+      <i class="fa-solid fa-chevron-right sr-arrow"></i>
+    </div>
+    <a class="settings-row" id="view-shop-row" href="#" target="_blank" rel="noopener">
+      <div class="sr-icon green"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+      <div class="sr-body"><div class="sr-label">View my shop</div><div class="sr-sub" id="shop-link-sub">mcstore.com.ng/shop/...</div></div>
+      <i class="fa-solid fa-chevron-right sr-arrow"></i>
+    </a>
+  </div>
+
+  <!-- account -->
+  <div class="settings-section">
+    <div class="ss-head">Account</div>
+    <div class="settings-row" onclick="openDrawer('business')">
+      <div class="sr-icon blue"><i class="fa-solid fa-briefcase"></i></div>
+      <div class="sr-body"><div class="sr-label">Business information</div><div class="sr-sub">Name, NIN, address</div></div>
+      <i class="fa-solid fa-chevron-right sr-arrow"></i>
+    </div>
+    <div class="settings-row" onclick="openDrawer('payment')">
+      <div class="sr-icon green"><i class="fa-solid fa-building-columns"></i></div>
+      <div class="sr-body"><div class="sr-label">Payment account</div><div class="sr-sub" id="bank-sub">Bank details</div></div>
+      <i class="fa-solid fa-chevron-right sr-arrow"></i>
+    </div>
+    <div class="settings-row" onclick="openDrawer('shipping')">
+      <div class="sr-icon gold"><i class="fa-solid fa-truck-fast"></i></div>
+      <div class="sr-body"><div class="sr-label">Shipping settings</div><div class="sr-sub">Processing time, coverage</div></div>
+      <i class="fa-solid fa-chevron-right sr-arrow"></i>
+    </div>
+  </div>
+
+  <!-- support -->
+  <div class="settings-section">
+    <div class="ss-head">Support</div>
+    <a class="settings-row" href="https://wa.me/2348056230366?text=Hi%2C+I+need+help+with+my+vendor+account" target="_blank" rel="noopener">
+      <div class="sr-icon wa"><i class="fa-brands fa-whatsapp"></i></div>
+      <div class="sr-body"><div class="sr-label">WhatsApp support</div><div class="sr-sub">+234 805 623 0366</div></div>
+      <i class="fa-solid fa-chevron-right sr-arrow"></i>
+    </a>
+    <a class="settings-row" href="mailto:mcstore.care@gmail.com">
+      <div class="sr-icon blue"><i class="fa-solid fa-envelope"></i></div>
+      <div class="sr-body"><div class="sr-label">Email support</div><div class="sr-sub">mcstore.care@gmail.com</div></div>
+      <i class="fa-solid fa-chevron-right sr-arrow"></i>
+    </a>
+    <a class="settings-row" href="https://mcstore.com.ng/terms" target="_blank" rel="noopener">
+      <div class="sr-icon gold"><i class="fa-solid fa-file-lines"></i></div>
+      <div class="sr-body"><div class="sr-label">Terms &amp; Privacy</div><div class="sr-sub">Our policies</div></div>
+      <i class="fa-solid fa-chevron-right sr-arrow"></i>
+    </a>
+  </div>
+
+  <!-- danger -->
+  <div class="danger-zone">
+    <div class="dz-title"><i class="fa-solid fa-triangle-exclamation"></i> Danger zone</div>
+    <button class="btn-danger" onclick="confirmDeactivate()"><i class="fa-solid fa-pause-circle"></i> Deactivate my shop</button>
+    <button class="btn-logout" onclick="parent.postMessage({type:'logout'},'\*')"><i class="fa-solid fa-right-from-bracket"></i> Log out</button>
+  </div>
+
+</div>
+
+<!-- DRAWER -->
+<div class="overlay" id="drawer-overlay" onclick="closeDrawerIfOverlay(event)">
+  <div class="drawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-head">
+      <div class="drawer-title" id="drawer-title">Settings</div>
+      <button class="drawer-close" onclick="closeDrawerEl()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+  </div>
+</div>
+
+<script>
+  const SB_URL  = parent.SB_URL  || "https://kswikkoqfpyxuurzxail.supabase.co";
+  const SB_ANON = parent.SB_ANON || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd2lra29xZnB5eHV1cnp4YWlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjEzMDQsImV4cCI6MjA4NjkzNzMwNH0.uuoSKWOTeXot1HJys0EO9OcIRBL0mKrNHIUHIAPCpZ4";
+
+  async function boot(){
+    let tries=0;
+    while(!parent._vendor && tries<20){await new Promise(r=>setTimeout(r,200));tries++;}
+    const v=parent._vendor; if(!v) return;
+    const name=v.shop_name||v.legal_name||'Vendor';
+    const slug=v.shop_slug||'';
+    const logo=document.getElementById('p-avatar');
+    if(v.shop_logo){logo.innerHTML=`<img src="${v.shop_logo}" alt="logo"/>`;}else{logo.textContent=name.charAt(0).toUpperCase();}
+    document.getElementById('p-name').textContent=name;
+    document.getElementById('p-slug').textContent=`mcstore.com.ng/shop/${slug}`;
+    const shopUrl=`https://mcstore.com.ng/shop/${slug}`;
+    document.getElementById('shop-link-sub').textContent=shopUrl;
+    document.getElementById('view-shop-row').href=shopUrl;
+    if(v.bank_name&&v.account_number) document.getElementById('bank-sub').textContent=`${v.bank_name} · ${v.account_number}`;
+  }
+
+  window.openDrawer = function(type){
+    const v=parent._vendor||{};
+    const titles={shop:'Shop Profile',business:'Business Info',payment:'Payment Account',shipping:'Shipping'};
+    document.getElementById('drawer-title').textContent=titles[type]||'Settings';
+    let body='';
+    if(type==='shop'){
+      body=`
+        <div class="field"><label>Shop name</label><div class="input-wrap"><i class="fi fa-solid fa-store"></i><input type="text" id="edit-shopname" value="${v.shop_name||''}"/></div></div>
+        <div class="field"><label>Description</label><div class="input-wrap ta-wrap"><i class="fi fa-solid fa-align-left"></i><textarea id="edit-desc">${v.shop_desc||''}</textarea></div></div>
+        <button class="btn-save" onclick="saveShop()"><i class="fa-solid fa-floppy-disk"></i> Save changes</button>`;
+    } else if(type==='business'){
+      body=`
+        <div class="info-row"><span class="il">Legal name</span><span class="iv">${v.legal_name||'—'}</span></div>
+        <div class="info-row"><span class="il">WhatsApp</span><span class="iv">${v.whatsapp||'—'}</span></div>
+        <div class="info-row"><span class="il">State</span><span class="iv">${v.state||'—'}</span></div>
+        <div class="info-row"><span class="il">LGA</span><span class="iv">${v.lga||'—'}</span></div>
+        <div class="info-row"><span class="il">Business type</span><span class="iv">${v.business_type||'—'}</span></div>
+        <div style="background:var(--blue-dim);border:1px solid var(--blue-bd);border-radius:var(--r-md);padding:12px 13px;font-size:13px;font-weight:600;color:var(--blue);margin-top:14px;display:flex;gap:9px;align-items:flex-start;">
+          <i class="fa-solid fa-circle-info" style="margin-top:1px;flex-shrink:0;"></i>
+          <span>To update legal name or NIN, please contact support on WhatsApp — these require manual re-verification.</span>
+        </div>`;
+    } else if(type==='payment'){
+      body=`
+        <div style="background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.28);border-radius:var(--r-md);padding:12px 13px;font-size:13px;font-weight:600;color:var(--amber);margin-bottom:14px;display:flex;gap:9px;align-items:flex-start;">
+          <i class="fa-solid fa-triangle-exclamation" style="margin-top:1px;flex-shrink:0;"></i>
+          <span>To change your bank account, contact support on WhatsApp. We verify all payment changes manually for your security.</span>
+        </div>
+        <div class="info-row"><span class="il">Bank</span><span class="iv">${v.bank_name||'—'}</span></div>
+        <div class="info-row"><span class="il">Account number</span><span class="iv">${v.account_number||'—'}</span></div>
+        <a href="https://wa.me/2348056230366?text=Hi%2C+I+want+to+update+my+payment+account" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:var(--r-md);font-size:14px;font-weight:800;color:#fff;background:#25d366;margin-top:14px;">
+          <i class="fa-brands fa-whatsapp"></i> Contact support to update
+        </a>`;
+    } else if(type==='shipping'){
+      body=`
+        <div class="field"><label>Processing time</label><div class="input-wrap"><i class="fi fa-solid fa-clock"></i>
+          <select id="edit-proc">
+            <option value="1" ${v.processing_days==1?'selected':''}>Same day</option>
+            <option value="2" ${v.processing_days==2?'selected':''}>1–2 days</option>
+            <option value="3" ${v.processing_days==3?'selected':''}>2–3 days</option>
+            <option value="5" ${v.processing_days==5?'selected':''}>3–5 days</option>
+          </select>
+        </div></div>
+        <button class="btn-save" onclick="saveShipping()"><i class="fa-solid fa-floppy-disk"></i> Save</button>`;
+    }
+    document.getElementById('drawer-body').innerHTML=body;
+    document.getElementById('drawer-overlay').classList.add('open');
+    document.body.style.overflow='hidden';
+  };
+
+  window.saveShop = async function(){
+    const name=document.getElementById('edit-shopname')?.value?.trim();
+    const desc=document.getElementById('edit-desc')?.value?.trim();
+    if(!name) return;
+    await fetch(`${SB_URL}/rest/v1/vendors?uid=eq.${parent._uid}`,{method:'PATCH',headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({shop_name:name,shop_desc:desc})});
+    if(parent._vendor){parent._vendor.shop_name=name;parent._vendor.shop_desc=desc;}
+    document.getElementById('p-name').textContent=name;
+    closeDrawerEl();
+  };
+
+  window.saveShipping = async function(){
+    const days=document.getElementById('edit-proc')?.value;
+    await fetch(`${SB_URL}/rest/v1/vendors?uid=eq.${parent._uid}`,{method:'PATCH',headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({processing_days:parseInt(days)})});
+    if(parent._vendor)parent._vendor.processing_days=parseInt(days);
+    closeDrawerEl();
+  };
+
+  window.closeDrawerEl = function(){document.getElementById('drawer-overlay').classList.remove('open');document.body.style.overflow='';};
+  window.closeDrawerIfOverlay = function(e){if(e.target===document.getElementById('drawer-overlay'))closeDrawerEl();};
+  window.confirmDeactivate = function(){alert('To deactivate your shop, please contact us on WhatsApp at +234 805 623 0366. We process this manually to protect your account.');};
+
+  boot();
+</script>
+</body>
+</html>
