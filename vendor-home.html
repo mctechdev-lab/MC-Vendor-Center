@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Home</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--blue:#1a56db;--blue-dark:#1543ad;--blue-dim:rgba(26,86,219,.07);--blue-dim2:rgba(26,86,219,.13);--blue-bd:rgba(26,86,219,.22);--gold:#f5a623;--gold2:#f97316;--gold-dim:rgba(245,166,35,.10);--bg:#f6f8fd;--bg2:#eef2fb;--surface:#fff;--border:rgba(26,86,219,.10);--border2:rgba(26,86,219,.18);--ink:#0f1b3d;--muted:#5b6987;--muted2:#93a0bd;--green:#0ea968;--green-dim:rgba(14,169,104,.10);--green-bd:rgba(14,169,104,.25);--red:#dc2626;--amber:#f59e0b;--amber-dim:rgba(245,158,11,.10);--amber-bd:rgba(245,158,11,.25);--font-d:'Syne',sans-serif;--font-b:'Plus Jakarta Sans',sans-serif;--r-md:14px;--r-lg:20px;--sh-sm:0 2px 10px rgba(15,27,61,.06);--sh-md:0 6px 24px rgba(15,27,61,.09);--sh-blue:0 6px 20px rgba(26,86,219,.18);--sh-gold:0 6px 20px rgba(245,166,35,.22);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-b);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;padding-bottom:16px;}
+.pad{padding:16px;}
+
+/* SHOP CARD */
+.shop-card{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:var(--r-lg);padding:18px;margin-bottom:14px;position:relative;overflow:hidden;}
+.shop-card::before{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;background:radial-gradient(circle,rgba(245,166,35,.22),transparent 70%);pointer-events:none;}
+.sc-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.sc-logo{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.25);display:grid;place-items:center;font-family:var(--font-d);font-weight:900;font-size:18px;color:#fff;flex-shrink:0;overflow:hidden;}
+.sc-logo img{width:100%;height:100%;object-fit:cover;}
+.sc-name{font-family:var(--font-d);font-weight:900;font-size:16px;color:#fff;}
+.sc-link{font-size:11px;color:rgba(255,255,255,.75);font-weight:600;margin-top:2px;}
+.sc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.sc-stat{text-align:center;}
+.sc-stat .sn{font-family:var(--font-d);font-weight:900;font-size:18px;color:var(--gold);}
+.sc-stat .sl{font-size:10px;color:rgba(255,255,255,.70);font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+
+/* STATS GRID */
+.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px;box-shadow:var(--sh-sm);}
+.stat-card.blue{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border:none;}
+.stat-card.green{background:linear-gradient(135deg,var(--green),#059669);border:none;}
+.stat-card.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;}
+.sc-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:15px;margin-bottom:9px;}
+.stat-card:not(.blue):not(.green):not(.gold) .sc-icon{background:var(--blue-dim);color:var(--blue);}
+.stat-card.blue .sc-icon,.stat-card.green .sc-icon,.stat-card.gold .sc-icon{background:rgba(255,255,255,.18);color:#fff;}
+.sc-val{font-family:var(--font-d);font-weight:900;font-size:22px;line-height:1;margin-bottom:3px;}
+.stat-card.blue .sc-val,.stat-card.green .sc-val,.stat-card.gold .sc-val{color:#fff;}
+.sc-lbl{font-size:11px;font-weight:700;color:var(--muted2);}
+.stat-card.blue .sc-lbl,.stat-card.green .sc-lbl,.stat-card.gold .sc-lbl{color:rgba(255,255,255,.80);}
+
+/* ALERT */
+.alert{display:flex;align-items:flex-start;gap:9px;padding:12px 13px;border-radius:var(--r-md);font-size:13px;font-weight:600;margin-bottom:14px;line-height:1.5;}
+.alert-info{background:var(--blue-dim);border:1px solid var(--blue-bd);color:var(--blue);}
+.alert-warning{background:var(--amber-dim);border:1px solid var(--amber-bd);color:var(--amber);}
+.alert i{flex-shrink:0;margin-top:1px;}
+
+/* SECTION */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.sec-title{font-family:var(--font-d);font-weight:800;font-size:15px;color:var(--ink);}
+.sec-action{font-size:12px;font-weight:700;color:var(--blue);cursor:pointer;}
+
+/* LIST ITEMS */
+.list-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 13px;display:flex;align-items:center;gap:11px;box-shadow:var(--sh-sm);margin-bottom:8px;cursor:pointer;transition:border-color .2s;}
+.list-item:hover{border-color:var(--blue-bd);}
+.li-icon{width:38px;height:38px;flex-shrink:0;border-radius:10px;display:grid;place-items:center;font-size:15px;}
+.li-icon.green{background:var(--green-dim);color:var(--green);}
+.li-icon.amber{background:var(--amber-dim);color:var(--amber);}
+.li-icon.red{background:rgba(220,38,38,.08);color:var(--red);}
+.li-icon.blue{background:var(--blue-dim);color:var(--blue);}
+.li-body{flex:1;min-width:0;}
+.li-title{font-weight:700;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
+.li-sub{font-size:11px;color:var(--muted);}
+.li-right{text-align:right;flex-shrink:0;}
+.li-amount{font-family:var(--font-d);font-weight:800;font-size:14px;color:var(--ink);}
+.pill{font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em;}
+.pill-delivered,.pill-approved,.pill-live{background:var(--green-dim);color:var(--green);border:1px solid var(--green-bd);}
+.pill-pending{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-bd);}
+.pill-cancelled,.pill-rejected{background:rgba(220,38,38,.08);color:var(--red);border:1px solid rgba(220,38,38,.20);}
+
+/* EMPTY */
+.empty{text-align:center;padding:32px 16px;display:flex;flex-direction:column;align-items:center;gap:9px;}
+.empty-icon{width:56px;height:56px;background:var(--bg2);border:1px solid var(--border);border-radius:50%;display:grid;place-items:center;font-size:22px;color:var(--muted2);}
+.empty h3{font-family:var(--font-d);font-weight:800;font-size:15px;}
+.empty p{font-size:13px;color:var(--muted);max-width:240px;line-height:1.6;}
+
+/* ADD PRODUCT BTN */
+.btn-add{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:var(--r-md);font-size:14px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:var(--sh-gold);border:none;cursor:pointer;margin-bottom:14px;transition:transform .2s;}
+.btn-add:hover{transform:translateY(-2px);}
+</style>
+</head>
+<body>
+<div class="pad">
+
+  <!-- welcome alert for new vendors -->
+  <div class="alert alert-info" id="welcome-alert" style="display:none;">
+    <i class="fa-solid fa-store"></i>
+    <span>Welcome! Your shop is live. Add your first product so customers can find you.</span>
+  </div>
+
+  <!-- shop card -->
+  <div class="shop-card">
+    <div class="sc-top">
+      <div class="sc-logo" id="sc-logo">?</div>
+      <div>
+        <div class="sc-name" id="sc-name">Your Shop</div>
+        <div class="sc-link" id="sc-link">mcstore.com.ng/shop/...</div>
+      </div>
+    </div>
+    <div class="sc-stats">
+      <div class="sc-stat"><div class="sn" id="sc-products">0</div><div class="sl">Products</div></div>
+      <div class="sc-stat"><div class="sn" id="sc-orders">0</div><div class="sl">Orders</div></div>
+      <div class="sc-stat"><div class="sn" id="sc-rating">—</div><div class="sl">Rating</div></div>
+    </div>
+  </div>
+
+  <!-- stat cards -->
+  <div class="stat-row">
+    <div class="stat-card green">
+      <div class="sc-icon"><i class="fa-solid fa-naira-sign"></i></div>
+      <div class="sc-val" id="stat-earnings">₦0</div>
+      <div class="sc-lbl">Total Earnings</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="sc-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+      <div class="sc-val" id="stat-orders">0</div>
+      <div class="sc-lbl">Total Orders</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+      <div class="sc-val" id="stat-products">0</div>
+      <div class="sc-lbl">Live Products</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+      <div class="sc-val" id="stat-pending">0</div>
+      <div class="sc-lbl">Pending Orders</div>
+    </div>
+  </div>
+
+  <!-- add product shortcut -->
+  <button class="btn-add" onclick="parent.switchTab('products')">
+    <i class="fa-solid fa-plus"></i> Add a product
+  </button>
+
+  <!-- recent orders -->
+  <div class="sec-head">
+    <div class="sec-title">Recent orders</div>
+    <div class="sec-action" onclick="parent.switchTab('orders')">See all</div>
+  </div>
+  <div id="recent-orders">
+    <div class="empty">
+      <div class="empty-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+      <h3>No orders yet</h3>
+      <p>When customers order your products, they will appear here.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const SB_URL  = parent.SB_URL  || "https://kswikkoqfpyxuurzxail.supabase.co";
+  const SB_ANON = parent.SB_ANON || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd2lra29xZnB5eHV1cnp4YWlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjEzMDQsImV4cCI6MjA4NjkzNzMwNH0.uuoSKWOTeXot1HJys0EO9OcIRBL0mKrNHIUHIAPCpZ4";
+
+  async function sbGet(table, query) {
+    const res = await fetch(`${SB_URL}/rest/v1/${table}?${query}`, { headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`} });
+    return res.json();
+  }
+
+  function fmt(d) { return d ? new Date(d).toLocaleDateString('en-NG',{day:'numeric',month:'short'}) : '—'; }
+
+  async function boot() {
+    // Wait for parent to load vendor data
+    let tries = 0;
+    while (!parent._vendor && tries < 20) { await new Promise(r => setTimeout(r, 200)); tries++; }
+    const v = parent._vendor;
+    if (!v) return;
+    const uid = v.uid;
+
+    // Shop card
+    const logo = document.getElementById('sc-logo');
+    if (v.shop_logo) { logo.innerHTML = `<img src="${v.shop_logo}" alt="logo"/>`; } else { logo.textContent = (v.shop_name||'?').charAt(0).toUpperCase(); }
+    document.getElementById('sc-name').textContent = v.shop_name || v.legal_name || 'Your Shop';
+    document.getElementById('sc-link').textContent = `mcstore.com.ng/shop/${v.shop_slug||''}`;
+
+    // Load data
+    const [products, orders, earnings] = await Promise.all([
+      sbGet('vendor_products', `vendor_id=eq.${uid}&select=id,status`),
+      sbGet('vendor_orders',   `vendor_id=eq.${uid}&select=*&order=created_at.desc`),
+      sbGet('vendor_earnings', `vendor_id=eq.${uid}&select=*`)
+    ]);
+
+    const live    = (products||[]).filter(p=>p.status==='live').length;
+    const pending = (orders||[]).filter(o=>o.status==='pending').length;
+    const earn    = earnings?.[0] || {};
+    const total   = Number(earn.total_earned||0);
+
+    document.getElementById('sc-products').textContent  = products?.length||0;
+    document.getElementById('sc-orders').textContent    = orders?.length||0;
+    document.getElementById('stat-products').textContent = live;
+    document.getElementById('stat-orders').textContent  = orders?.length||0;
+    document.getElementById('stat-pending').textContent = pending;
+    document.getElementById('stat-earnings').textContent = total>=1000?`₦${Math.round(total/1000)}k`:`₦${total}`;
+
+    if ((products||[]).length === 0) document.getElementById('welcome-alert').style.display='flex';
+
+    // Recent orders
+    const recent = (orders||[]).slice(0,5);
+    if (recent.length) {
+      document.getElementById('recent-orders').innerHTML = recent.map(o => `
+        <div class="list-item">
+          <div class="li-icon ${o.status==='delivered'?'green':o.status==='cancelled'?'red':'amber'}">
+            <i class="fa-solid ${o.status==='delivered'?'fa-circle-check':o.status==='cancelled'?'fa-circle-xmark':'fa-clock'}"></i>
+          </div>
+          <div class="li-body">
+            <div class="li-title">${o.product_name||'Order'}</div>
+            <div class="li-sub">${o.customer_name||'Customer'} &middot; ${fmt(o.created_at)}</div>
+          </div>
+          <div class="li-right">
+            <div class="li-amount">₦${Number(o.amount||0).toLocaleString()}</div>
+            <span class="pill pill-${o.status||'pending'}">${o.status||'pending'}</span>
+          </div>
+        </div>`).join('');
+    }
+  }
+
+  boot();
+</script>
+</body>
+</html>
