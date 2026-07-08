@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Orders</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--blue:#1a56db;--blue-dark:#1543ad;--blue-dim:rgba(26,86,219,.07);--blue-dim2:rgba(26,86,219,.13);--blue-bd:rgba(26,86,219,.22);--gold:#f5a623;--gold2:#f97316;--bg:#f6f8fd;--bg2:#eef2fb;--surface:#fff;--border:rgba(26,86,219,.10);--border2:rgba(26,86,219,.18);--ink:#0f1b3d;--muted:#5b6987;--muted2:#93a0bd;--green:#0ea968;--green-dim:rgba(14,169,104,.10);--green-bd:rgba(14,169,104,.25);--red:#dc2626;--amber:#f59e0b;--amber-dim:rgba(245,158,11,.10);--amber-bd:rgba(245,158,11,.25);--font-d:'Syne',sans-serif;--font-b:'Plus Jakarta Sans',sans-serif;--r-md:14px;--r-lg:20px;--sh-sm:0 2px 10px rgba(15,27,61,.06);--sh-blue:0 6px 20px rgba(26,86,219,.18);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-b);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;padding-bottom:16px;}
+.pad{padding:16px;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;background:none;}
+
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px;padding-bottom:2px;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{padding:6px 16px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--muted);transition:all .2s;}
+.chip.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+.list-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:13px 14px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh-sm);margin-bottom:8px;cursor:pointer;transition:border-color .2s;}
+.list-item:hover{border-color:var(--blue-bd);}
+.li-icon{width:40px;height:40px;flex-shrink:0;border-radius:11px;display:grid;place-items:center;font-size:16px;}
+.li-icon.green{background:var(--green-dim);color:var(--green);}
+.li-icon.amber{background:var(--amber-dim);color:var(--amber);}
+.li-icon.red{background:rgba(220,38,38,.08);color:var(--red);}
+.li-icon.blue{background:var(--blue-dim);color:var(--blue);}
+.li-body{flex:1;min-width:0;}
+.li-title{font-weight:700;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
+.li-sub{font-size:11px;color:var(--muted);}
+.li-right{text-align:right;flex-shrink:0;}
+.li-amount{font-family:var(--font-d);font-weight:800;font-size:14px;color:var(--ink);}
+.pill{font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;text-transform:uppercase;}
+.pill-pending{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-bd);}
+.pill-delivered{background:var(--green-dim);color:var(--green);border:1px solid var(--green-bd);}
+.pill-cancelled{background:rgba(220,38,38,.08);color:var(--red);border:1px solid rgba(220,38,38,.20);}
+.pill-confirmed,.pill-shipped{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-bd);}
+
+.empty{text-align:center;padding:48px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.empty-icon{width:60px;height:60px;background:var(--bg2);border:1px solid var(--border);border-radius:50%;display:grid;place-items:center;font-size:24px;color:var(--muted2);}
+.empty h3{font-family:var(--font-d);font-weight:800;font-size:15px;}
+.empty p{font-size:13px;color:var(--muted);max-width:240px;line-height:1.6;}
+
+/* DRAWER */
+.overlay{position:fixed;inset:0;z-index:200;background:rgba(15,27,61,.45);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s;}
+.overlay.open{opacity:1;pointer-events:all;}
+.drawer{position:fixed;bottom:0;left:0;right:0;z-index:201;background:var(--surface);border-radius:24px 24px 0 0;border-top:1px solid var(--border);padding:0 0 32px;max-height:88svh;overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);}
+.overlay.open .drawer{transform:translateY(0);}
+.drawer-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 0;}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;}
+.drawer-title{font-family:var(--font-d);font-weight:900;font-size:17px;}
+.drawer-close{width:32px;height:32px;background:var(--bg);border-radius:8px;display:grid;place-items:center;font-size:14px;color:var(--muted);}
+.drawer-body{padding:4px 18px 0;}
+
+.detail-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.detail-row:last-of-type{border-bottom:none;}
+.detail-row .dl{color:var(--muted);font-weight:700;}
+.detail-row .dv{font-weight:700;color:var(--ink);text-align:right;max-width:55%;}
+.earn-highlight{background:var(--green-dim);border:1px solid var(--green-bd);border-radius:var(--r-md);padding:14px;text-align:center;margin:14px 0;}
+.earn-highlight .eh-label{font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.earn-highlight .eh-amount{font-family:var(--font-d);font-weight:900;font-size:24px;color:var(--green);}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:var(--r-md);font-size:14px;font-weight:800;color:#fff;background:#25d366;margin-top:12px;margin-bottom:8px;}
+</style>
+</head>
+<body>
+<div class="pad">
+
+  <div class="chips">
+    <div class="chip active" onclick="filterOrders('all',this)">All</div>
+    <div class="chip" onclick="filterOrders('pending',this)">Pending</div>
+    <div class="chip" onclick="filterOrders('confirmed',this)">Confirmed</div>
+    <div class="chip" onclick="filterOrders('shipped',this)">Shipped</div>
+    <div class="chip" onclick="filterOrders('delivered',this)">Delivered</div>
+    <div class="chip" onclick="filterOrders('cancelled',this)">Cancelled</div>
+  </div>
+
+  <div id="orders-list">
+    <div style="text-align:center;padding:40px;color:#93a0bd;font-size:13px;">Loading orders...</div>
+  </div>
+
+</div>
+
+<!-- ORDER DETAIL DRAWER -->
+<div class="overlay" id="detail-overlay" onclick="closeDetailIfOverlay(event)">
+  <div class="drawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-head">
+      <div class="drawer-title">Order details</div>
+      <button class="drawer-close" onclick="closeDetail()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="drawer-body" id="detail-body"></div>
+  </div>
+</div>
+
+<script>
+  const SB_URL  = parent.SB_URL  || "https://kswikkoqfpyxuurzxail.supabase.co";
+  const SB_ANON = parent.SB_ANON || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd2lra29xZnB5eHV1cnp4YWlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjEzMDQsImV4cCI6MjA4NjkzNzMwNH0.uuoSKWOTeXot1HJys0EO9OcIRBL0mKrNHIUHIAPCpZ4";
+  let allOrders = [];
+
+  function fmt(d){ return d?new Date(d).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—'; }
+
+  async function boot() {
+    let tries=0;
+    while(!parent._uid && tries<20){await new Promise(r=>setTimeout(r,200));tries++;}
+    const uid=parent._uid; if(!uid) return;
+    const res=await fetch(`${SB_URL}/rest/v1/vendor_orders?vendor_id=eq.${uid}&select=*&order=created_at.desc`,{headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`}});
+    allOrders=await res.json()||[];
+    renderOrders(allOrders);
+  }
+
+  function renderOrders(list) {
+    const el=document.getElementById('orders-list');
+    if(!list.length){
+      el.innerHTML=`<div class="empty"><div class="empty-icon"><i class="fa-solid fa-receipt"></i></div><h3>No orders yet</h3><p>Orders from customers will appear here as they come in.</p></div>`;
+      return;
+    }
+    el.innerHTML=list.map(o=>`
+      <div class="list-item" onclick="openDetail('${o.id}')">
+        <div class="li-icon ${o.status==='delivered'?'green':o.status==='cancelled'?'red':o.status==='shipped'?'blue':'amber'}">
+          <i class="fa-solid ${o.status==='delivered'?'fa-circle-check':o.status==='cancelled'?'fa-circle-xmark':o.status==='shipped'?'fa-truck':'fa-clock'}"></i>
+        </div>
+        <div class="li-body">
+          <div class="li-title">${o.product_name||'Order'}</div>
+          <div class="li-sub">${o.customer_name||'Customer'} &middot; ${fmt(o.created_at)}</div>
+        </div>
+        <div class="li-right">
+          <div class="li-amount">₦${Number(o.amount||0).toLocaleString()}</div>
+          <span class="pill pill-${o.status||'pending'}">${o.status||'pending'}</span>
+        </div>
+      </div>`).join('');
+  }
+
+  window.filterOrders = function(status,btn){
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    renderOrders(status==='all'?allOrders:allOrders.filter(o=>o.status===status));
+  };
+
+  window.openDetail = function(id){
+    const o=allOrders.find(x=>x.id===id); if(!o) return;
+    const earn=(Number(o.amount||0)*0.97).toLocaleString();
+    const comm=(Number(o.amount||0)*0.03).toLocaleString();
+    document.getElementById('detail-body').innerHTML=`
+      <div class="earn-highlight">
+        <div class="eh-label">Your earnings from this order</div>
+        <div class="eh-amount">₦${earn}</div>
+      </div>
+      <div class="detail-row"><span class="dl">Product</span><span class="dv">${o.product_name||'—'}</span></div>
+      <div class="detail-row"><span class="dl">Customer</span><span class="dv">${o.customer_name||'—'}</span></div>
+      <div class="detail-row"><span class="dl">Order amount</span><span class="dv">₦${Number(o.amount||0).toLocaleString()}</span></div>
+      <div class="detail-row"><span class="dl">MC commission (3%)</span><span class="dv">₦${comm}</span></div>
+      <div class="detail-row"><span class="dl">Status</span><span class="dv"><span class="pill pill-${o.status}">${o.status}</span></span></div>
+      <div class="detail-row"><span class="dl">Date</span><span class="dv">${fmt(o.created_at)}</span></div>
+      ${o.delivery_address?`<div class="detail-row"><span class="dl">Ship to</span><span class="dv">${o.delivery_address}</span></div>`:''}
+      ${o.quantity?`<div class="detail-row"><span class="dl">Quantity</span><span class="dv">${o.quantity}</span></div>`:''}
+      <a href="https://wa.me/2348056230366?text=Hi%2C+I+need+help+with+order+${o.id}" target="_blank" rel="noopener" class="wa-btn">
+        <i class="fa-brands fa-whatsapp"></i> Report issue with this order
+      </a>`;
+    document.getElementById('detail-overlay').classList.add('open');
+    document.body.style.overflow='hidden';
+  };
+
+  window.closeDetail=function(){document.getElementById('detail-overlay').classList.remove('open');document.body.style.overflow='';};
+  window.closeDetailIfOverlay=function(e){if(e.target===document.getElementById('detail-overlay'))closeDetail();};
+
+  boot();
+</script>
+</body>
+</html>
