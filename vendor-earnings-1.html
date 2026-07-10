@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Earnings</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--blue:#1a56db;--blue-dark:#1543ad;--blue-dim:rgba(26,86,219,.07);--blue-bd:rgba(26,86,219,.22);--gold:#f5a623;--gold2:#f97316;--bg:#f6f8fd;--bg2:#eef2fb;--surface:#fff;--border:rgba(26,86,219,.10);--border2:rgba(26,86,219,.18);--ink:#0f1b3d;--muted:#5b6987;--muted2:#93a0bd;--green:#0ea968;--green-dim:rgba(14,169,104,.10);--green-bd:rgba(14,169,104,.25);--red:#dc2626;--amber:#f59e0b;--amber-dim:rgba(245,158,11,.10);--amber-bd:rgba(245,158,11,.25);--font-d:'Syne',sans-serif;--font-b:'Plus Jakarta Sans',sans-serif;--r-md:14px;--r-lg:20px;--sh-sm:0 2px 10px rgba(15,27,61,.06);--sh-md:0 6px 24px rgba(15,27,61,.09);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-b);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;padding-bottom:24px;}
+.pad{padding:16px;}
+
+.hero{background:linear-gradient(135deg,var(--green),#059669);border-radius:var(--r-lg);padding:22px 18px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%);pointer-events:none;}
+.hero-label{font-size:11px;font-weight:800;color:rgba(255,255,255,.80);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.hero-amount{font-family:var(--font-d);font-weight:900;font-size:clamp(28px,8vw,36px);color:#fff;margin-bottom:4px;}
+.hero-sub{font-size:12px;color:rgba(255,255,255,.75);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;margin-bottom:14px;box-shadow:var(--sh-sm);}
+.card-title{font-family:var(--font-d);font-weight:800;font-size:14px;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.card-title i{font-size:13px;color:var(--blue);}
+.payout-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.payout-row:last-child{border-bottom:none;}
+.pr-label{font-size:12px;font-weight:700;color:var(--muted);}
+.pr-value{font-family:var(--font-d);font-weight:800;font-size:14px;color:var(--ink);}
+.pr-value.amber{color:var(--amber);}
+.pr-value.green{color:var(--green);}
+
+.alert{display:flex;align-items:flex-start;gap:9px;padding:12px 13px;border-radius:var(--r-md);font-size:13px;font-weight:600;margin-bottom:14px;line-height:1.5;}
+.alert-info{background:var(--blue-dim);border:1px solid var(--blue-bd);color:var(--blue);}
+.alert i{flex-shrink:0;margin-top:1px;}
+
+.sec-title{font-family:var(--font-d);font-weight:800;font-size:15px;margin-bottom:10px;}
+
+.empty{text-align:center;padding:32px 16px;display:flex;flex-direction:column;align-items:center;gap:9px;}
+.empty-icon{width:56px;height:56px;background:var(--bg2);border:1px solid var(--border);border-radius:50%;display:grid;place-items:center;font-size:22px;color:var(--muted2);}
+.empty h3{font-family:var(--font-d);font-weight:800;font-size:15px;}
+.empty p{font-size:13px;color:var(--muted);max-width:240px;line-height:1.6;}
+
+.payout-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 13px;display:flex;align-items:center;gap:11px;box-shadow:var(--sh-sm);margin-bottom:8px;}
+.pi-icon{width:38px;height:38px;flex-shrink:0;border-radius:10px;display:grid;place-items:center;font-size:15px;background:var(--green-dim);color:var(--green);}
+.pi-body{flex:1;}
+.pi-title{font-weight:700;font-size:13px;color:var(--ink);}
+.pi-sub{font-size:11px;color:var(--muted);}
+.pi-right{text-align:right;}
+.pi-amount{font-family:var(--font-d);font-weight:800;font-size:14px;color:var(--green);}
+.pi-status{font-size:10px;font-weight:700;color:var(--muted2);}
+</style>
+</head>
+<body>
+<div class="pad">
+
+  <div class="hero">
+    <div class="hero-label"><i class="fa-solid fa-wallet"></i> Available balance</div>
+    <div class="hero-amount" id="balance">₦0.00</div>
+    <div class="hero-sub">Updates after each confirmed delivery</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="fa-solid fa-chart-simple"></i> Earnings summary</div>
+    <div class="payout-row"><span class="pr-label">Total earned (all time)</span><span class="pr-value" id="total">₦0</span></div>
+    <div class="payout-row"><span class="pr-label">This month</span><span class="pr-value" id="month">₦0</span></div>
+    <div class="payout-row"><span class="pr-label">MC commission (3%)</span><span class="pr-value" id="commission">₦0</span></div>
+    <div class="payout-row"><span class="pr-label">Total paid out</span><span class="pr-value green" id="paid">₦0</span></div>
+    <div class="payout-row"><span class="pr-label">Pending payout</span><span class="pr-value amber" id="pending">₦0</span></div>
+  </div>
+
+  <div class="alert alert-info">
+    <i class="fa-solid fa-circle-info"></i>
+    <span>Payouts are sent to your registered bank account after each order is confirmed delivered. MC Store takes a 3% commission per sale — no monthly fees, no listing fees.</span>
+  </div>
+
+  <div class="sec-title">Payout history</div>
+  <div id="payout-history">
+    <div class="empty">
+      <div class="empty-icon"><i class="fa-solid fa-money-bill-transfer"></i></div>
+      <h3>No payouts yet</h3>
+      <p>Your payout history will appear here once orders are delivered and confirmed.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const SB_URL  = parent.SB_URL  || "https://kswikkoqfpyxuurzxail.supabase.co";
+  const SB_ANON = parent.SB_ANON || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd2lra29xZnB5eHV1cnp4YWlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjEzMDQsImV4cCI6MjA4NjkzNzMwNH0.uuoSKWOTeXot1HJys0EO9OcIRBL0mKrNHIUHIAPCpZ4";
+
+  async function boot(){
+    let tries=0;
+    while(!parent._uid && tries<20){await new Promise(r=>setTimeout(r,200));tries++;}
+    const uid=parent._uid; if(!uid) return;
+
+    const [earn,payouts]=await Promise.all([
+      fetch(`${SB_URL}/rest/v1/vendor_earnings?vendor_id=eq.${uid}&select=*`,{headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`}}).then(r=>r.json()),
+      fetch(`${SB_URL}/rest/v1/payout_history?vendor_id=eq.${uid}&select=*&order=created_at.desc`,{headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`}}).then(r=>r.json())
+    ]);
+
+    const e=earn?.[0]||{};
+    const total=Number(e.total_earned||0);
+    const paid=Number(e.total_paid_out||0);
+    const pend=Number(e.pending_payout||0);
+    const month=Number(e.this_month||0);
+    const comm=total*0.03;
+    const avail=total-paid;
+
+    document.getElementById('balance').textContent=`₦${avail.toLocaleString('en-NG',{minimumFractionDigits:2})}`;
+    document.getElementById('total').textContent=`₦${total.toLocaleString()}`;
+    document.getElementById('month').textContent=`₦${month.toLocaleString()}`;
+    document.getElementById('commission').textContent=`₦${comm.toLocaleString()}`;
+    document.getElementById('paid').textContent=`₦${paid.toLocaleString()}`;
+    document.getElementById('pending').textContent=`₦${pend.toLocaleString()}`;
+
+    if(payouts&&payouts.length){
+      document.getElementById('payout-history').innerHTML=payouts.map(p=>`
+        <div class="payout-item">
+          <div class="pi-icon"><i class="fa-solid fa-building-columns"></i></div>
+          <div class="pi-body">
+            <div class="pi-title">${p.bank_name||'Bank transfer'}</div>
+            <div class="pi-sub">${p.account_num||'—'} &middot; ${p.created_at?new Date(p.created_at).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric'}):'—'}</div>
+          </div>
+          <div class="pi-right">
+            <div class="pi-amount">₦${Number(p.amount||0).toLocaleString()}</div>
+            <div class="pi-status">${p.status||'pending'}</div>
+          </div>
+        </div>`).join('');
+    }
+  }
+  boot();
+</script>
+</body>
+</html>
