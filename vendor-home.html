@@ -174,23 +174,38 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--ink);-webkit-fon
     document.getElementById('sc-link').textContent = `mcstore.com.ng/shop/${v.shop_slug||''}`;
 
     // Load data
-    const [products, orders, earnings] = await Promise.all([
+    const [products, ordersRaw] = await Promise.all([
       sbGet('vendor_products', `vendor_id=eq.${uid}&select=id,status`),
-      sbGet('vendor_orders',   `vendor_id=eq.${uid}&select=*&order=created_at.desc`),
-      sbGet('vendor_earnings', `vendor_id=eq.${uid}&select=*`)
+      sbGet('orders',          `vendor_id=eq.${uid}&select=*&order=created_at.desc`)
     ]);
 
+    // Real orders store line items as JSON, not a single product_name/amount —
+    // derive a display name and use subtotal (vendor's product revenue,
+    // excluding the delivery fee which goes to the courier, not the vendor)
+    const orders = (ordersRaw||[]).map(o => {
+      let items = [];
+      try { items = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items || []); } catch(e) { items = []; }
+      const product_name = items.length === 1
+        ? (items[0].title || items[0].name || 'Order')
+        : items.length > 1 ? `${items.length} items` : 'Order';
+      return { ...o, product_name, amount: Number(o.subtotal || 0) };
+    });
+
     const live    = (products||[]).filter(p=>p.status==='live').length;
-    const pending = (orders||[]).filter(o=>o.status==='pending').length;
-    const earn    = earnings?.[0] || {};
-    const total   = Number(earn.total_earned||0);
+    const pending = (orders||[]).filter(o=>o.status==='pending'||o.status==='processing').length;
+    // Real earnings = 97% of subtotal on non-cancelled orders (3% MC commission,
+    // matching the per-order breakdown shown on the Orders page) — computed live
+    // since there's no separate running-ledger table yet.
+    const total = (orders||[])
+      .filter(o => o.status !== 'cancelled')
+      .reduce((sum,o) => sum + Number(o.subtotal||0) * 0.97, 0);
 
     document.getElementById('sc-products').textContent  = products?.length||0;
     document.getElementById('sc-orders').textContent    = orders?.length||0;
     document.getElementById('stat-products').textContent = live;
     document.getElementById('stat-orders').textContent  = orders?.length||0;
     document.getElementById('stat-pending').textContent = pending;
-    document.getElementById('stat-earnings').textContent = total>=1000?`₦${Math.round(total/1000)}k`:`₦${total}`;
+    document.getElementById('stat-earnings').textContent = total>=1000?`₦${Math.round(total/1000)}k`:`₦${Math.round(total)}`;
 
     if ((products||[]).length === 0) document.getElementById('welcome-alert').style.display='flex';
 

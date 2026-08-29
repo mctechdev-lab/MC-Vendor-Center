@@ -92,40 +92,34 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--ink);-webkit-fon
     while(!parent._uid && tries<20){await new Promise(r=>setTimeout(r,200));tries++;}
     const uid=parent._uid; if(!uid) return;
 
-    const [earn,payouts]=await Promise.all([
-      fetch(`${SB_URL}/rest/v1/vendor_earnings?vendor_id=eq.${uid}&select=*`,{headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`}}).then(r=>r.json()),
-      fetch(`${SB_URL}/rest/v1/payout_history?vendor_id=eq.${uid}&select=*&order=created_at.desc`,{headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`}}).then(r=>r.json())
-    ]);
+    const orders = await fetch(`${SB_URL}/rest/v1/orders?vendor_id=eq.${uid}&select=*&order=created_at.desc`,{headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`}}).then(r=>r.json()) || [];
 
-    const e=earn?.[0]||{};
-    const total=Number(e.total_earned||0);
-    const paid=Number(e.total_paid_out||0);
-    const pend=Number(e.pending_payout||0);
-    const month=Number(e.this_month||0);
-    const comm=total*0.03;
-    const avail=total-paid;
+    // No payout-tracking table exists yet, so earnings are computed live from
+    // real orders (97% of subtotal per order, matching the breakdown shown on
+    // the Orders page) rather than a running ledger. "Paid out" stays at ₦0
+    // until an actual payout workflow is built — payouts happen manually
+    // outside the app for now.
+    const now = new Date();
+    const nonCancelled = orders.filter(o => o.status !== 'cancelled');
+    const total = nonCancelled.reduce((s,o) => s + Number(o.subtotal||0) * 0.97, 0);
+    const comm  = nonCancelled.reduce((s,o) => s + Number(o.subtotal||0) * 0.03, 0);
+    const month = nonCancelled
+      .filter(o => { const d = new Date(o.created_at); return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear(); })
+      .reduce((s,o) => s + Number(o.subtotal||0) * 0.97, 0);
+    const paid = 0;
+    const pend = total - paid;
+    const avail = total - paid;
 
     document.getElementById('balance').textContent=`₦${avail.toLocaleString('en-NG',{minimumFractionDigits:2})}`;
-    document.getElementById('total').textContent=`₦${total.toLocaleString()}`;
-    document.getElementById('month').textContent=`₦${month.toLocaleString()}`;
-    document.getElementById('commission').textContent=`₦${comm.toLocaleString()}`;
+    document.getElementById('total').textContent=`₦${Math.round(total).toLocaleString()}`;
+    document.getElementById('month').textContent=`₦${Math.round(month).toLocaleString()}`;
+    document.getElementById('commission').textContent=`₦${Math.round(comm).toLocaleString()}`;
     document.getElementById('paid').textContent=`₦${paid.toLocaleString()}`;
-    document.getElementById('pending').textContent=`₦${pend.toLocaleString()}`;
+    document.getElementById('pending').textContent=`₦${Math.round(pend).toLocaleString()}`;
 
-    if(payouts&&payouts.length){
-      document.getElementById('payout-history').innerHTML=payouts.map(p=>`
-        <div class="payout-item">
-          <div class="pi-icon"><i class="fa-solid fa-building-columns"></i></div>
-          <div class="pi-body">
-            <div class="pi-title">${p.bank_name||'Bank transfer'}</div>
-            <div class="pi-sub">${p.account_num||'—'} &middot; ${p.created_at?new Date(p.created_at).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric'}):'—'}</div>
-          </div>
-          <div class="pi-right">
-            <div class="pi-amount">₦${Number(p.amount||0).toLocaleString()}</div>
-            <div class="pi-status">${p.status||'pending'}</div>
-          </div>
-        </div>`).join('');
-    }
+    // Payout history has no real data source yet — the built-in empty state
+    // ("Your payout history will appear here...") stays visible until a real
+    // payout workflow is built.
   }
   boot();
 </script>

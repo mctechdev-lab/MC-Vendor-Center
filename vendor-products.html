@@ -168,7 +168,7 @@ img{display:block;max-width:100%;}
       <div class="field">
         <label>Category <span class="req">*</span></label>
         <div class="input-wrap"><i class="fi fa-solid fa-tag"></i>
-          <select id="p-category">
+          <select id="p-category" onchange="onCategoryChange()">
             <option value="">Select category</option>
             <option value="Electronics">Electronics</option>
             <option value="Mobile Phones">Mobile Phones</option>
@@ -179,6 +179,7 @@ img{display:block;max-width:100%;}
             <option value="Cameras">Cameras</option>
             <option value="Shoes">Shoes</option>
             <option value="Bags & Accessories">Bags &amp; Accessories</option>
+            <option value="Furniture">Furniture</option>
             <option value="Smart Watches & Bands">Smart Watches &amp; Bands</option>
             <option value="Speakers & Audio">Speakers &amp; Audio</option>
             <option value="Gaming">Gaming</option>
@@ -188,6 +189,27 @@ img{display:block;max-width:100%;}
           </select>
         </div>
       </div>
+
+      <!-- SIZES & PER-SIZE STOCK — shown only for Fashion / Shoes -->
+      <div class="field" id="size-section" style="display:none">
+        <label>Available Sizes &amp; Stock <span class="req">*</span>
+          <a href="#" onclick="openSizeGuide();return false;" style="float:right;font-weight:700;color:#1a56db;font-size:.8rem">
+            <i class="fa-solid fa-ruler"></i> Sizing Guide
+          </a>
+        </label>
+        <div id="size-options" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.4rem"></div>
+        <small style="display:block;margin-top:.5rem;color:#6b7280">Tap a size to add it, then enter how many you have in stock for that size. Total stock above updates automatically.</small>
+      </div>
+
+      <!-- SPECIFICATIONS — works for any category (phones, furniture, anything) -->
+      <div class="field">
+        <label>Specifications <span class="opt">(optional — e.g. Storage: 128GB, Material: Wood)</span></label>
+        <div id="spec-rows"></div>
+        <button type="button" onclick="addSpecRow()" style="margin-top:.5rem;background:none;border:1.5px dashed #e2e8f0;border-radius:10px;padding:.55rem 1rem;font-size:.82rem;font-weight:700;color:#1a56db;cursor:pointer;width:100%">
+          <i class="fa-solid fa-plus"></i> Add specification
+        </button>
+      </div>
+
       <div class="field">
         <label>Description <span class="opt">(recommended)</span></label>
         <div class="input-wrap ta-wrap"><i class="fi fa-solid fa-align-left"></i>
@@ -290,6 +312,116 @@ img{display:block;max-width:100%;}
     reader.readAsDataURL(file);
   };
 
+  // ── SIZES (per-size stock) ──
+  const SIZE_PRESETS = {
+    'Fashion': ['XS','S','M','L','XL','XXL','3XL'],
+    'Shoes':   ['36','37','38','39','40','41','42','43','44','45','46']
+  };
+  let selectedSizes = {}; // { "M": 5, "L": 2 }
+
+  window.onCategoryChange = function() {
+    const cat = document.getElementById('p-category').value;
+    const section = document.getElementById('size-section');
+    const stockField = document.getElementById('p-stock').closest('.field');
+    if (SIZE_PRESETS[cat]) {
+      section.style.display = 'block';
+      renderSizeOptions(SIZE_PRESETS[cat]);
+      stockField.style.display = 'none'; // total stock auto-computed from sizes
+    } else {
+      section.style.display = 'none';
+      selectedSizes = {};
+      stockField.style.display = '';
+    }
+  };
+
+  function renderSizeOptions(sizes) {
+    const wrap = document.getElementById('size-options');
+    wrap.innerHTML = sizes.map(s => `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.3rem">
+        <button type="button" onclick="toggleSize('${s}')" id="size-btn-${s}"
+          style="min-width:44px;padding:.5rem .7rem;border-radius:9px;border:1.5px solid ${selectedSizes[s]!==undefined?'#1a56db':'#e2e8f0'};background:${selectedSizes[s]!==undefined?'#1a56db':'#fff'};color:${selectedSizes[s]!==undefined?'#fff':'#1e293b'};font-weight:700;font-size:.8rem;cursor:pointer">
+          ${s}
+        </button>
+        ${selectedSizes[s]!==undefined ? `<input type="number" min="0" placeholder="Qty" value="${selectedSizes[s]}" oninput="updateSizeStock('${s}',this.value)" style="width:52px;text-align:center;border:1.5px solid #e2e8f0;border-radius:6px;padding:.25rem;font-size:.75rem"/>` : ''}
+      </div>`).join('');
+  }
+
+  window.toggleSize = function(s) {
+    const cat = document.getElementById('p-category').value;
+    if (selectedSizes[s] !== undefined) delete selectedSizes[s];
+    else selectedSizes[s] = 0;
+    renderSizeOptions(SIZE_PRESETS[cat]);
+    updateTotalStockFromSizes();
+  };
+  window.updateSizeStock = function(s, val) {
+    selectedSizes[s] = parseInt(val) || 0;
+    updateTotalStockFromSizes();
+  };
+  function updateTotalStockFromSizes() {
+    const total = Object.values(selectedSizes).reduce((a,b)=>a+b, 0);
+    document.getElementById('p-stock').value = total;
+  }
+
+  // ── SIZING GUIDE MODAL ──
+  window.openSizeGuide = function() {
+    const cat = document.getElementById('p-category').value;
+    const isShoe = cat === 'Shoes';
+    const body = isShoe ? `
+      <p style="margin-bottom:.75rem;color:#475569;font-size:.85rem">Measure foot length from heel to longest toe, in cm, then match to the EU size below.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+        <tr style="background:#f8fafc"><th style="padding:.5rem;text-align:left">EU Size</th><th style="padding:.5rem;text-align:left">Foot Length (cm)</th></tr>
+        ${[['36','22.5'],['37','23.5'],['38','24'],['39','24.5'],['40','25.5'],['41','26'],['42','27'],['43','27.5'],['44','28.5'],['45','29'],['46','30']]
+          .map(([e,c])=>`<tr style="border-top:1px solid #e2e8f0"><td style="padding:.5rem">${e}</td><td style="padding:.5rem">${c} cm</td></tr>`).join('')}
+      </table>` : `
+      <p style="margin-bottom:.75rem;color:#475569;font-size:.85rem">Measure chest, waist and hip in cm, then match to the nearest size below.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+        <tr style="background:#f8fafc"><th style="padding:.5rem;text-align:left">Size</th><th style="padding:.5rem;text-align:left">Chest (cm)</th><th style="padding:.5rem;text-align:left">Waist (cm)</th></tr>
+        ${[['XS','81-84','61-64'],['S','85-88','65-68'],['M','89-93','69-73'],['L','94-99','74-79'],['XL','100-106','80-86'],['XXL','107-113','87-93'],['3XL','114-120','94-100']]
+          .map(([s,c,w])=>`<tr style="border-top:1px solid #e2e8f0"><td style="padding:.5rem;font-weight:700">${s}</td><td style="padding:.5rem">${c}</td><td style="padding:.5rem">${w}</td></tr>`).join('')}
+      </table>`;
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem';
+    overlay.onclick = (e) => { if(e.target===overlay) overlay.remove(); };
+    overlay.innerHTML = `
+      <div style="background:#fff;border-radius:16px;padding:1.5rem;max-width:400px;width:100%;max-height:80vh;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <h3 style="margin:0;font-size:1rem">${isShoe?'Shoe':'Clothing'} Sizing Guide</h3>
+          <button onclick="this.closest('.mc-size-guide-overlay').remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer">&times;</button>
+        </div>
+        ${body}
+      </div>`;
+    overlay.classList.add('mc-size-guide-overlay');
+    document.body.appendChild(overlay);
+  };
+
+  // ── SPECIFICATIONS (works for any category — phones, furniture, anything) ──
+  let specRowCount = 0;
+  window.addSpecRow = function(label, value) {
+    const id = specRowCount++;
+    const wrap = document.getElementById('spec-rows');
+    const row = document.createElement('div');
+    row.id = `spec-row-${id}`;
+    row.style.cssText = 'display:flex;gap:.5rem;margin-top:.5rem';
+    row.innerHTML = `
+      <input type="text" placeholder="Label (e.g. Storage)" value="${label||''}" class="spec-label" style="flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:.55rem .7rem;font-size:.82rem"/>
+      <input type="text" placeholder="Value (e.g. 128GB)" value="${value||''}" class="spec-value" style="flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:.55rem .7rem;font-size:.82rem"/>
+      <button type="button" onclick="document.getElementById('spec-row-${id}').remove()" style="background:none;border:none;color:#ef4444;font-size:1rem;cursor:pointer;padding:0 .3rem">
+        <i class="fa-solid fa-trash"></i>
+      </button>`;
+    wrap.appendChild(row);
+  };
+  function collectSpecs() {
+    return Array.from(document.querySelectorAll('#spec-rows > div')).map(row => ({
+      label: row.querySelector('.spec-label').value.trim(),
+      value: row.querySelector('.spec-value').value.trim()
+    })).filter(s => s.label && s.value);
+  }
+  function collectVariants() {
+    const cat = document.getElementById('p-category').value;
+    if (!SIZE_PRESETS[cat]) return null;
+    return Object.entries(selectedSizes).map(([size,stock]) => ({ size, stock }));
+  }
+
   window.publishProduct = async function() {
     const name=document.getElementById('p-name').value.trim();
     const price=document.getElementById('p-price').value;
@@ -299,7 +431,17 @@ img{display:block;max-width:100%;}
     const errEl=document.getElementById('add-error');
     errEl.style.display='none';
 
-    if(!name||!price||!stock||!cat){ errEl.textContent='Please fill in all required fields.'; errEl.style.display='block'; return; }
+    if(!name||!price||!cat){ errEl.textContent='Please fill in all required fields.'; errEl.style.display='block'; return; }
+
+    const variants = collectVariants();
+    if (SIZE_PRESETS[cat] && (!variants || !variants.length)) {
+      errEl.textContent='Please select at least one size and enter its stock.'; errEl.style.display='block'; return;
+    }
+    if (!SIZE_PRESETS[cat] && !stock) {
+      errEl.textContent='Please fill in all required fields.'; errEl.style.display='block'; return;
+    }
+
+    const attributes = collectSpecs();
 
     const btn=document.getElementById('btn-publish');
     btn.disabled=true; btn.classList.add('loading');
@@ -317,7 +459,7 @@ img{display:block;max-width:100%;}
       const res=await fetch(`${SB_URL}/rest/v1/vendor_products`,{
         method:'POST',
         headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify({vendor_id:uid,name,price:parseFloat(price),stock:parseInt(stock),category:cat,description:desc,images:imageUrl?[imageUrl]:[],status:'pending',created_at:new Date().toISOString()})
+        body:JSON.stringify({vendor_id:uid,name,price:parseFloat(price),stock:parseInt(document.getElementById('p-stock').value)||0,category:cat,description:desc,images:imageUrl?[imageUrl]:[],variants:variants||null,attributes:attributes.length?attributes:null,status:'pending',created_at:new Date().toISOString()})
       });
       if(!res.ok) throw new Error(await res.text());
       closeAdd();
@@ -325,6 +467,10 @@ img{display:block;max-width:100%;}
       document.getElementById('p-category').value='';
       document.getElementById('p-preview').classList.remove('show');
       document.getElementById('p-image').value='';
+      selectedSizes = {};
+      document.getElementById('size-section').style.display = 'none';
+      document.getElementById('p-stock').closest('.field').style.display = '';
+      document.getElementById('spec-rows').innerHTML = '';
       await loadProducts();
     } catch(err) {
       errEl.textContent=err.message||'Failed to publish. Try again.';

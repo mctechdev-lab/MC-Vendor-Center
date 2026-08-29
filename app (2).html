@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#1a56db"/>
+  <title>Dashboard — MC Vendor Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --blue:#1a56db;--blue-dark:#1543ad;--blue-dim:rgba(26,86,219,.07);
+      --blue-dim2:rgba(26,86,219,.13);--blue-bd:rgba(26,86,219,.22);
+      --gold:#f5a623;--gold2:#f97316;--bg:#f6f8fd;--surface:#ffffff;
+      --border:rgba(26,86,219,.10);--border2:rgba(26,86,219,.18);
+      --ink:#0f1b3d;--muted:#5b6987;--muted2:#93a0bd;
+      --green:#0ea968;--red:#dc2626;--amber:#f59e0b;
+      --font-d:'Syne',sans-serif;--font-b:'Plus Jakarta Sans',sans-serif;
+      --nav-h:64px;--top-h:56px;
+      --sh-sm:0 2px 10px rgba(15,27,61,.06);
+      --sh-blue:0 6px 20px rgba(26,86,219,.18);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{-webkit-text-size-adjust:100%;height:100%;}
+    body{font-family:var(--font-b);background:var(--bg);color:var(--ink);height:100%;max-height:100svh;display:flex;flex-direction:column;overflow:hidden;-webkit-font-smoothing:antialiased;}
+
+    .gate{position:fixed;inset:0;z-index:999;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;transition:opacity .4s;}
+    .gate.hidden{opacity:0;pointer-events:none;}
+    .gate-logo{width:54px;height:54px;background:linear-gradient(140deg,var(--blue),var(--blue-dark));border-radius:16px;display:grid;place-items:center;font-family:var(--font-d);font-weight:900;font-size:20px;color:#fff;box-shadow:var(--sh-blue);}
+    .gate-title{font-family:var(--font-d);font-weight:900;font-size:17px;}
+    .gate-sub{font-size:13px;color:var(--muted);}
+    .gate-spinner{width:34px;height:34px;border:3px solid var(--blue-dim2);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;}
+
+    .topbar{height:var(--top-h);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--sh-sm);z-index:50;}
+    .topbar-left{display:flex;align-items:center;gap:10px;}
+    .brand-mark{width:32px;height:32px;background:linear-gradient(140deg,var(--blue),var(--blue-dark));border-radius:9px;display:grid;place-items:center;font-family:var(--font-d);font-weight:900;font-size:12px;color:#fff;box-shadow:var(--sh-blue);flex-shrink:0;}
+    .topbar-info .g-label{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.07em;}
+    .topbar-info .g-name{font-family:var(--font-d);font-weight:800;font-size:14px;color:var(--ink);}
+    .topbar-right{display:flex;align-items:center;gap:8px;}
+    .tb-btn{width:34px;height:34px;border-radius:9px;background:var(--bg);border:1px solid var(--border2);display:grid;place-items:center;font-size:14px;color:var(--muted);cursor:pointer;transition:background .2s,color .2s;position:relative;}
+    .tb-btn:hover{background:var(--blue-dim);color:var(--blue);}
+    .tb-dot{position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--surface);display:none;}
+    .tb-dot.show{display:block;}
+
+    .iframe-wrap{flex:1;overflow:hidden;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));position:relative;}
+    .iframe-wrap iframe{width:100%;height:100%;border:none;background:var(--bg);display:block;}
+
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:var(--surface);border-top:1px solid var(--border);box-shadow:0 -4px 20px rgba(15,27,61,.07);display:flex;align-items:stretch;}
+    .nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;position:relative;transition:background .2s;-webkit-tap-highlight-color:transparent;}
+    .nav-tab:hover{background:var(--blue-dim);}
+    .nav-tab.active{background:var(--blue-dim);}
+    .nav-tab::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2.5px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,var(--blue),var(--gold));opacity:0;transition:opacity .25s;}
+    .nav-tab.active::before{opacity:1;}
+    .nav-icon{font-size:18px;color:var(--muted2);transition:color .2s,transform .25s;position:relative;}
+    .nav-tab.active .nav-icon{color:var(--blue);transform:translateY(-1px);}
+    .nav-badge{position:absolute;top:-4px;right:-6px;background:var(--red);color:#fff;font-size:9px;font-weight:800;width:16px;height:16px;border-radius:50%;display:none;place-items:center;border:2px solid var(--surface);}
+    .nav-badge.show{display:grid;}
+    .nav-label{font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:.02em;transition:color .2s;}
+    .nav-tab.active .nav-label{color:var(--blue);}
+
+    @keyframes spin{to{transform:rotate(360deg);}}
+  </style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gate-logo">MC</div>
+  <div class="gate-title">MC Vendor Center</div>
+  <div class="gate-sub">Loading your dashboard...</div>
+  <div class="gate-spinner"></div>
+</div>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="brand-mark">MC</div>
+    <div class="topbar-info">
+      <div class="g-label" id="top-greeting">Vendor Center</div>
+      <div class="g-name" id="top-name">Loading...</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="tb-btn" onclick="switchTab('orders')" title="Orders">
+      <i class="fa-solid fa-receipt"></i>
+      <div class="tb-dot" id="orders-dot"></div>
+    </div>
+    <div class="tb-btn" onclick="switchTab('settings')" title="Settings">
+      <i class="fa-solid fa-gear"></i>
+    </div>
+  </div>
+</div>
+
+<div class="iframe-wrap">
+  <iframe id="main-frame" src="vendor-home.html" title="Dashboard"></iframe>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-tab active" id="tab-home" onclick="switchTab('home')">
+    <div class="nav-icon"><i class="fa-solid fa-house"></i></div>
+    <div class="nav-label">Home</div>
+  </div>
+  <div class="nav-tab" id="tab-products" onclick="switchTab('products')">
+    <div class="nav-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+    <div class="nav-label">Products</div>
+  </div>
+  <div class="nav-tab" id="tab-orders" onclick="switchTab('orders')">
+    <div class="nav-icon" style="position:relative;">
+      <i class="fa-solid fa-receipt"></i>
+      <div class="nav-badge" id="badge-orders"></div>
+    </div>
+    <div class="nav-label">Orders</div>
+  </div>
+  <div class="nav-tab" id="tab-earnings" onclick="switchTab('earnings')">
+    <div class="nav-icon"><i class="fa-solid fa-wallet"></i></div>
+    <div class="nav-label">Earnings</div>
+  </div>
+  <div class="nav-tab" id="tab-settings" onclick="switchTab('settings')">
+    <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+    <div class="nav-label">Settings</div>
+  </div>
+</nav>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const SB_URL  = "https://kswikkoqfpyxuurzxail.supabase.co";
+  const SB_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd2lra29xZnB5eHV1cnp4YWlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjEzMDQsImV4cCI6MjA4NjkzNzMwNH0.uuoSKWOTeXot1HJys0EO9OcIRBL0mKrNHIUHIAPCpZ4";
+
+  window.SB_URL  = SB_URL;
+  window.SB_ANON = SB_ANON;
+  window.CDN_CLOUD  = "dluuvtjph";
+  window.CDN_PRESET = "ml_default";
+
+  const app  = initializeApp({ apiKey:"AIzaSyC7trJbzcIix4HgPEHCybb6E7Ztkc39kfw", authDomain:"mc-store-b6beb.firebaseapp.com", projectId:"mc-store-b6beb", storageBucket:"mc-store-b6beb.firebasestorage.app", messagingSenderId:"930964754103", appId:"1:930964754103:web:0e79c3dcd6bcc4dafc8732" });
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = 'login.html'; return; }
+    window._uid = user.uid;
+    try {
+      const res  = await fetch(`${SB_URL}/rest/v1/vendors?uid=eq.${user.uid}&select=*`, { headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`} });
+      const data = await res.json();
+      const v    = data[0];
+      if (!v || !v.onboarding_complete) { window.location.href = 'onboarding.html'; return; }
+      if (v.status === 'pending')        { window.location.href = 'pending.html'; return; }
+      if (v.status === 'rejected')       { window.location.href = 'rejected.html'; return; }
+      if (v.status !== 'approved')       { window.location.href = 'pending.html'; return; }
+      window._vendor = v;
+      const hr = new Date().getHours();
+      document.getElementById('top-greeting').textContent = hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+      document.getElementById('top-name').textContent = v.shop_name || v.legal_name || 'Vendor';
+      const ordRes = await fetch(`${SB_URL}/rest/v1/orders?vendor_id=eq.${user.uid}&status=in.(pending,processing)&select=id`, { headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`} });
+      const orders = await ordRes.json();
+      if (orders?.length > 0) {
+        document.getElementById('badge-orders').textContent = orders.length;
+        document.getElementById('badge-orders').classList.add('show');
+        document.getElementById('orders-dot').classList.add('show');
+      }
+      document.getElementById('gate').classList.add('hidden');
+    } catch(err) { window.location.href = 'login.html'; }
+  });
+
+  window.logout = async function() { await signOut(auth); window.location.href = 'login.html'; };
+</script>
+
+<script>
+  const TABS = { home:'vendor-home.html', products:'vendor-products.html', orders:'vendor-orders.html', earnings:'vendor-earnings.html', settings:'vendor-settings.html' };
+  let currentTab = 'home';
+
+  window.switchTab = function(tab) {
+    if (tab === currentTab) return;
+    currentTab = tab;
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.id===`tab-${tab}`));
+    document.getElementById('main-frame').src = TABS[tab] || TABS.home;
+    sessionStorage.setItem('vendor_tab', tab);
+  };
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const last = sessionStorage.getItem('vendor_tab');
+    if (last && last !== 'home' && TABS[last]) setTimeout(() => switchTab(last), 200);
+  });
+
+  window.addEventListener('message', e => {
+    if (e.data?.type === 'switchTab') switchTab(e.data.tab);
+    if (e.data?.type === 'logout') window.logout?.();
+  });
+</script>
+</body>
+</html>

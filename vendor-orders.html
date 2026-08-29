@@ -103,8 +103,23 @@ button{cursor:pointer;font-family:inherit;border:none;outline:none;background:no
     let tries=0;
     while(!parent._uid && tries<20){await new Promise(r=>setTimeout(r,200));tries++;}
     const uid=parent._uid; if(!uid) return;
-    const res=await fetch(`${SB_URL}/rest/v1/vendor_orders?vendor_id=eq.${uid}&select=*&order=created_at.desc`,{headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`}});
-    allOrders=await res.json()||[];
+    const res=await fetch(`${SB_URL}/rest/v1/orders?vendor_id=eq.${uid}&select=*&order=created_at.desc`,{headers:{'apikey':SB_ANON,'Authorization':`Bearer ${SB_ANON}`}});
+    const rows = await res.json() || [];
+    // Real orders store line items as JSON, not a single product_name/amount —
+    // derive a display name and use subtotal (vendor's product revenue,
+    // excluding the delivery fee which goes to the courier, not the vendor)
+    allOrders = rows.map(o => {
+      let items = [];
+      try { items = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items || []); } catch(e) { items = []; }
+      const product_name = items.length === 1
+        ? (items[0].title || items[0].name || 'Order')
+        : items.length > 1 ? `${items.length} items` : 'Order';
+      const delivery_address = [o.delivery_street, o.delivery_city, o.delivery_state].filter(Boolean).join(', ');
+      return {
+        ...o, product_name, amount: Number(o.subtotal || 0), delivery_address,
+        quantity: items.length === 1 ? (items[0].quantity || items[0].qty || 1) : null
+      };
+    });
     renderOrders(allOrders);
   }
 
