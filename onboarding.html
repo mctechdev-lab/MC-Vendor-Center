@@ -768,7 +768,7 @@
         <div class="field">
           <label>Selfie holding your ID <span class="req">*</span></label>
           <div class="upload-box">
-            <input type="file" id="s5-selfie" accept="image/*" capture="user" onchange="previewUpload(this,'selfie-preview-img','selfie-preview')" />
+            <input type="file" id="s5-selfie" accept="image/*" onchange="previewUpload(this,'selfie-preview-img','selfie-preview')" />
             <i class="fa-solid fa-camera"></i>
             <p>Take or upload a selfie holding your ID</p>
             <small>Face and ID must both be clearly visible</small>
@@ -1312,6 +1312,7 @@
       document.getElementById(wrapId).classList.add('show');
     };
     reader.readAsDataURL(file);
+    showErr(input.id, false); // clear any "please upload" error now that a file is picked
   };
 
   window.toggleAllStates = function() {
