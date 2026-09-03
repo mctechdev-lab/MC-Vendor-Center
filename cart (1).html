@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cart — MC Store</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1a56db;--blue-dk:#1347c8;--blue-lt:#eff6ff;--blue-md:#dbeafe;
+  --gold:#f5a623;--gold-lt:#fef3c7;--green:#16a34a;--green-lt:#f0fdf4;
+  --red:#ef4444;--red-lt:#fef2f2;--orange:#f97316;--orange-lt:#fff7ed;
+  --white:#fff;--bg:#f0f7ff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--white);border-bottom:1.5px solid var(--border);
+  height:56px;padding:0 1rem;position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;gap:.75rem;
+  box-shadow:0 2px 10px rgba(26,86,219,.07);}
+.back-btn{width:36px;height:36px;border-radius:10px;border:1.5px solid var(--border);
+  background:var(--bg);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--muted);flex-shrink:0;}
+.topbar-title{font-size:1rem;font-weight:800;flex:1;}
+.cart-badge{background:var(--blue);color:white;font-size:.65rem;font-weight:800;
+  padding:.15rem .5rem;border-radius:50px;margin-left:4px;}
+
+/* ── STEP PROGRESS ── */
+.steps{display:flex;align-items:center;padding:.85rem 1rem;background:var(--white);
+  border-bottom:1.5px solid var(--border);gap:0;overflow-x:auto;scrollbar-width:none;}
+.step{display:flex;align-items:center;gap:.35rem;flex-shrink:0;}
+.step-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);
+  background:var(--white);display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:800;color:var(--muted);transition:all .3s;flex-shrink:0;}
+.step-dot.active{border-color:var(--blue);background:var(--blue);color:white;}
+.step-dot.done{border-color:var(--green);background:var(--green);color:white;}
+.step-label{font-size:.68rem;font-weight:700;color:var(--muted);white-space:nowrap;}
+.step-label.active{color:var(--blue);}
+.step-label.done{color:var(--green);}
+.step-line{flex:1;height:2px;background:var(--border);min-width:16px;margin:0 .25rem;transition:background .3s;}
+.step-line.done{background:var(--green);}
+
+/* ── STEP PANELS ── */
+.step-panel{display:none;animation:slideIn .3s ease;}
+.step-panel.active{display:block;}
+.panel-body{padding:1rem;}
+
+/* ── CARDS ── */
+.card{background:var(--white);border:1.5px solid var(--border);border-radius:16px;
+  padding:1rem;margin-bottom:.85rem;box-shadow:0 2px 8px rgba(26,86,219,.05);}
+.card-title{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;}
+
+/* ── DELIVERY DATE BANNER ── */
+.delivery-banner{background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+  border:1.5px solid #86efac;border-radius:14px;padding:.85rem 1rem;
+  margin-bottom:.85rem;display:flex;align-items:center;gap:.75rem;}
+.delivery-banner-icon{width:40px;height:40px;background:#16a34a;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;color:white;
+  font-size:1rem;flex-shrink:0;}
+.delivery-banner-title{font-size:.78rem;font-weight:700;color:var(--muted);}
+.delivery-banner-date{font-size:.9rem;font-weight:800;color:#16a34a;}
+
+/* ── CART ITEMS ── */
+.cart-item{display:flex;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--border);}
+.cart-item:last-child{border-bottom:none;}
+.item-img{width:64px;height:64px;border-radius:10px;object-fit:cover;
+  background:var(--blue-lt);flex-shrink:0;border:1.5px solid var(--border);}
+.item-img-ph{width:64px;height:64px;border-radius:10px;background:var(--blue-lt);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  color:var(--blue);font-size:1.3rem;border:1.5px solid var(--border);}
+.item-name{font-size:.82rem;font-weight:700;line-height:1.35;margin-bottom:.3rem;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.item-price{font-size:.9rem;font-weight:800;color:var(--blue);}
+.qty-row{display:flex;align-items:center;gap:.4rem;margin-top:.4rem;}
+.qty-btn{width:26px;height:26px;border-radius:7px;border:1.5px solid var(--border);
+  background:var(--bg);font-size:.8rem;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;transition:all .15s;font-weight:700;}
+.qty-btn:hover{background:var(--blue-lt);border-color:var(--blue);color:var(--blue);}
+.qty-num{font-size:.83rem;font-weight:700;min-width:22px;text-align:center;}
+.remove-btn{margin-left:auto;background:none;border:none;color:var(--muted);
+  font-size:.75rem;cursor:pointer;padding:.2rem .4rem;border-radius:6px;transition:all .15s;}
+.remove-btn:hover{background:var(--red-lt);color:var(--red);}
+
+/* ── PROCEED BTN ── */
+.proceed-btn{width:100%;padding:.9rem;background:linear-gradient(135deg,#3b82f6,var(--blue));
+  color:white;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;
+  font-size:.95rem;font-weight:800;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:.6rem;box-shadow:0 4px 14px rgba(26,86,219,.3);
+  transition:all .2s;margin-top:.85rem;}
+.proceed-btn:hover:not(:disabled){transform:translateY(-2px);}
+.proceed-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+/* ── DELIVERY TYPE TOGGLE ── */
+.del-toggle{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem;}
+.del-type-btn{padding:.85rem;border-radius:12px;border:2px solid var(--border);
+  background:var(--white);font-family:'DM Sans',sans-serif;font-size:.83rem;
+  font-weight:800;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:.5rem;transition:all .2s;color:var(--muted);}
+.del-type-btn.active{border-color:var(--blue);background:var(--blue);color:white;}
+
+/* ── ADDRESS CARDS ── */
+.addr-card{border:1.5px solid var(--border);border-radius:12px;padding:.8rem 1rem;
+  margin-bottom:.5rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;
+  transition:all .2s;background:var(--white);}
+.addr-card:hover{border-color:var(--blue-md);background:var(--blue-lt);}
+.addr-card.selected{border-color:var(--blue);background:var(--blue-lt);}
+.addr-icon{width:36px;height:36px;border-radius:9px;background:var(--blue-lt);
+  display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0;}
+.addr-card.selected .addr-icon{background:var(--blue);color:white;}
+.addr-name{font-size:.82rem;font-weight:800;}
+.addr-detail{font-size:.72rem;color:var(--muted);margin-top:1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ── COURIER CARDS ── */
+.courier-card{border:1.5px solid var(--border);border-radius:12px;padding:.8rem 1rem;
+  margin-bottom:.5rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;
+  transition:all .2s;background:var(--white);}
+.courier-card:hover{border-color:var(--blue-md);background:var(--blue-lt);}
+.courier-card.selected{border-color:var(--blue);background:var(--blue-lt);}
+.courier-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);
+  flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.courier-card.selected .courier-radio{border-color:var(--blue);background:var(--blue);}
+.courier-card.selected .courier-radio::after{content:'';width:6px;height:6px;
+  border-radius:50%;background:white;}
+.courier-logo{width:36px;height:36px;border-radius:8px;object-fit:contain;
+  background:var(--bg);padding:4px;border:1px solid var(--border);flex-shrink:0;}
+.courier-name{font-size:.85rem;font-weight:800;}
+.courier-eta{font-size:.72rem;color:var(--muted);margin-top:1px;}
+.courier-fee{font-size:.9rem;font-weight:800;color:var(--blue);white-space:nowrap;}
+
+/* ── MORE COURIERS SHEET ── */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
+  display:none;align-items:flex-end;}
+.sheet-overlay.open{display:flex;}
+.sheet{background:var(--white);border-radius:20px 20px 0 0;width:100%;
+  max-height:80vh;overflow-y:auto;padding:1rem;}
+.sheet-handle{width:40px;height:4px;background:var(--border);border-radius:50px;
+  margin:0 auto .85rem;}
+.sheet-search{width:100%;border:1.5px solid var(--border);border-radius:10px;
+  padding:.6rem .9rem;font-family:'DM Sans',sans-serif;font-size:.875rem;
+  outline:none;margin-bottom:.85rem;background:var(--bg);}
+.sheet-search:focus{border-color:var(--blue);}
+
+/* ── PAYMENT METHODS ── */
+.pay-card{border:1.5px solid var(--border);border-radius:12px;padding:.8rem 1rem;
+  margin-bottom:.5rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;
+  transition:all .2s;background:var(--white);}
+.pay-card:hover:not(.disabled){border-color:var(--blue-md);background:var(--blue-lt);}
+.pay-card.selected{border-color:var(--blue);background:var(--blue-lt);}
+.pay-card.disabled{opacity:.5;cursor:not-allowed;}
+.pay-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.pay-card.selected .pay-radio{border-color:var(--blue);background:var(--blue);}
+.pay-card.selected .pay-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:white;}
+.pay-icon{width:36px;height:36px;border-radius:9px;background:var(--blue-lt);
+  display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0;}
+.pay-name{font-size:.85rem;font-weight:800;}
+.pay-sub{font-size:.72rem;color:var(--muted);margin-top:1px;}
+
+/* ── ORDER SUMMARY ── */
+.sum-row{display:flex;justify-content:space-between;align-items:center;
+  font-size:.875rem;padding:.35rem 0;}
+.sum-row .lbl{color:var(--muted);}
+.sum-row .val{font-weight:700;}
+.sum-divider{border:none;border-top:1.5px solid var(--border);margin:.5rem 0;}
+.sum-total{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;}
+.sum-total .lbl{font-size:.95rem;font-weight:800;}
+.sum-total .val{font-size:1.1rem;font-weight:800;color:var(--blue);}
+
+/* ── PLACE ORDER BTN ── */
+.place-btn{width:100%;padding:1rem;background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:white;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;
+  font-size:1rem;font-weight:800;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:.6rem;box-shadow:0 4px 14px rgba(22,163,74,.3);
+  transition:all .2s;margin-top:.85rem;}
+.place-btn:hover:not(:disabled){transform:translateY(-2px);}
+.place-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+/* ── EMPTY CART ── */
+.empty{text-align:center;padding:4rem 2rem;}
+.empty i{font-size:3rem;display:block;margin-bottom:1rem;opacity:.25;}
+.empty h3{font-size:1.1rem;font-weight:800;margin-bottom:.4rem;}
+.empty p{font-size:.85rem;color:var(--muted);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#0f172a;color:white;padding:.65rem 1.25rem;border-radius:50px;
+  font-size:.83rem;font-weight:600;opacity:0;transition:all .3s;z-index:999;
+  display:flex;align-items:center;gap:.5rem;white-space:nowrap;max-width:92vw;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.err i{color:#f87171;}
+.toast.ok i{color:#4ade80;}
+
+/* ── SUCCESS ── */
+.success-overlay{position:fixed;inset:0;background:white;z-index:300;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:2rem;}
+.success-icon{width:80px;height:80px;background:var(--green-lt);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;
+  font-size:2rem;color:var(--green);}
+
+/* ── PICKUP INFO ── */
+.pickup-box{background:var(--blue-lt);border:1.5px solid var(--blue-md);
+  border-radius:14px;padding:1rem;margin-bottom:.85rem;}
+
+/* ── COUPON ── */
+.coupon-row{display:flex;gap:.5rem;margin-top:.5rem;}
+.coupon-input{flex:1;border:1.5px solid var(--border);border-radius:10px;
+  padding:.6rem .85rem;font-family:'DM Sans',sans-serif;font-size:.875rem;
+  outline:none;transition:all .2s;text-transform:uppercase;}
+.coupon-input:focus{border-color:var(--blue);}
+.coupon-btn{background:var(--blue);color:white;border:none;border-radius:10px;
+  padding:.6rem 1rem;font-family:'DM Sans',sans-serif;font-size:.83rem;
+  font-weight:700;cursor:pointer;white-space:nowrap;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="back-btn" onclick="window.parent.postMessage({type:'switchTab',target:'home'},'*')">
+    <i class="fas fa-arrow-left"></i>
+  </div>
+  <div class="topbar-title">Checkout <span class="cart-badge" id="headerCount">0</span></div>
+</div>
+
+<!-- STEP PROGRESS -->
+<div class="steps" id="stepsBar">
+  <div class="step">
+    <div class="step-dot active" id="dot1">1</div>
+    <div class="step-label active" id="lbl1">Cart</div>
+  </div>
+  <div class="step-line" id="line1"></div>
+  <div class="step">
+    <div class="step-dot" id="dot2">2</div>
+    <div class="step-label" id="lbl2">Delivery</div>
+  </div>
+  <div class="step-line" id="line2"></div>
+  <div class="step">
+    <div class="step-dot" id="dot3">3</div>
+    <div class="step-label" id="lbl3">Courier</div>
+  </div>
+  <div class="step-line" id="line3"></div>
+  <div class="step">
+    <div class="step-dot" id="dot4">4</div>
+    <div class="step-label" id="lbl4">Payment</div>
+  </div>
+  <div class="step-line" id="line4"></div>
+  <div class="step">
+    <div class="step-dot" id="dot5">5</div>
+    <div class="step-label" id="lbl5">Confirm</div>
+  </div>
+</div>
+
+<!-- ════ STEP 1 — CART ════ -->
+<div class="step-panel active" id="panel1">
+  <div class="panel-body">
+    <!-- Delivery date banner -->
+    <div class="delivery-banner" id="deliveryBanner">
+      <div class="delivery-banner-icon"><i class="fas fa-truck-fast"></i></div>
+      <div>
+        <div class="delivery-banner-title">Estimated Delivery</div>
+        <div class="delivery-banner-date" id="deliveryDateRange">Wed 25 Jun – Fri 27 Jun</div>
+      </div>
+    </div>
+
+    <!-- Cart items -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-cart-shopping"></i> Your Items</div>
+      <div id="cartItems"><div style="text-align:center;padding:2rem;color:var(--muted)"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem"></i></div></div>
+    </div>
+
+    <!-- Order mini summary -->
+    <div class="card" id="step1Summary" style="display:none">
+      <div class="sum-row"><span class="lbl">Subtotal</span><span class="val" id="s1Subtotal">—</span></div>
+      <div class="sum-row"><span class="lbl">Delivery</span><span class="val">Calculated next</span></div>
+      <hr class="sum-divider">
+      <div class="sum-row"><span class="lbl" style="font-weight:800">Estimated Total</span><span class="val" style="color:var(--blue)" id="s1Total">—</span></div>
+    </div>
+
+    <button class="proceed-btn" id="step1Btn" onclick="goStep(2)" disabled>
+      <i class="fas fa-arrow-right"></i> Proceed to Delivery
+    </button>
+  </div>
+</div>
+
+<!-- ════ STEP 2 — DELIVERY METHOD ════ -->
+<div class="step-panel" id="panel2">
+  <div class="panel-body">
+    <div class="card">
+      <div class="card-title"><i class="fas fa-truck"></i> How Do You Want It?</div>
+
+      <div class="del-toggle">
+        <button class="del-type-btn active" id="btnDelivery" onclick="setDelType('delivery')">
+          <i class="fas fa-truck"></i> Home Delivery
+        </button>
+        <button class="del-type-btn" id="btnPickup" onclick="setDelType('pickup')">
+          <i class="fas fa-store"></i> Store Pickup
+        </button>
+      </div>
+
+      <!-- PICKUP -->
+      <div id="pickupSection" style="display:none">
+        <div class="pickup-box">
+          <div style="font-size:.85rem;font-weight:800;color:var(--blue);margin-bottom:.5rem">
+            <i class="fas fa-store"></i> MC Store — Bodija, Ibadan
+          </div>
+          <div style="font-size:.82rem;color:var(--text);line-height:1.6">
+            Opposite Bovas Filling Station, Bodija<br>Ibadan, Oyo State
+          </div>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:.4rem">
+            <i class="fas fa-clock" style="color:var(--blue)"></i> Mon–Sat 8am–8pm &nbsp;
+            <i class="fas fa-phone" style="color:var(--blue)"></i> +234 805 623 0366
+          </div>
+          <div style="margin-top:.65rem;background:white;border-radius:8px;padding:.6rem;font-size:.75rem;color:var(--muted)">
+            <i class="fas fa-circle-info" style="color:var(--blue)"></i> Pay when you collect. Bring your order number.
+          </div>
+        </div>
+        <div style="font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.6rem">Your Contact</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.6rem">
+          <div>
+            <label style="font-size:.72rem;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">First Name *</label>
+            <input type="text" id="pName" placeholder="John" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:.6rem .8rem;font-family:'DM Sans',sans-serif;font-size:.875rem;outline:none">
+          </div>
+          <div>
+            <label style="font-size:.72rem;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">Phone *</label>
+            <input type="tel" id="pPhone" placeholder="080..." style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:.6rem .8rem;font-family:'DM Sans',sans-serif;font-size:.875rem;outline:none">
+          </div>
+        </div>
+      </div>
+
+      <!-- DELIVERY ADDRESSES -->
+      <div id="deliverySection">
+        <div style="font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.6rem">
+          <i class="fas fa-bookmark" style="color:var(--blue)"></i> Select Delivery Address
+        </div>
+        <div id="addrList">
+          <div style="text-align:center;padding:1.5rem;color:var(--muted)">
+            <i class="fas fa-spinner fa-spin" style="font-size:1.2rem;display:block;margin-bottom:.5rem"></i>
+            Loading addresses...
+          </div>
+        </div>
+        <button onclick="goAddAddress()" style="width:100%;margin-top:.5rem;border:1.5px dashed var(--border);background:none;border-radius:10px;padding:.6rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;color:var(--muted);cursor:pointer">
+          <i class="fas fa-plus"></i> Add New Address
+        </button>
+      </div>
+    </div>
+
+    <button class="proceed-btn" id="step2Btn" onclick="goStep(3)" disabled>
+      <i class="fas fa-arrow-right"></i> Continue to Courier Selection
+    </button>
+  </div>
+</div>
+
+<!-- ════ STEP 3 — COURIER ════ -->
+<div class="step-panel" id="panel3">
+  <div class="panel-body">
+    <div class="card">
+      <div class="card-title"><i class="fas fa-shipping-fast"></i> Choose Courier</div>
+      <div id="courierList">
+        <div style="text-align:center;padding:2rem;color:var(--muted)">
+          <i class="fas fa-spinner fa-spin" style="font-size:1.5rem;display:block;margin-bottom:.75rem"></i>
+          Fetching live courier rates...
+        </div>
+      </div>
+      <button onclick="openMoreCouriers()" style="width:100%;margin-top:.75rem;border:1.5px solid var(--blue-md);background:var(--blue-lt);border-radius:10px;padding:.65rem;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:700;color:var(--blue);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem">
+        <i class="fas fa-search"></i> Check More Couriers
+      </button>
+    </div>
+
+    <!-- Delivery date preview -->
+    <div class="delivery-banner" id="step3DateBanner" style="display:none">
+      <div class="delivery-banner-icon"><i class="fas fa-calendar-check"></i></div>
+      <div>
+        <div class="delivery-banner-title">Expected Delivery</div>
+        <div class="delivery-banner-date" id="step3DateText">—</div>
+      </div>
+    </div>
+
+    <button class="proceed-btn" id="step3Btn" onclick="goStep(4)" disabled>
+      <i class="fas fa-arrow-right"></i> Continue to Payment
+    </button>
+  </div>
+</div>
+
+<!-- ════ STEP 4 — PAYMENT ════ -->
+<div class="step-panel" id="panel4">
+  <div class="panel-body">
+    <div class="card">
+      <div class="card-title"><i class="fas fa-credit-card"></i> Payment Method</div>
+      <div id="paymentList"></div>
+    </div>
+
+    <!-- Coupon -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-tag"></i> Promo Code (Optional)</div>
+      <div class="coupon-row">
+        <input type="text" class="coupon-input" id="couponInput" placeholder="Enter code e.g. SAVE10">
+        <button class="coupon-btn" onclick="applyCoupon()">Apply</button>
+      </div>
+      <div id="couponResult" style="margin-top:.5rem"></div>
+    </div>
+
+    <button class="proceed-btn" id="step4Btn" onclick="goStep(5)" disabled>
+      <i class="fas fa-arrow-right"></i> Review Order
+    </button>
+  </div>
+</div>
+
+<!-- ════ STEP 5 — CONFIRM ════ -->
+<div class="step-panel" id="panel5">
+  <div class="panel-body">
+    <!-- Delivery date final -->
+    <div class="delivery-banner" id="step5DateBanner">
+      <div class="delivery-banner-icon"><i class="fas fa-calendar-check"></i></div>
+      <div>
+        <div class="delivery-banner-title">Expected Delivery</div>
+        <div class="delivery-banner-date" id="step5DateText">—</div>
+      </div>
+    </div>
+
+    <!-- Items summary -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-bag-shopping"></i> Order Items</div>
+      <div id="confirmItems"></div>
+    </div>
+
+    <!-- Delivery summary -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-truck"></i> Delivery Details</div>
+      <div id="confirmDelivery" style="font-size:.83rem;line-height:1.8;color:var(--text)"></div>
+    </div>
+
+    <!-- Price summary -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-receipt"></i> Price Summary</div>
+      <div id="confirmSummary"></div>
+    </div>
+
+    <button class="place-btn" id="placeOrderBtn" onclick="placeOrder()">
+      <i class="fas fa-lock"></i> Place Order & Pay
+    </button>
+    <p style="text-align:center;font-size:.72rem;color:var(--muted);margin-top:.6rem">
+      <i class="fas fa-shield-check"></i> Secured with SSL encryption via Paystack
+    </p>
+  </div>
+</div>
+
+<!-- ════ MORE COURIERS SHEET ════ -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet(event)">
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <div style="font-size:.9rem;font-weight:800;margin-bottom:.75rem">All Available Couriers</div>
+    <input type="text" class="sheet-search" id="sheetSearch" placeholder="Search courier..." oninput="filterCouriers(this.value)">
+    <div id="sheetCourierList"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
+
+<!-- SUCCESS -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon"><i class="fas fa-check"></i></div>
+  <h2 style="font-size:1.5rem;font-weight:900;margin-bottom:.5rem">Order Placed! 🎉</h2>
+  <p style="color:var(--muted);font-size:.88rem;max-width:280px;line-height:1.6;margin-bottom:1.5rem" id="successMsg">Your order has been placed successfully!</p>
+  <button onclick="window.parent.postMessage({type:'switchTab',target:'orders'},'*')"
+    style="background:var(--blue);color:white;border:none;border-radius:12px;padding:.85rem 2rem;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer">
+    <i class="fas fa-bag-shopping"></i> View My Orders
+  </button>
+</div>
+
+<script type="module">
+import { getSession } from './session.js';
+import { db_getCart, db_updateCartQty, db_removeFromCart, db_placeOrder } from './db.js';
+import { initiatePayment } from './payment.js';
+
+// ── STATE ──
+let user         = null;
+let cartItems    = [];
+let delType      = 'delivery'; // 'delivery' | 'pickup'
+let selAddress   = null;
+let selRate      = null;
+let selPay       = null;
+let discount     = 0;
+let couponCode   = '';
+let vendorGroups = []; // [{ vendor_id, vendor_name, items, rates, selRate }] — one group per seller
+let currentStep  = 1;
+
+const SB_URL = 'https://kswikkoqfpyxuurzxail.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd2lra29xZnB5eHV1cnp4YWlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzNjEzMDQsImV4cCI6MjA4NjkzNzMwNH0.uuoSKWOTeXot1HJys0EO9OcIRBL0mKrNHIUHIAPCpZ4';
+
+function fmt(n){ return '₦'+Number(n||0).toLocaleString('en-NG'); }
+function esc(s){ const d=document.createElement('div');d.textContent=s||'';return d.innerHTML; }
+
+function showToast(msg, type='ok') {
+  const t=document.getElementById('toast');
+  t.className=`toast ${type}`;
+  t.querySelector('i').className=type==='ok'?'fas fa-check-circle':'fas fa-circle-exclamation';
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── DELIVERY DATE CALCULATOR ──
+function calcDeliveryDate(minDays=3, maxDays=5) {
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function addBusinessDays(date, n) {
+    let d = new Date(date); let added = 0;
+    while (added < n) {
+      d.setDate(d.getDate()+1);
+      if (d.getDay()!==0) added++; // Only Sunday is non-business day in Nigeria
+    }
+    return d;
+  }
+  const now   = new Date();
+  const from  = addBusinessDays(now, minDays);
+  const to    = addBusinessDays(now, maxDays);
+  const fStr  = `${days[from.getDay()]} ${from.getDate()} ${months[from.getMonth()]}`;
+  const tStr  = `${days[to.getDay()]} ${to.getDate()} ${months[to.getMonth()]}`;
+  return `${fStr} – ${tStr}`;
+}
+
+function etaToDays(eta='') {
+  // Parse ETA strings like "2–5 business days", "Next day", "Same day"
+  if (!eta) return { min:3, max:5 };
+  const lower = eta.toLowerCase();
+  if (lower.includes('same day')) return { min:0, max:0 };
+  if (lower.includes('next day') || lower.includes('overnight')) return { min:1, max:1 };
+  const nums = eta.match(/\d+/g);
+  if (nums && nums.length >= 2) return { min:parseInt(nums[0]), max:parseInt(nums[1]) };
+  if (nums && nums.length === 1) return { min:parseInt(nums[0]), max:parseInt(nums[0])+1 };
+  return { min:3, max:5 };
+}
+
+function updateDeliveryDates(eta) {
+  const { min, max } = etaToDays(eta);
+  const range = calcDeliveryDate(min, max);
+  document.getElementById('deliveryDateRange').textContent = range;
+  document.getElementById('step3DateText').textContent     = range;
+  document.getElementById('step5DateText').textContent     = range;
+  document.getElementById('step3DateBanner').style.display = 'flex';
+}
+
+// ── STEP NAVIGATION ──
+window.goStep = function(n) {
+  // Validate before moving
+  if (n === 3 && delType === 'delivery' && !selAddress) {
+    showToast('Please select a delivery address', 'err'); return;
+  }
+  if (n === 3 && delType === 'pickup') {
+    const name = document.getElementById('pName')?.value.trim();
+    const phone = document.getElementById('pPhone')?.value.trim();
+    if (!name || !phone) { showToast('Please enter your name and phone', 'err'); return; }
+  }
+  if (n === 4 && !selRate) {
+    showToast('Please select a courier', 'err'); return;
+  }
+  if (n === 5 && !selPay) {
+    showToast('Please select a payment method', 'err'); return;
+  }
+
+  currentStep = n;
+
+  // Update panels
+  for (let i=1;i<=5;i++) {
+    document.getElementById(`panel${i}`).classList.toggle('active', i===n);
+  }
+
+  // Update step indicators
+  for (let i=1;i<=5;i++) {
+    const dot = document.getElementById(`dot${i}`);
+    const lbl = document.getElementById(`lbl${i}`);
+    const line = document.getElementById(`line${i}`);
+    if (i < n) {
+      dot.className='step-dot done'; dot.innerHTML='<i class="fas fa-check" style="font-size:.55rem"></i>';
+      lbl.className='step-label done';
+      if (line) line.className='step-line done';
+    } else if (i===n) {
+      dot.className='step-dot active'; dot.innerHTML=String(i);
+      lbl.className='step-label active';
+    } else {
+      dot.className='step-dot'; dot.innerHTML=String(i);
+      lbl.className='step-label';
+      if (line) line.className='step-line';
+    }
+  }
+
+  // Step-specific actions
+  if (n===3) fetchRates();
+  if (n===4) renderPayments();
+  if (n===5) renderConfirm();
+
+  window.scrollTo(0,0);
+};
+
+// ── INIT ──
+async function init() {
+  const session = await getSession().catch(()=>null);
+  if (!session?.uid) {
+    window.parent.postMessage({type:'requireLogin'},'*'); return;
+  }
+  user = session;
+
+  // Pre-fill pickup contact
+  const parts = (user.fullName||'').split(' ');
+  const pName = document.getElementById('pName');
+  const pPhone = document.getElementById('pPhone');
+  if (pName) pName.value = parts[0]||'';
+  if (pPhone) pPhone.value = user.phone||'';
+
+  // Set default delivery date (3-5 business days)
+  document.getElementById('deliveryDateRange').textContent = calcDeliveryDate(3,5);
+
+  await loadCart();
+  await loadAddresses();
+}
+
+// ── LOAD CART ──
+async function loadCart() {
+  cartItems = await db_getCart(user.uid).catch(()=>[]);
+  const count = cartItems.reduce((s,i)=>s+(i.quantity||1),0);
+  document.getElementById('headerCount').textContent = count;
+  window.parent.postMessage({type:'cartUpdate',count},'*');
+
+  const container = document.getElementById('cartItems');
+  if (!cartItems.length) {
+    container.innerHTML = `<div class="empty">
+      <i class="fas fa-cart-shopping"></i>
+      <h3>Your cart is empty</h3>
+      <p>Add items from the shop to get started</p>
+      <button onclick="window.parent.postMessage({type:'switchTab',target:'home'},'*')"
+        style="margin-top:1rem;background:var(--blue);color:white;border:none;border-radius:10px;padding:.7rem 1.4rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer">
+        <i class="fas fa-shopping-bag"></i> Shop Now
+      </button>
+    </div>`;
+    document.getElementById('deliveryBanner').style.display='none';
+    document.getElementById('step1Summary').style.display='none';
+    return;
+  }
+
+  container.innerHTML = cartItems.map(item => `
+    <div class="cart-item" id="crow-${item.product_id}">
+      ${item.image_url
+        ? `<img class="item-img" src="${esc(item.image_url)}" alt="">`
+        : `<div class="item-img-ph"><i class="fas fa-box"></i></div>`}
+      <div style="flex:1;min-width:0">
+        <div class="item-name">${esc(item.name||'Product')}</div>
+        ${item.size ? `<div style="font-size:.7rem;color:#64748b;font-weight:700;margin:.1rem 0">Size: ${esc(item.size)}</div>` : ''}
+        ${item.vendor_id ? `<div style="font-size:.68rem;color:var(--blue);font-weight:700;margin:.1rem 0"><i class="fas fa-store" style="font-size:.6rem"></i> Sold by another vendor</div>` : ''}
+        <div class="item-price">${fmt(item.price)}</div>
+        <div class="qty-row">
+          <button class="qty-btn" onclick="changeQty('${item.product_id}',${(item.quantity||1)-1})">
+            <i class="fas fa-minus" style="font-size:.6rem"></i>
+          </button>
+          <span class="qty-num" id="qty-${item.product_id}">${item.quantity||1}</span>
+          <button class="qty-btn" onclick="changeQty('${item.product_id}',${(item.quantity||1)+1})">
+            <i class="fas fa-plus" style="font-size:.6rem"></i>
+          </button>
+          <button class="remove-btn" onclick="removeItem('${item.product_id}')">
+            <i class="fas fa-trash"></i> Remove
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
+
+  // Vendor items ship from a separate address — in-store pickup only covers
+  // MC Store's own inventory, so hide that option when the cart is mixed.
+  const hasVendorItems = cartItems.some(i => i.vendor_id);
+  const pickupBtn = document.getElementById('btnPickup');
+  if (pickupBtn) {
+    pickupBtn.style.display = hasVendorItems ? 'none' : '';
+    if (hasVendorItems && delType === 'pickup') setDelType('delivery');
+  }
+
+  updateStep1Summary();
+  document.getElementById('step1Btn').disabled = false;
+  document.getElementById('step1Summary').style.display = 'block';
+}
+
+function updateStep1Summary() {
+  const sub = cartItems.reduce((s,i)=>s+(i.price||0)*(i.quantity||1),0);
+  document.getElementById('s1Subtotal').textContent = fmt(sub);
+  document.getElementById('s1Total').textContent    = fmt(sub);
+}
+
+window.changeQty = async function(pid, qty) {
+  if (qty<=0) { removeItem(pid); return; }
+  await db_updateCartQty(user.uid, pid, qty);
+  const item = cartItems.find(i=>i.product_id===pid);
+  if (item) item.quantity = qty;
+  document.getElementById(`qty-${pid}`).textContent = qty;
+  updateStep1Summary();
+  const count = cartItems.reduce((s,i)=>s+(i.quantity||1),0);
+  document.getElementById('headerCount').textContent = count;
+  window.parent.postMessage({type:'cartUpdate',count},'*');
+};
+
+window.removeItem = async function(pid) {
+  await db_removeFromCart(user.uid, pid);
+  cartItems = cartItems.filter(i=>i.product_id!==pid);
+  const row = document.getElementById(`crow-${pid}`);
+  if (row) { row.style.opacity='0'; row.style.transition='opacity .25s'; setTimeout(()=>row.remove(),250); }
+  if (!cartItems.length) loadCart();
+  else { updateStep1Summary(); }
+  const count = cartItems.reduce((s,i)=>s+(i.quantity||1),0);
+  document.getElementById('headerCount').textContent = count;
+  window.parent.postMessage({type:'cartUpdate',count},'*');
+};
+
+// ── DELIVERY TYPE ──
+window.setDelType = function(type) {
+  delType = type;
+  document.getElementById('btnDelivery').classList.toggle('active', type==='delivery');
+  document.getElementById('btnPickup').classList.toggle('active', type==='pickup');
+  document.getElementById('deliverySection').style.display = type==='delivery'?'block':'none';
+  document.getElementById('pickupSection').style.display   = type==='pickup'?'block':'none';
+
+  if (type==='pickup') {
+    selRate = { courier_id:'pickup', courier_name:'Store Pickup', delivery_fee:0, eta:'Ready in 1–2 hours' };
+    updateDeliveryDates('Same day');
+    document.getElementById('step2Btn').disabled = false;
+  } else {
+    selRate = null;
+    document.getElementById('step2Btn').disabled = !selAddress;
+  }
+};
+
+// ── LOAD ADDRESSES ──
+async function loadAddresses() {
+  const list = document.getElementById('addrList');
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/saved_addresses?uid=eq.${user.uid}&order=is_default.desc,created_at.desc`,
+      { headers:{ apikey:SB_KEY, Authorization:`Bearer ${SB_KEY}` } });
+    const addrs = res.ok ? await res.json() : [];
+
+    if (!addrs.length) {
+      list.innerHTML = `<div style="border:2px dashed var(--border);border-radius:12px;padding:1.5rem;text-align:center">
+        <i class="fas fa-location-dot" style="font-size:1.5rem;color:var(--blue);display:block;margin-bottom:.5rem"></i>
+        <div style="font-size:.85rem;font-weight:800;margin-bottom:.35rem">No saved addresses</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:.85rem">Add a delivery address to continue</div>
+        <button onclick="goAddAddress()" style="background:var(--blue);color:white;border:none;border-radius:9px;padding:.6rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer">
+          <i class="fas fa-plus"></i> Add Address
+        </button>
+      </div>`;
+      return;
+    }
+
+    // Auto-select default
+    selAddress = addrs.find(a=>a.is_default) || addrs[0];
+    document.getElementById('step2Btn').disabled = false;
+
+    list.innerHTML = addrs.map((a,i) => `
+      <div class="addr-card ${i===0||a.is_default?'selected':''}" onclick="selectAddress(${JSON.stringify(a).replace(/"/g,'&quot;')}, this)">
+        <div class="addr-icon"><i class="fas fa-location-dot"></i></div>
+        <div style="flex:1;min-width:0">
+          <div class="addr-name">${esc(a.label||'Home')} ${a.is_default?'<span style="background:var(--blue);color:white;font-size:.58rem;padding:.1rem .45rem;border-radius:50px;font-weight:800;margin-left:4px">Default</span>':''}</div>
+          <div class="addr-detail">${esc(a.street)}, ${esc(a.city)}, ${esc(a.state)}</div>
+          ${a.landmark?`<div style="font-size:.68rem;color:var(--muted)"><i class="fas fa-map-pin" style="font-size:.6rem"></i> Near ${esc(a.landmark)}</div>`:''}
+        </div>
+        <i class="fas fa-circle-check" style="color:${i===0||a.is_default?'var(--blue)':'var(--border)'};font-size:1.1rem;flex-shrink:0"></i>
+      </div>`).join('');
+  } catch(e) {
+    list.innerHTML = `<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.83rem">Could not load addresses</div>`;
+  }
+}
+
+window.selectAddress = function(addr, el) {
+  selAddress = addr;
+  document.querySelectorAll('#addrList .addr-card').forEach(c => {
+    c.classList.remove('selected');
+    c.querySelector('.fa-circle-check').style.color='var(--border)';
+  });
+  el.classList.add('selected');
+  el.querySelector('.fa-circle-check').style.color='var(--blue)';
+  document.getElementById('step2Btn').disabled = false;
+};
+
+window.goAddAddress = function() {
+  try { sessionStorage.setItem('mc_open_addr','1'); } catch {}
+  window.parent.postMessage({type:'switchTab',target:'account',action:'openAddAddress'},'*');
+};
+
+// ── GROUP CART BY VENDOR ──
+// Each vendor (and MC Store's own inventory, vendor_id=null) ships separately,
+// since Shipbubble needs one sender address per shipment.
+function groupCartByVendor() {
+  const groups = {};
+  cartItems.forEach(item => {
+    const method = item.delivery_method === 'self' ? 'self' : 'shipbubble';
+    // Sub-group by vendor AND delivery method — a vendor could sell some
+    // self-delivered items and some Shipbubble items, which need separate
+    // shipments either way.
+    const key = `${item.vendor_id || '__mcstore__'}::${method}`;
+    if (!groups[key]) {
+      groups[key] = {
+        vendor_id: item.vendor_id || null,
+        vendor_name: item.vendor_id ? 'Marketplace seller' : 'MC Store',
+        deliveryMethod: method,
+        items: [],
+        rates: [],
+        selRate: null
+      };
+    }
+    groups[key].items.push(item);
+  });
+  return Object.values(groups);
+}
+
+// ── FETCH RATES ──
+async function fetchRates() {
+  if (delType==='pickup') {
+    document.getElementById('courierList').innerHTML = `
+      <div style="background:var(--green-lt);border:1.5px solid #86efac;border-radius:12px;padding:1rem;text-align:center">
+        <i class="fas fa-store" style="color:var(--green);font-size:1.5rem;display:block;margin-bottom:.5rem"></i>
+        <div style="font-weight:800;color:var(--green);margin-bottom:.25rem">Store Pickup — Free!</div>
+        <div style="font-size:.78rem;color:var(--muted)">Pick up at Bodija, Ibadan. Ready in 1–2 hours.</div>
+      </div>`;
+    document.getElementById('step3Btn').disabled = false;
+    return;
+  }
+
+  if (!selAddress) return;
+
+  vendorGroups = groupCartByVendor();
+
+  document.getElementById('courierList').innerHTML = `
+    <div style="text-align:center;padding:2rem;color:var(--muted)">
+      <i class="fas fa-spinner fa-spin" style="font-size:1.5rem;display:block;margin-bottom:.75rem"></i>
+      Getting live courier rates for ${selAddress.city}...
+    </div>`;
+
+  try {
+    // One rate lookup per vendor group — each has its own sender address
+    await Promise.all(vendorGroups.map(async group => {
+      // Self-delivery vendors handle their own logistics — no Shipbubble
+      // booking, no courier fee, they contact the buyer directly.
+      if (group.deliveryMethod === 'self') {
+        group.rates = [{ courier_name: 'Vendor delivery', delivery_fee: 0, eta: 'Arranged directly with seller' }];
+        group.selRate = group.rates[0];
+        return;
+      }
+
+      const weight = Math.max(0.5, group.items.reduce((s,i)=>s+0.3*(i.quantity||1),0));
+      const res = await fetch('/api/shipping', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          action:'getRates',
+          payload:{
+            vendor_id: group.vendor_id,
+            recipientAddress:{
+              fullName: user.fullName||'Customer',
+              email: user.email||'',
+              phone: user.phone||'08000000000',
+              street: selAddress.street,
+              city: selAddress.city,
+              state: selAddress.state
+            },
+            items: group.items.map(i=>({ name:i.name, quantity:i.quantity||1, weight:i.weight||0.3 })),
+            totalWeight: weight
+          }
+        })
+      });
+      const data = await res.json();
+      group.rates = data.ok ? (data.rates || []) : [];
+      group.error = data.ok ? null : (data.error || 'No couriers available');
+      // Auto-select the cheapest courier for this seller
+      group.selRate = group.rates.length
+        ? group.rates.reduce((a,b)=> (b.delivery_fee < a.delivery_fee ? b : a))
+        : null;
+    }));
+
+    const anyFailed = vendorGroups.some(g => !g.selRate);
+    if (anyFailed) {
+      const failedNames = vendorGroups.filter(g=>!g.selRate).map(g=>g.vendor_name).join(', ');
+      document.getElementById('courierList').innerHTML = `
+        <div style="background:var(--red-lt);border:1.5px solid #fecaca;border-radius:12px;padding:1rem;text-align:center">
+          <i class="fas fa-triangle-exclamation" style="color:var(--red);font-size:1.3rem;display:block;margin-bottom:.5rem"></i>
+          <div style="font-weight:700;color:var(--red);margin-bottom:.35rem">No couriers available for: ${esc(failedNames)}</div>
+          <div style="font-size:.78rem;color:var(--muted)">Try a different address or contact us on WhatsApp</div>
+          <button onclick="fetchRates()" style="margin-top:.75rem;background:var(--red);color:white;border:none;border-radius:9px;padding:.5rem 1rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer">
+            <i class="fas fa-refresh"></i> Retry
+          </button>
+        </div>`;
+      return;
+    }
+
+    renderCourierList();
+
+  } catch(e) {
+    document.getElementById('courierList').innerHTML = `
+      <div style="text-align:center;padding:1.5rem;color:var(--muted)">
+        <i class="fas fa-wifi" style="color:var(--red);font-size:1.3rem;display:block;margin-bottom:.5rem"></i>
+        Connection error. <button onclick="fetchRates()" style="background:none;border:none;color:var(--blue);font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Retry</button>
+      </div>`;
+  }
+}
+
+function renderCourierList() {
+  // Single seller (the common case today) — keep the familiar pick-a-courier list
+  if (vendorGroups.length === 1) {
+    const group = vendorGroups[0];
+    if (group.deliveryMethod === 'self') {
+      document.getElementById('courierList').innerHTML = `
+        <div class="courier-card selected" style="cursor:default">
+          <div style="width:36px;height:36px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-motorcycle" style="color:#f59e0b"></i></div>
+          <div style="flex:1;min-width:0">
+            <div class="courier-name">Vendor delivers directly</div>
+            <div class="courier-eta"><i class="fas fa-clock" style="font-size:.6rem"></i> Arranged directly with seller</div>
+          </div>
+          <div class="courier-fee rate-free">Free</div>
+        </div>`;
+      document.getElementById('sheetCourierList').innerHTML = document.getElementById('courierList').innerHTML;
+    } else {
+    document.getElementById('courierList').innerHTML = group.rates.map((r,i) => `
+      <div class="courier-card ${r===group.selRate?'selected':''}" onclick='selectCourier(${JSON.stringify(r)}, this, "${group.vendor_id||''}")'>
+        <div class="courier-radio"></div>
+        ${r.logo ? `<img class="courier-logo" src="${r.logo}" alt="">` : `<div style="width:36px;height:36px;border-radius:8px;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-truck" style="color:var(--blue)"></i></div>`}
+        <div style="flex:1;min-width:0">
+          <div class="courier-name">${esc(r.courier_name)}</div>
+          <div class="courier-eta"><i class="fas fa-clock" style="font-size:.6rem"></i> ${r.eta||'2–5 business days'}</div>
+        </div>
+        <div class="courier-fee ${r.delivery_fee===0?'rate-free':''}">${r.delivery_fee===0?'Free':fmt(r.delivery_fee)}</div>
+      </div>`).join('');
+    document.getElementById('sheetCourierList').innerHTML = document.getElementById('courierList').innerHTML;
+    }
+  } else {
+    // Multiple sellers — each ships separately, so show one delivery card per seller
+    // with its (auto-picked, cheapest) courier rather than one combined picker.
+    document.getElementById('courierList').innerHTML = vendorGroups.map(group => `
+      <div class="courier-card selected" style="cursor:default">
+        ${group.selRate.logo ? `<img class="courier-logo" src="${group.selRate.logo}" alt="">` : `<div style="width:36px;height:36px;border-radius:8px;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-truck" style="color:var(--blue)"></i></div>`}
+        <div style="flex:1;min-width:0">
+          <div class="courier-name">${esc(group.vendor_name)} — ${esc(group.selRate.courier_name)}</div>
+          <div class="courier-eta"><i class="fas fa-clock" style="font-size:.6rem"></i> ${group.selRate.eta||'2–5 business days'} · ${group.items.length} item${group.items.length>1?'s':''}</div>
+        </div>
+        <div class="courier-fee ${group.selRate.delivery_fee===0?'rate-free':''}">${group.selRate.delivery_fee===0?'Free':fmt(group.selRate.delivery_fee)}</div>
+      </div>`).join('') + `
+      <div style="font-size:.75rem;color:var(--muted);text-align:center;margin-top:.5rem;padding:.5rem">
+        <i class="fas fa-circle-info"></i> Your order ships as ${vendorGroups.length} separate deliveries since items come from different sellers
+      </div>`;
+  }
+
+  const combinedFee = vendorGroups.reduce((s,g)=>s+(g.selRate?.delivery_fee||0),0);
+  selRate = { delivery_fee: combinedFee, courier_name: vendorGroups.length>1 ? `${vendorGroups.length} couriers` : vendorGroups[0].selRate.courier_name, eta: vendorGroups[0].selRate.eta };
+  updateDeliveryDates(vendorGroups.map(g=>g.selRate.eta).sort().pop() || '3–5 business days');
+  document.getElementById('step3Btn').disabled = false;
+}
+
+window.selectCourier = function(rate, el, vendorKey) {
+  const group = vendorGroups.find(g => (g.vendor_id||'') === vendorKey);
+  if (group) group.selRate = rate;
+  document.querySelectorAll('#courierList .courier-card, #sheetCourierList .courier-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  const combinedFee = vendorGroups.reduce((s,g)=>s+(g.selRate?.delivery_fee||0),0);
+  selRate = { delivery_fee: combinedFee, courier_name: rate.courier_name, eta: rate.eta };
+  updateDeliveryDates(rate.eta||'3–5 business days');
+  document.getElementById('step3Btn').disabled = false;
+  closeSheet();
+};
+
+// ── MORE COURIERS SHEET ──
+window.openMoreCouriers = function() {
+  document.getElementById('sheetCourierList').innerHTML = document.getElementById('courierList').innerHTML;
+  document.getElementById('sheetOverlay').classList.add('open');
+};
+window.closeSheet = function(e) {
+  if (!e || e.target===document.getElementById('sheetOverlay')) {
+    document.getElementById('sheetOverlay').classList.remove('open');
+  }
+};
+window.filterCouriers = function(q) {
+  const lower = q.toLowerCase();
+  document.querySelectorAll('#sheetCourierList .courier-card').forEach(c => {
+    const name = c.querySelector('.courier-name')?.textContent.toLowerCase()||'';
+    c.style.display = name.includes(lower) ? 'flex' : 'none';
+  });
+};
+
+// ── RENDER PAYMENTS ──
+function renderPayments() {
+  const sub = cartItems.reduce((s,i)=>s+(i.price||0)*(i.quantity||1),0);
+  const fee = selRate?.delivery_fee||0;
+  const total = Math.max(0, sub+fee-discount);
+  const COD_MIN=7000, COD_MAX=50000;
+  const codOk = total>=COD_MIN && total<=COD_MAX;
+
+  document.getElementById('paymentList').innerHTML = `
+    <div class="pay-card selected" onclick="selectPay(this,'online')" id="pay-online">
+      <div class="pay-radio"></div>
+      <div class="pay-icon"><i class="fas fa-credit-card"></i></div>
+      <div>
+        <div class="pay-name">Pay Online</div>
+        <div class="pay-sub">Card · Bank Transfer · USSD via Paystack</div>
+      </div>
+    </div>
+    <div class="pay-card ${codOk?'':'disabled'}" id="pay-cod" ${codOk?`onclick="selectPay(this,'cod')"`:''}>
+      <div class="pay-radio"></div>
+      <div class="pay-icon" style="background:var(--gold-lt);color:var(--gold)"><i class="fas fa-money-bill-wave"></i></div>
+      <div>
+        <div class="pay-name">Cash on Delivery</div>
+        <div class="pay-sub">${codOk
+          ? 'Pay cash when your order arrives'
+          : total<COD_MIN
+            ? `Min. order is ${fmt(COD_MIN)} for COD`
+            : `Max. ${fmt(COD_MAX)} for COD — please pay online`}</div>
+      </div>
+      ${!codOk?'<i class="fas fa-lock" style="color:var(--muted);font-size:.85rem;flex-shrink:0"></i>':''}
+    </div>`;
+
+  selPay = 'online';
+  document.getElementById('step4Btn').disabled = false;
+}
+
+window.selectPay = function(el, method) {
+  document.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selPay = method;
+};
+
+// ── COUPON ──
+window.applyCoupon = async function() {
+  const code = document.getElementById('couponInput').value.trim().toUpperCase();
+  if (!code) return;
+  const res  = document.getElementById('couponResult');
+  res.innerHTML = '<span style="font-size:.78rem;color:var(--muted)">Checking...</span>';
+  try {
+    const r = await fetch('/api/referral',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'validateCoupon',code,uid:user.uid})});
+    const d = await r.json();
+    if (d.ok) {
+      discount   = d.discount;
+      couponCode = code;
+      res.innerHTML = `<div style="background:var(--green-lt);border:1.5px solid #86efac;border-radius:8px;padding:.5rem .75rem;font-size:.78rem;color:var(--green);font-weight:700;margin-top:.4rem"><i class="fas fa-tag"></i> Coupon applied! You save ${fmt(discount)}</div>`;
+    } else {
+      res.innerHTML = `<div style="font-size:.78rem;color:var(--red);margin-top:.4rem"><i class="fas fa-circle-xmark"></i> ${d.error||'Invalid coupon'}</div>`;
+    }
+  } catch {
+    res.innerHTML = `<div style="font-size:.78rem;color:var(--red);margin-top:.4rem">Could not validate. Try again.</div>`;
+  }
+};
+
+// ── RENDER CONFIRM ──
+function renderConfirm() {
+  // Items
+  document.getElementById('confirmItems').innerHTML = cartItems.map(i=>`
+    <div style="display:flex;align-items:center;gap:.65rem;padding:.5rem 0;border-bottom:1px solid var(--border)">
+      ${i.image_url?`<img src="${esc(i.image_url)}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:1.5px solid var(--border)">`:
+        `<div style="width:44px;height:44px;border-radius:8px;background:var(--blue-lt);display:flex;align-items:center;justify-content:center"><i class="fas fa-box" style="color:var(--blue)"></i></div>`}
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.8rem;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${esc(i.name||'Product')}</div>
+        <div style="font-size:.75rem;color:var(--muted)">Qty: ${i.quantity||1}</div>
+      </div>
+      <div style="font-size:.85rem;font-weight:800;color:var(--blue)">${fmt((i.price||0)*(i.quantity||1))}</div>
+    </div>`).join('');
+
+  // Delivery
+  const delInfo = delType==='pickup'
+    ? `<b>Store Pickup</b> — MC Store Bodija, Ibadan<br><i class="fas fa-clock" style="color:var(--blue)"></i> Ready in 1–2 hours · <b style="color:var(--green)">Free</b>`
+    : vendorGroups.length > 1
+      ? vendorGroups.map(g => `<b>${esc(g.vendor_name)}</b> via <b>${esc(g.selRate.courier_name)}</b> — ${g.selRate.delivery_fee===0?'Free':fmt(g.selRate.delivery_fee)}<br>`).join('') +
+        `${selAddress?.street||''}, ${selAddress?.city||''}, ${selAddress?.state||''}${selAddress?.landmark?`<br>Near ${selAddress.landmark}`:''}`
+      : `<b>Home Delivery</b> via <b>${selRate?.courier_name||''}</b><br>
+       ${selAddress?.street||''}, ${selAddress?.city||''}, ${selAddress?.state||''}<br>
+       ${selAddress?.landmark?`Near ${selAddress.landmark}<br>`:''}
+       <i class="fas fa-clock" style="color:var(--blue)"></i> ${selRate?.eta||'2–5 business days'} · <b>${fmt(selRate?.delivery_fee||0)}</b>`;
+  document.getElementById('confirmDelivery').innerHTML = delInfo;
+
+  // Summary
+  const sub   = cartItems.reduce((s,i)=>s+(i.price||0)*(i.quantity||1),0);
+  const fee   = delType==='pickup' ? 0 : (selRate?.delivery_fee||0);
+  const total = Math.max(0, sub+fee-discount);
+  document.getElementById('confirmSummary').innerHTML = `
+    <div class="sum-row"><span class="lbl">Subtotal</span><span class="val">${fmt(sub)}</span></div>
+    <div class="sum-row"><span class="lbl">Delivery Fee</span><span class="val" style="${fee===0?'color:var(--green)':''}">${fee===0?'Free':fmt(fee)}</span></div>
+    ${discount>0?`<div class="sum-row"><span class="lbl" style="color:var(--green)">Discount</span><span class="val" style="color:var(--green)">-${fmt(discount)}</span></div>`:''}
+    <div class="sum-row"><span class="lbl">Payment</span><span class="val">${selPay==='online'?'Online (Paystack)':'Cash on Delivery'}</span></div>
+    <hr class="sum-divider">
+    <div class="sum-total"><span class="lbl">Total</span><span class="val">${fmt(total)}</span></div>`;
+}
+
+// ── PLACE ORDER ──
+window.placeOrder = async function() {
+  const btn = document.getElementById('placeOrderBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+  const sub   = cartItems.reduce((s,i)=>s+(i.price||0)*(i.quantity||1),0);
+  const fee   = delType==='pickup' ? 0 : (selRate?.delivery_fee||0);
+  const total = Math.max(0, sub+fee-discount);
+
+  const name  = delType==='pickup'
+    ? document.getElementById('pName').value.trim()
+    : user.fullName||'Customer';
+  const phone = delType==='pickup'
+    ? document.getElementById('pPhone').value.trim()
+    : user.phone||'08000000000';
+
+  // Build one order payload per seller — pickup (MC Store only, no vendor items
+  // allowed) stays a single order; delivery splits by vendorGroups since each
+  // seller ships from a different address.
+  const groups = delType==='pickup'
+    ? [{ vendor_id:null, items:cartItems, selRate:{ delivery_fee:0, courier_name:'', service_code:'', eta:'' } }]
+    : vendorGroups;
+
+  const groupOrderPayloads = groups.map(group => {
+    const groupSub   = group.items.reduce((s,i)=>s+(i.price||0)*(i.quantity||1),0);
+    const groupShare = sub > 0 ? groupSub / sub : 0;         // proportion of the cart this seller represents
+    const groupFee   = delType==='pickup' ? 0 : (group.selRate?.delivery_fee||0);
+    const groupDisc  = discount * groupShare;                 // split any coupon proportionally
+    const groupTotal = Math.max(0, groupSub + groupFee - groupDisc);
+
+    return {
+      uid: user.uid,
+      vendorId: group.vendor_id,
+      customerName: name,
+      customerEmail: user.email||'',
+      customerPhone: phone,
+      items: group.items,
+      deliveryStreet:   delType==='pickup' ? 'Opposite Bovas Filling Station' : (selAddress?.street||''),
+      deliveryCity:     delType==='pickup' ? 'Ibadan' : (selAddress?.city||''),
+      deliveryState:    delType==='pickup' ? 'Oyo'    : (selAddress?.state||''),
+      deliveryLandmark: delType==='pickup' ? 'MC Store Bodija' : (selAddress?.landmark||''),
+      subtotal: groupSub, deliveryFee: groupFee, discount: groupDisc, total: groupTotal,
+      shipbubble_courier_id:    group.selRate?.courier_id||'',
+      shipbubble_courier_name:  group.selRate?.courier_name||'',
+      shipbubble_service_code:  group.selRate?.service_code||'',
+      shipbubble_request_token: group.selRate?.request_token||''
+    };
+  });
+
+  try {
+    if (selPay==='online') {
+      initiatePayment({
+        email: user.email,
+        amount: total,
+        orderId: `CART-${Date.now()}`,
+        customerName: name, phone,
+        onSuccess: async (ref) => {
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving order...';
+          try {
+            const orders = [];
+            for (const payload of groupOrderPayloads) {
+              orders.push(await db_placeOrder({...payload, paymentMethod:'online', paymentRef:ref.reference}));
+            }
+            showSuccess(orders[0], orders.length);
+          } catch(e) {
+            showToast('Payment done but save failed. Contact support!', 'err');
+            btn.disabled=false; btn.innerHTML='<i class="fas fa-lock"></i> Place Order & Pay';
+          }
+        },
+        onCancel: () => {
+          showToast('Payment cancelled','err');
+          btn.disabled=false; btn.innerHTML='<i class="fas fa-lock"></i> Place Order & Pay';
+        }
+      });
+    } else {
+      const orders = [];
+      for (const payload of groupOrderPayloads) {
+        orders.push(await db_placeOrder({...payload, paymentMethod:'cash_on_delivery', paymentRef:''}));
+      }
+      showSuccess(orders[0], orders.length);
+    }
+  } catch(e) {
+    showToast(e.message||'Could not place order. Try again.','err');
+    btn.disabled=false; btn.innerHTML='<i class="fas fa-lock"></i> Place Order & Pay';
+  }
+};
+
+function showSuccess(order, orderCount = 1) {
+  const overlay = document.getElementById('successOverlay');
+  const num     = order?.order_number||'';
+  document.getElementById('successMsg').textContent = orderCount > 1
+    ? `${orderCount} orders confirmed (one per seller)! First: ${num?'#'+num+' ':''}Expected delivery: ${document.getElementById('step5DateText').textContent}`
+    : `Order ${num?'#'+num+' ':''}confirmed! Expected delivery: ${document.getElementById('step5DateText').textContent}`;
+  overlay.style.display = 'flex';
+  window.parent.postMessage({type:'cartUpdate',count:0},'*');
+  window.parent.postMessage({type:'orderPlaced'},'*');
+}
+
+init();
+</script>
+</body>
+</html>
